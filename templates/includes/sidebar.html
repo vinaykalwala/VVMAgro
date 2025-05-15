@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .sidebar {
+            width: 240px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: scroll;
+        }
+        
+        .sidebar::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+        
+        .sidebar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .sidebar h2 {
+            margin-top: 80px;
+            font-size: 21px;
+            padding: 0 16px;
+            color: #0c005a;
+            text-decoration: none;
+        }
+        
+        .sidebar ul {
+            list-style-type: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            background-color: #0c005a;
+        }
+        
+        .sidebar ul li {
+            padding: 15px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            color: #4859a4;
+            justify-content: space-between;
+        }
+        
+        .sidebar ul li a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .sidebar ul li:hover {
+            background-color: #0c0055af;
+            color: white;
+        }
+        
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+        
+        .sidebar ul li i:last-child {
+            margin-left: auto;
+            color: #9197B3;
+        }
+        
+        .sidebar ul li:hover i:last-child {
+            color: white;
+        }
+        
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 250px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <h2> Admin Dashboard</h2>
+        </aside>
+    </div>
+
+</body>
+
+</html>
