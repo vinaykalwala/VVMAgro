@@ -175,7 +175,7 @@
       <li><a href="{% url 'contactus' %}">Contact Us</a></li>
       
     </ul>
-    <form method="POST" action="" style="margin-left: 10px;">
+    <form method="POST" action="{% url 'login'%}" style="margin-left: 10px;">
       {% csrf_token %}
       <button type="submit" class="logout-button">Login</button>
     </form>
