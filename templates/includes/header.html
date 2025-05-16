@@ -54,37 +54,41 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
-   .logout-button {
-      padding: 6px 14px;
-      border-radius: 15px;
-      font-weight: 600;
-      color: green;
-      background-color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s, box-shadow 1.5s ease-in-out;
-      animation: glow 2s infinite alternate;
-      position: relative;
-      z-index: 10;
-    }
+ .logout-button {
+  padding: 6px 14px;
+  border-radius: 15px;
+  font-weight: 600;
+  color: green;
+  background-color: #fff;
+  border: 2px solid green;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  animation: glow 2s infinite alternate;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 0 6px rgba(0, 128, 0, 0.3);
+}
 
-    .logout-button:hover {
-      background-color: #f4f4f4;
-      box-shadow: 0 0 12px 6px rgba(0, 128, 0, 0.8);
-      animation: none;
-    }
+.logout-button:hover {
+  background-color: rgb(187, 245, 187);
+  color: #fff;
+  transform: scale(1.07);
+  box-shadow: 0 0 18px 8px rgba(0, 255, 0, 0.6);
+  animation: none;
+}
 
-    @keyframes glow {
-      0% {
-        box-shadow: 0 0 5px 2px rgba(0, 128, 0, 0.5);
-      }
-      50% {
-        box-shadow: 0 0 15px 6px rgba(0, 255, 0, 1);
-      }
-      100% {
-        box-shadow: 0 0 5px 2px rgba(0, 128, 0, 0.5);
-      }
-    }
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 6px 2px rgba(0, 128, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 16px 6px rgba(0, 255, 0, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 6px 2px rgba(0, 128, 0, 0.4);
+  }
+}
+
 
    .hamburger {
       display: none;
@@ -169,6 +173,7 @@
       <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
       <li><a href="{% url 'careers' %}">Careers</a></li>
       <li><a href="{% url 'contactus' %}">Contact Us</a></li>
+      
     </ul>
     <form method="POST" action="" style="margin-left: 10px;">
       {% csrf_token %}
