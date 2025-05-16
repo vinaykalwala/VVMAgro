@@ -21,6 +21,7 @@
     .hero {
         height: 80vh;
         background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/branches-bg.png" %}') center/contain no-repeat;
+        background-size: cover;
         background-position: center;
         display: flex;
         align-items: center;
@@ -64,9 +65,10 @@
 
     /* Container */
     .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem 1.5rem;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 2rem 2rem !important;
     }
 
     /* Section Styles */
