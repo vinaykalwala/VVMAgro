@@ -36,7 +36,7 @@
 
     .nav-links {
       display: flex;
-      gap: 15px;
+      gap: 10px;
       list-style: none;
     }
 
@@ -54,26 +54,44 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
-    .logout-button {
+   .logout-button {
       padding: 6px 14px;
       border-radius: 15px;
       font-weight: 600;
-      color:green;
+      color: green;
       background-color: #fff;
       border: none;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s, box-shadow 1.5s ease-in-out;
+      animation: glow 2s infinite alternate;
+      position: relative;
+      z-index: 10;
     }
 
     .logout-button:hover {
       background-color: #f4f4f4;
+      box-shadow: 0 0 12px 6px rgba(0, 128, 0, 0.8);
+      animation: none;
     }
 
-    .hamburger {
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 5px 2px rgba(0, 128, 0, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 15px 6px rgba(0, 255, 0, 1);
+      }
+      100% {
+        box-shadow: 0 0 5px 2px rgba(0, 128, 0, 0.5);
+      }
+    }
+
+   .hamburger {
       display: none;
       flex-direction: column;
       cursor: pointer;
       gap: 5px;
+      z-index: 20;
     }
 
     .hamburger div {
@@ -83,27 +101,54 @@
       transition: 0.3s;
     }
 
-    @media (max-width: 900px) {
-      .nav-links {
-        display: none;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        flex-direction: column;
-        background: green;
-        padding: 15px 20px;
-        gap: 10px;
-      }
+  @media (max-width: 900px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    background: green;
+    padding: 15px 20px;
+    gap: 10px;
+  }
 
-      .nav-links.open {
-        display: flex;
-      }
+  .nav-links.open {
+    display: flex;
+  }
 
-      .hamburger {
-        display: flex;
-      }
+  .hamburger {
+    display: flex;
+    order: 3;
+  }
+
+  .logo {
+    order: 1;
+  }
+
+  form {
+    order: 2;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .logout-button {
+    animation: glow 1.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    0% {
+      box-shadow: 0 0 5px #00ff00;
     }
+    100% {
+      box-shadow: 0 0 20px #00ff00;
+    }
+  }
+}
+
   </style>
 </head>
 
@@ -118,12 +163,12 @@
       <div></div>
     </div>
     <ul class="nav-links" id="menu">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">About Us</a></li>
-      <li><a href="#">Products</a></li>
-      <li><a href="#">Branches & Distributors</a></li>
-      <li><a href="#">Careers</a></li>
-      <li><a href="#">Contact Us</a></li>
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'aboutus' %}">About Us</a></li>
+      <li><a href="{% url 'products' %}">Products</a></li>
+      <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
+      <li><a href="{% url 'careers' %}">Careers</a></li>
+      <li><a href="{% url 'contactus' %}">Contact Us</a></li>
     </ul>
     <form method="POST" action="" style="margin-left: 10px;">
       {% csrf_token %}

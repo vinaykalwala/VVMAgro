@@ -8,7 +8,15 @@ from Inventory.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-        path('',home, name='home'),
+    path('',home, name='home'),
+    path('aboutus',aboutus, name='aboutus'),
+    path('products',products, name='products'),
+    path('branchesanddistributors',branchesanddistributors, name='branchesanddistributors'),
+    path('careers',careers, name='careers'),
+    path('contactus',contactus, name='contactus'),
+
+
+
 
 ]
 if settings.DEBUG:
