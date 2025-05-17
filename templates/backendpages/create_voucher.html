@@ -1,0 +1,12 @@
+<h2>Create Voucher for Stock Exchange Operation {{ stock_form.id }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <h3>Products in Voucher</h3>
+  {{ formset.management_form }}
+  {% for form in formset %}
+    {{ form.as_p }}
+  {% endfor %}
+  <button type="submit">Save Voucher</button>
+</form>

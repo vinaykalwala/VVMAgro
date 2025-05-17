@@ -20,7 +20,14 @@ urlpatterns = [
     path('branchesanddistributors',branchesanddistributors, name='branchesanddistributors'),
     path('careers',careers, name='careers'),
     path('contactus',contactus, name='contactus'),
-
+    path('signup/', signup_view, name='signup'),
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('admin_dashboard/', admin_dashboard, name='admin_dashboard'),
+    path('user_dashboard/', user_dashboard, name='user_dashboard'),
+    path('product-exchange/', product_exchange_view, name='product_exchange'),
+    path('voucher/create/', voucher_create_view, name='voucher_create'),
+    path('voucher/<int:voucher_id>/',voucher_detail_view, name='voucher_detail'),
 
 
 

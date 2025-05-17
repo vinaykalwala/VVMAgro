@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+    background: url("{% static 'tractorbg.png' %}") no-repeat center center;
+background-size: cover;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      backdrop-filter: blur(10px); /* This is the blur */
+    }
+
+    .login-container {
+      display: flex;
+      max-width: 850px;
+      width: 95%;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(12px);
+    }
+
+    .login-left {
+      flex: 1;
+background: url("{% static 'tractorbg.png' %}") no-repeat center center;
+background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-left img {
+      width: 100px;
+      height: 100px;
+      opacity: 0.8;
+    }
+
+    .login-right {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-right h2 {
+      color: green;
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 14px 14px 45px;
+      border-radius: 10px;
+      border: none;
+      background:white;
+      font-size: 16px;
+      color: #2e7d32;
+      border: 1px solid rgb(135, 250, 135);
+    }
+
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: #4caf50;
+    }
+
+    button {
+      padding: 14px;
+      background: linear-gradient(to right, green, green);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #388e3c, #2e7d32);
+    }
+
+    .forgot {
+      text-align: right;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .forgot a {
+      text-decoration: none;
+      color: #1b5e20;
+    }
+
+    .signup {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .signup a {
+      text-decoration: none;
+      color: green;
+      font-weight: bold;
+    }
+
+    .error-message {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+}
+
+
+    @media (max-width: 768px) {
+      .login-container {
+        flex-direction: column;
+      }
+
+      .login-left {
+        height: 200px;
+      }
+
+      .login-right {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-left">
+      <!-- Optional logo -->
+    </div>
+    <div class="login-right">
+      <h2>Welcome !</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="input-group">
+          <i class="fa fa-user"></i>
+          {{ form.username }}
+        </div>
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          {{ form.password }}
+        </div>
+       
+        <button type="submit">LOGIN</button>
+      </form>
+
+
+      <div class="signup">
+        <p>Do you want to go home? <a href="{% url 'home' %}">Home</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

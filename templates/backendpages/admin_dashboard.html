@@ -1,0 +1,175 @@
+{% extends 'backendpages/base.html' %}
+  {% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    
+    <style>
+        .admin-welcome-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            
+            
+            padding: 70px 40px;
+            border-radius: 20px;
+            animation: fadeInSlideUp 1.2s ease forwards;
+            flex-wrap: wrap;
+        }
+
+        .admin-welcome-left {
+            flex: 1 1 50%;
+            animation: fadeInLeft 1s ease;
+            
+        }
+
+        .admin-welcome-title {
+            font-size: 38px;
+            font-weight: bold;
+            color: green;
+            margin-bottom: 15px;
+        }
+
+        .admin-welcome-subtitle {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .admin-welcome-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .admin-welcome-btn {
+            background: green;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background 0.3s;
+           
+
+        }
+
+        .admin-welcome-btn:hover {
+            background:green;
+        }
+
+        .admin-welcome-btn-outline {
+            border: 2px solid green;
+            color: green;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .admin-welcome-btn-outline:hover {
+            background: green;
+            color: white;
+        }
+
+        .admin-welcome-right {
+            flex: 1 1 40%;
+            text-align: center;
+            animation: fadeInRight 1s ease;
+        }
+
+        .admin-welcome-image {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Animations */
+        @keyframes fadeInSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+       
+       
+
+.godown-glass-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url("{% static 'tractorbg.png' %}") no-repeat center center / cover;
+    filter: blur(15px);
+    z-index: -1;
+    border-radius: 15px;
+}
+
+
+
+    </style>
+</head>
+
+<body>
+  
+    <div class="main-content">
+        <div class="admin-welcome-wrapper">
+            <div class="admin-welcome-left">
+               <h1 class="admin-welcome-title">Welcome, {{ request.user.username }}!</h1>
+<p class="admin-welcome-subtitle">
+    You're in the control room of <strong>VVM Agro Industries</strong> 🌾<br>
+    Here you can add new products, create parties and groups, update daily work, manage stock and warehouses, record financial transactions, handle vouchers, and manage vendor information.<br>
+    Take control and keep everything running smoothly!
+</p>
+
+                <div class="admin-welcome-buttons">
+                    <a href="{% url 'home' %}" class="admin-welcome-btn">Go to Home</a>
+                    <a href="{% url 'signup' %}" class="admin-welcome-btn-outline">Manage Users</a>
+                </div>
+            </div>
+
+            <div class="admin-welcome-right">
+                <img src="{% static 'tractor.jpg' %}" alt="Farmer Illustration" class="admin-welcome-image">
+            </div>
+        </div>
+        <div class="godown-glass-box">
+    
+</div>
+
+    </div>
+    {% endblock %}
+</body>
+</html>

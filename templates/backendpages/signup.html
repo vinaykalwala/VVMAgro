@@ -1,0 +1,172 @@
+{% extends 'backendpages/base.html' %}
+    {% block content %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document</title>
+  <style>
+    .signup-wrapper {
+      display: flex;
+      flex-direction: row;
+      max-width: 1100px;
+      margin: 10px auto;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0, 128, 0, 0.1);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .signup-left,
+    .signup-right {
+      width: 350px;
+      height: 100%;
+      overflow-y: auto;
+    }
+ .signup-right {
+      width: 600px;
+      height: 100%;
+      overflow-y: auto;
+    }
+    .signup-left {
+      background-color: green;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 30px;
+      box-sizing: border-box;
+    }
+
+    .signup-left img {
+      max-width: 180px;
+      margin-bottom: 20px;
+    }
+
+    .signup-left h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+
+    .signup-left p {
+      font-size: 16px;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .signup-right {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      box-sizing: border-box;
+    }
+
+    .signup-right h2 {
+      color: #2e7d32;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .signup-form p {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+    }
+
+    .signup-form input,
+    .signup-form select,
+    .signup-form textarea {
+      padding: 10px;
+      border: 1px solid #a5d6a7;
+      border-radius: 8px;
+    background-color: #e6ffe6;
+      transition: border-color 0.3s;
+    }
+
+    .signup-form input:focus {
+      border-color: green;
+      outline: none;
+    }
+
+    .signup-form button {
+      background-color:green;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .signup-form button:hover {
+      background-color: green;
+    }
+
+    .signup-form a {
+      text-align: center;
+      margin-top: 10px;
+      color: green;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .signup-form a:hover {
+      text-decoration: underline;
+    }
+
+    @media screen and (max-width: 1150px) {
+      .signup-wrapper {
+        flex-direction: column;
+        width: 100%;
+        max-width: 550px;
+      }
+
+      .signup-left,
+      .signup-right {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-content">
+    <div class="signup-wrapper">
+      <!-- Green side with image and text -->
+    
+
+      <!-- White side with form -->
+      <div class="signup-right">
+        <h2>Sign Up</h2>
+        <form method="post" class="signup-form">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Sign Up</button>
+          <a href="{% url 'login' %}">Already have an account? Login</a>
+        </form>
+      </div>
+        <div class="signup-left">
+           <h2>Welcome Admin!</h2>
+<p>Create accounts for yourself and your team. Empower collaboration and unlock seamless access to everything your team needs!</p>
+            <img src="{% static 'tractor.jpg' %}" alt="signup" class="signup-image"/>
+                        <img src="{% static 'tractor.jpg' %}" alt="signup" class="signup-image"/>
+            <img src="{% static 'tractor.jpg' %}" alt="signup" class="signup-image"/>
+            <img src="{% static 'tractor.jpg' %}" alt="signup" class="signup-image"/>
+           
+       
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</body>
+</html>
