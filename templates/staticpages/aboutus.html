@@ -1,18 +1,573 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 {% extends 'staticpages/base.html' %}
-<body>
-    {% block content %}
+{% load static %}
+{% block title %}About VVM Agro Industries{% endblock %}
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
 
-    
-  <h1>about us</h1>
+    body {
+        background: #F8FAF5;
+        color: #2D3E40;
+        overflow-x: hidden;
+    }
 
-    {% endblock %}
+    /* Hero Section */
+    .hero {
+        height: 100vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "images/agriculture-bg.jpg" %}') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #FFFFFF;
+        position: relative;
+        overflow: hidden;
+    }
 
-</body>
-</html>
+    .hero-content {
+        max-width: 1200px;
+        padding: 2rem;
+        animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .hero h1 {
+        font-size: 4.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+        text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero p {
+        font-size: 1.5rem;
+        color: #D4E4D2;
+        font-weight: 300;
+        margin-bottom: 2rem;
+    }
+
+    /* Container */
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+        background: linear-gradient(180deg, #F8FAF5, #E8F0E5);
+    }
+
+    /* Section Styles */
+    .section {
+        background: #FFFFFF;
+        border-radius: 20px;
+        padding: 3rem;
+        margin: 0 1rem 4rem 1rem;
+        position: relative;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 1s ease, transform 1s ease;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid #E0E8E0;
+    }
+
+    .section.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .section h2 {
+        font-size: 3rem;
+        color: #2D3E40;
+        margin-bottom: 2rem;
+        position: relative;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .section h2::before {
+        content: '🌿';
+        font-size: 2.5rem;
+    }
+
+    .section h2::after {
+        content: '';
+        flex-grow: 1;
+        height: 3px;
+        background: linear-gradient(to right, #6BBF47, transparent);
+    }
+
+    .section p, .section ul {
+        font-size: 1.2rem;
+        color: #2D3E40;
+        line-height: 1.9;
+    }
+
+    .section ul {
+        list-style: none;
+        margin-top: 1.5rem;
+    }
+
+    .section ul li {
+        padding: 1rem 0;
+        position: relative;
+        padding-left: 2.5rem;
+        transition: background 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .section ul li:hover {
+        background: #F0F5F0;
+    }
+
+    .section ul li::before {
+        content: '🌱';
+        position: absolute;
+        left: 0;
+        color: #6BBF47;
+        font-size: 1.5rem;
+    }
+
+    /* Section Images */
+    .section-image {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 16px;
+        margin: 2rem 0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.5s ease;
+    }
+
+    .section-image:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Products Grid */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2.5rem;
+        margin-top: 2.5rem;
+    }
+
+    .product-card {
+        background: #F9FCF9;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        border: 1px solid #E5ECE5;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #6BBF47;
+        transition: height 0.4s ease;
+    }
+
+    .product-card:hover::before {
+        height: 100%;
+        opacity: 0.1;
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card h3 {
+        font-size: 1.7rem;
+        color: #2D3E40;
+        margin-bottom: 0.8rem;
+        font-weight: 500;
+    }
+
+    .product-card p {
+        font-size: 1rem;
+        color: #2D3E40;
+        line-height: 1.7;
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card img:hover {
+        transform: scale(1.03);
+    }
+
+    /* Timeline */
+    .timeline {
+        position: relative;
+        margin: 3rem 0;
+        padding: 0 1rem;
+    }
+
+    .timeline-item {
+        background: #F9FCF9;
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 2rem 0;
+        position: relative;
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: opacity 1s ease, transform 1s ease;
+        border-left: 4px solid #6BBF47;
+    }
+
+    .timeline-item.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .timeline-content h3 {
+        font-size: 1.8rem;
+        color: #2D3E40;
+        margin-bottom: 0.8rem;
+        font-weight: 500;
+    }
+
+    .timeline-content p {
+        font-size: 1.1rem;
+        color: #2D3E40;
+        line-height: 1.7;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Scroll Animation Script */
+    .scroll-script {
+        display: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .hero h1 {
+            font-size: 4rem;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+        }
+
+        .section {
+            padding: 2.5rem;
+            margin: 0 0.8rem 3rem 0.8rem;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+        }
+
+        .section-image {
+            height: 300px;
+        }
+
+        .products-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero {
+            height: 80vh;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        .container {
+            padding: 3rem 1.5rem;
+        }
+
+        .section {
+            padding: 2rem;
+            margin: 0 0.5rem 2rem 0.5rem;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+        }
+
+        .section-image {
+            height: 250px;
+        }
+
+        .products-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .product-card img {
+            height: 180px;
+        }
+
+        .timeline {
+            padding: 0 0.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero {
+            height: 70vh;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+
+        .container {
+            padding: 2rem 1rem;
+        }
+
+        .section {
+            padding: 1.5rem;
+            margin: 0 0.3rem 1.5rem 0.3rem;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+        }
+
+        .section h2::before {
+            font-size: 2rem;
+        }
+
+        .section p, .section ul {
+            font-size: 1rem;
+        }
+
+        .section-image {
+            height: 200px;
+        }
+
+        .product-card img {
+            height: 150px;
+        }
+
+        .timeline-item {
+            padding: 1.5rem;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.5rem;
+        }
+
+        .timeline-content p {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>ABOUT VVM AGRO INDUSTRIES</h1>
+        <p>Pioneering Agricultural Machinery and Tractors Since 2016</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="section">
+        <h2>Our Journey</h2>
+        <img src="{% static 'images/tractor-field.jpg' %}" alt="Tractor in field" class="section-image">
+        <p>Founded on 27-Jun-2016, VVM Agro Industries is a Micro enterprise (2023-24) dedicated to transforming agriculture and electrical contracting through innovative equipment. Our journey began in Hyderabad, Telangana, and expanded to Hayathanagar, Ranga Reddy District, Telangana, with additional operations in Mancherial, Telangana.</p>
+        <p>Under our V VMotors division, we manufacture high-performance tractors ranging from 33 HP to 90 HP and serve as an authorized state distributor for Indofarm Tractor spare parts across Telangana & Andhra Pradesh. Our innovative Hole Lifter, designed for electrical contractors, digs holes up to 6 feet and lifts poles (8m, 9.1m, 11m), significantly reducing manpower and costs.</p>
+        <p>We also specialize in:</p>
+        <ul>
+            <li style="--i: 1;">Wood working machines for precision processing.</li>
+            <li style="--i: 2;">Tractor attachments for efficient agricultural tasks.</li>
+            <li style="--i: 3;">Waste recycling machines for sustainable horticulture.</li>
+            <li style="--i: 4;">Forestry tools for advanced operations.</li>
+        </ul>
+        <p>With tie-ups with banks and finance companies, we ensure accessible solutions for our customers, backed by excellent after-sales service.</p>
+    </div>
+
+    <div class="section">
+        <h2>Our Vision</h2>
+        <img src="{% static 'images/Sustainable farming.jpg' %}" alt="Sustainable farming" class="section-image">
+        <p>At VVM Agro Industries, our vision is to lead the global agricultural and electrical equipment industry by offering high multi-featured, fuel-efficient solutions at optimum cost. We aim to deliver world-class performance, backed by exceptional after-sales services, empowering farmers and contractors with innovative tools that enhance productivity and sustainability.</p>
+        <p>We strive to:</p>
+        <ul>
+            <li style="--i: 1;">Pioneer sustainable technologies that reduce environmental impact.</li>
+            <li style="--i: 2;">Expand our reach to support agricultural communities worldwide.</li>
+            <li style="--i: 3;">Foster innovation through continuous research and development.</li>
+            <li style="--i: 4;">Build lasting partnerships with customers, prioritizing their success.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Our Management</h2>
+        <img src="{% static 'images/our-management.jpg' %}" alt="Our Management" class="section-image">
+        <p>Our leadership is driven by V. Sudharshan, the Proprietor and CEO of VVM Agro Industries:</p>
+        <ul>
+            <li style="--i: 1;">Served as an Electrical Contractor for 10 years (1997–2006), specializing in HVDS, RGGVY, and APDRP works.</li>
+            <li style="--i: 2;">Operated an electrical trading business, Venkatamani Sai Power Lines, in Ranigunj, Secunderabad, with a fabrication unit for LT/HT overhead lines (2006–2011).</li>
+            <li style="--i: 3;">Entered the automobile and agricultural machinery business, introducing innovative products like the Hole Lifter to support electrical contractors.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Products & Services</h2>
+        <p>Discover our innovative range of machinery and services tailored for agriculture, forestry, and electrical contracting:</p>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="{% static 'images/tractor.jpg' %}" alt="Tractor">
+                <h3>Tractors</h3>
+                <p>High-performance tractors ranging from 33 HP to 90 HP, designed for efficiency and durability.</p>
+            </div>
+            <div class="product-card">
+                <img src="{% static 'images/hole-lifter.png' %}" alt="Hole Lifter">
+                <h3>Hole Lifter</h3>
+                <p>Innovative equipment for electrical contractors, digs holes up to 6 ft and lifts poles (8m, 9.1m, 11m).</p>
+            </div>
+            <div class="product-card">
+                <img src="{% static 'images/wood-working-machine.png' %}" alt="Wood Working Machine">
+                <h3>Wood Working Machine</h3>
+                <p>Precision machines for efficient wood processing.</p>
+            </div>
+            <div class="product-card">
+                <img src="{% static 'images/tractor-attachments.png' %}" alt="Tractor Attachments">
+                <h3>Tractor Attachments</h3>
+                <p>Durable earthmoving machinery for agricultural tasks.</p>
+            </div>
+            <div class="product-card">
+                <img src="{% static 'images/waste-recycling-machine.jpg' %}" alt="Waste Recycling Machine">
+                <h3>Waste Recycling Machine</h3>
+                <p>Sustainable horticulture waste recycling solutions.</p>
+            </div>
+            <div class="product-card">
+                <img src="{% static 'images/spare-parts.png' %}" alt="Spare Parts">
+                <h3>Spare Parts</h3>
+                <p>Authorized distributor for Indofarm Tractor spare parts across Telangana & Andhra Pradesh.</p>
+            </div>
+            <div class="product-card">
+                <img src="{% static 'images/forestry-tools.png' %}" alt="Forestry Tools">
+                <h3>Forestry Tools</h3>
+                <p>Advanced machines for efficient forestry operations.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Organization Details</h2>
+        <img src="{% static 'images/hyderabad-office.jpg' %}" alt="Hyderabad office" class="section-image">
+        <ul>
+            <li style="--i: 1;"><strong>Name:</strong> VVM Agro Industries (V VMotors)</li>
+            <li style="--i: 2;"><strong>CEO:</strong> Vuppala Sudharshan</li>
+            <li style="--i: 3;"><strong>Type:</strong> Micro (2023-24, 2022-23, 2021-22)</li>
+            <li style="--i: 4;"><strong>Structure:</strong> Partnership</li>
+            <li style="--i: 5;"><strong>Incorporation:</strong> 27-Jun-2016</li>
+            <li style="--i: 6;"><strong>Activity:</strong> Manufacturing</li>
+            <li style="--i: 7;"><strong>Social Category:</strong> OBC</li>
+            <li style="--i: 8;"><strong>Commencement:</strong> 01-Dec-2020</li>
+            <li style="--i: 9;"><strong>Locations:</strong> 1104&1105, Opp Petrol Pump, Doolapally, 02, M G Road, Hyderabad, Telangana, 500055; Hayathanagar, Ranga Reddy District, Telangana</li>
+            <li style="--i: 10;"><strong>Branches:</strong> Hyderabad, Mancherial (Telangana); Hayathanagar (Telangana)</li>
+            <li style="--i: 11;"><strong>Turnover:</strong> 1.5 - 5 Cr</li>
+            <li style="--i: 12;"><strong>Employees:</strong> Up to 10 People</li>
+            <li style="--i: 13;"><strong>GST:</strong> 36AANFV9684N1ZW (Registered: 01-Jul-2017)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Our Milestones</h2>
+        <img src="{% static 'images/timeline-history.jpg' %}" alt="Timeline history" class="section-image">
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>1997</h3>
+                    <p>V. Sudharshan began working as an Electrical Contractor.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>2006</h3>
+                    <p>Established Venkatamani Sai Power Lines, an electrical trading and fabrication business.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>2016</h3>
+                    <p>VVM Agro Industries founded on 27-Jun-2016.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>2017</h3>
+                    <p>Began manufacturing wood working, waste recycling machines, and Hole Lifter.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>2020</h3>
+                    <p>Commenced production on 01-Dec-2020 and expanded into tractor manufacturing.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>2023</h3>
+                    <p>Classified as Micro enterprise for 2023-24.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Industry Standards</h2>
+        <img src="{% static 'images/industry-standards.jpg' %}" alt="Industry standards" class="section-image">
+        <p><strong>Classification:</strong> Manufacture of lifting and handling equipment (NIC: Machinery and equipment n.e.c.).</p>
+        <ul>
+            <li style="--i: 1;"><strong>HSN 84322910:</strong> Rotary hoes</li>
+            <li style="--i: 2;"><strong>HSN 84328020:</strong> Rotary tiller</li>
+            <li style="--i: 3;"><strong>HSN 84328090:</strong> Other machinery</li>
+            <li style="--i: 4;"><strong>HSN 84329010:</strong> Agricultural machinery parts</li>
+            <li style="--i: 5;"><strong>HSN 84329090:</strong> Other parts</li>
+        </ul>
+    </div>
+</div>
+
+<script class="scroll-script">
+    const sections = document.querySelectorAll('.section, .timeline-item');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    sections.forEach(section => observer.observe(section));
+</script>
+{% endblock %}

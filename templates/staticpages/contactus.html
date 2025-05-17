@@ -1,18 +1,310 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 {% extends 'staticpages/base.html' %}
-<body>
-    {% block content %}
+{% load static %}
+{% block title %}Contact VVM Agro Industries{% endblock %}
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
 
-    
-  <h1>contactus</h1>
+    /* Ensure content fits within layout */
+    .layout {
+        background: linear-gradient(180deg, #C8E6C9, #F1F8E9);
+        color: #1B5E20;
+        overflow-x: hidden;
+    }
 
-    {% endblock %}
+    /* Hero Section */
+    .hero {
+        height: 80vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/contact-bg.jpg" %}') center/contain no-repeat;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #FFFFFF;
+        position: relative;
+        overflow: hidden;
+    }
 
-</body>
-</html>
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #2E7D32, #4CAF50);
+        opacity: 0.3;
+        z-index: 1;
+    }
+
+    .hero-content {
+        z-index: 2;
+        animation: fadeInUp 1.5s ease-out;
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+        color: #FFFFFF;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        margin-bottom: 1rem;
+    }
+
+    .hero p {
+        font-size: 1.3rem;
+        color: #C8E6C9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Container */
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 2rem 2rem !important;
+    }
+
+    /* Section Styles */
+    .section {
+        background: #E8F5E9;
+        border: 2px solid #4CAF50;
+        border-radius: 12px;
+        padding: 3rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .section h2 {
+        color: #FFFFFF;
+        background: #2E7D32;
+        font-size: 2.2rem;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+    .section h2::after {
+        content: '';
+        width: 80px;
+        height: 4px;
+        background: #81C784;
+        position: absolute;
+        bottom: -10px;
+        left: 1rem;
+        transition: width 0.3s ease;
+    }
+
+    .section:hover h2::after {
+        width: 120px;
+    }
+
+    .section p, .section ul {
+        font-size: 1.1rem;
+        color: #1B5E20;
+    }
+
+    .section ul {
+        list-style: none;
+        margin-top: 1.5rem;
+    }
+
+    .section ul li {
+        padding: 0.8rem 0;
+        position: relative;
+        padding-left: 2rem;
+        animation: slideIn 0.5s ease forwards;
+        animation-delay: calc(0.1s * var(--i));
+    }
+
+    .section ul li::before {
+        content: '🌿';
+        position: absolute;
+        left: 0;
+        color: #4CAF50;
+    }
+
+    /* Contact Form */
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        padding: 1rem;
+        border: 2px solid #4CAF50;
+        border-radius: 6px;
+        font-size: 1rem;
+        color: #1B5E20;
+        background: #FFFFFF;
+        transition: border-color 0.3s ease;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+        border-color: #2E7D32;
+        outline: none;
+    }
+
+    .contact-form textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+
+    .contact-form button {
+        background: #2E7D32;
+        color: #FFFFFF;
+        padding: 1rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .contact-form button:hover {
+        background: #4CAF50;
+    }
+
+    /* Map Section */
+    .map-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 2px solid #4CAF50;
+    }
+
+    .map-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(50px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Scroll Animation Script */
+    .scroll-script {
+        display: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+
+        .section {
+            padding: 2rem;
+        }
+
+        .contact-form {
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero {
+            height: 60vh;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Contact VVM Agro Industries</h1>
+        <p>We’re Here to Help You Innovate Agriculture</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="section">
+        <h2>Get in Touch</h2>
+        <p>Reach out to us for inquiries about our machinery, partnerships, or support. Our team is ready to assist you!</p>
+        <ul>
+            <li style="--i: 1;"><strong>Address:</strong> 1104&1105, Opp Petrol Pump, Doolapally, 02, M G Road, Hyderabad, Telangana, 500055</li>
+            <li style="--i: 2;"><strong>Phone:</strong> +91-123-456-7890</li>
+            <li style="--i: 3;"><strong>Email:</strong> info@vvmagro.com</li>
+            <li style="--i: 4;"><strong>Branches:</strong> Hyderabad, Mancherial, Telangana</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Send Us a Message</h2>
+        <form class="contact-form" action="#" method="POST">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+
+    <div class="section">
+        <h2>Find Us</h2>
+        <p>Visit our headquarters in Hyderabad:</p>
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.2878920546876!2d78.44134711487436!3d17.49748798799992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93c0b3b0b3b3%3A0x8c0b0b0b0b0b0b0b!2sDoolapally%2C%20Hyderabad%2C%20Telangana%20500055!5e0!3m2!1sen!2sin!4v1698765432109!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Customer Support</h2>
+        <p>Our support team is available Monday to Friday, 9 AM to 6 PM IST. Contact us for technical assistance or product inquiries.</p>
+    </div>
+</div>
+
+<script class="scroll-script">
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    sections.forEach(section => observer.observe(section));
+</script>
+{% endblock %}

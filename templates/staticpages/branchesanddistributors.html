@@ -1,18 +1,338 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 {% extends 'staticpages/base.html' %}
-<body>
-    {% block content %}
+{% load static %}
+{% block title %}Branches & Distributors - VVM Agro Industries{% endblock %}
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
 
-    
-  <h1>branches and distributors</h1>
+    /* Ensure content fits within layout */
+    .layout {
+        background: linear-gradient(180deg, #C8E6C9, #F1F8E9);
+        color: #1B5E20;
+        overflow-x: hidden;
+    }
 
-    {% endblock %}
+    /* Hero Section */
+    .hero {
+        height: 80vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/branches-bg.png" %}') center/contain no-repeat;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #FFFFFF;
+        position: relative;
+        overflow: hidden;
+    }
 
-</body>
-</html>
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #2E7D32, #4CAF50);
+        opacity: 0.3;
+        z-index: 1;
+    }
+
+    .hero-content {
+        z-index: 2;
+        animation: fadeInUp 1.5s ease-out;
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+        color: #FFFFFF;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        margin-bottom: 1rem;
+    }
+
+    .hero p {
+        font-size: 1.3rem;
+        color: #C8E6C9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Container */
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 2rem 2rem !important;
+    }
+
+    /* Section Styles */
+    .section {
+        background: #E8F5E9;
+        border: 2px solid #4CAF50;
+        border-radius: 12px;
+        padding: 3rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .section h2 {
+        color: #FFFFFF;
+        background: #2E7D32;
+        font-size: 2.2rem;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+    .section h2::after {
+        content: '';
+        width: 80px;
+        height: 4px;
+        background: #81C784;
+        position: absolute;
+        bottom: -10px;
+        left: 1rem;
+        transition: width 0.3s ease;
+    }
+
+    .section:hover h2::after {
+        width: 120px;
+    }
+
+    .section p, .section ul {
+        font-size: 1.1rem;
+        color: #1B5E20;
+    }
+
+    .section ul {
+        list-style: none;
+        margin-top: 1.5rem;
+    }
+
+    .section ul li {
+        padding: 0.8rem 0;
+        position: relative;
+        padding-left: 2rem;
+        animation: slideIn 0.5s ease forwards;
+        animation-delay: calc(0.1s * var(--i));
+    }
+
+    .section ul li::before {
+        content: '🌿';
+        position: absolute;
+        left: 0;
+        color: #4CAF50;
+    }
+
+    /* Branch Cards */
+    .branch-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .branch-card {
+        background: linear-gradient(145deg, #C8E6C9, #A5D6A7);
+        border: 2px solid #2E7D32;
+        border-radius: 12px;
+        padding: 2rem;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .branch-card:hover {
+        transform: translateY(-10px) rotateX(10deg);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        border-color: #4CAF50;
+    }
+
+    .branch-card h3 {
+        color: #FFFFFF;
+        background: #4CAF50;
+        font-size: 1.4rem;
+        margin-bottom: 0.8rem;
+        padding: 0.3rem;
+        border-radius: 4px;
+    }
+
+    .branch-card p {
+        font-size: 0.95rem;
+        color: #1B5E20;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Map Section */
+    .map-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 2px solid #4CAF50;
+        margin-top: 1.5rem;
+    }
+
+    .map-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* CTA Button */
+    .cta-btn {
+        display: inline-block;
+        background: #2E7D32;
+        color: #FFFFFF;
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: background 0.3s ease;
+        margin-top: 1.5rem;
+    }
+
+    .cta-btn:hover {
+        background: #4CAF50;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(50px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Scroll Animation Script */
+    .scroll-script {
+        display: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+
+        .section {
+            padding: 2rem;
+        }
+
+        .branch-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero {
+            height: 60vh;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Branches & Distributors</h1>
+        <p>Connecting Innovation Across Telangana and Andhra Pradesh</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="section">
+        <h2>Our Branches</h2>
+        <p>VVM Agro Industries operates strategically located branches to serve our customers effectively. Visit us at the following locations:</p>
+        <div class="branch-grid">
+            <div class="branch-card">
+                <h3>Hyderabad, Telangana</h3>
+                <p><strong>Address:</strong> 1104&1105, Opp Petrol Pump, Doolapally, 02, M G Road, Hyderabad, Telangana, 500055</p>
+                <p><strong>Phone:</strong> +91-123-456-7890</p>
+                <p><strong>Email:</strong> hyderabad@vvmagro.com</p>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.2878920546876!2d78.44134711487436!3d17.49748798799992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93c0b3b0b3b3%3A0x8c0b0b0b0b0b0b0b!2sDoolapally%2C%20Hyderabad%2C%20Telangana%20500055!5e0!3m2!1sen!2sin!4v1698765432109!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+            <div class="branch-card">
+                <h3>Hayathanagar, Telangana</h3>
+                <p><strong>Address:</strong> Hayathanagar, Ranga Reddy District, Telangana</p>
+                <p><strong>Phone:</strong> +91-123-456-7891</p>
+                <p><strong>Email:</strong> hayathanagar@vvmagro.com</p>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.205747346418!2d78.59361431487298!3d17.328716988103436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9b7b6f6b6b6b%3A0x9c9c9c9c9c9c9c9c!2sHayathnagar%2C%20Hyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1698765432110!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+            <div class="branch-card">
+                <h3>Mancherial, Telangana</h3>
+                <p><strong>Address:</strong> Mancherial, Telangana</p>
+                <p><strong>Phone:</strong> +91-123-456-7892</p>
+                <p><strong>Email:</strong> mancherial@vvmagro.com</p>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3790.123456789123!2d79.44456781487412!3d18.871234987654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcce123456789ab%3A0xabcabcabcabcabcabc!2sMancherial%2C%20Telangana!5e0!3m2!1sen!2sin!4v1698765432111!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Our Distributors</h2>
+        <p>Through our V VMotors division, VVM Agro Industries is proud to be an authorized state distributor for Indofarm Tractor spare parts across Telangana &Andhra Pradesh. We ensure high-quality parts are readily available to support farmers and contractors.</p>
+        <ul>
+            <li style="--i: 1;"><strong>Region:</strong> Entire Telangana & Andhra Pradesh</li>
+            <li style="--i: 2;"><strong>Products:</strong> Full range of Indofarm Tractor spare parts</li>
+            <li style="--i: 3;"><strong>Contact:</strong> distributors@vvmagro.com</li>
+            <li style="--i: 4;"><strong>Phone:</strong> +91-123-456-7893</li>
+        </ul>
+        <a href="mailto:distributors@vvmagro.com" class="cta-btn">Inquire About Distribution</a>
+    </div>
+
+    <div class="section">
+        <h2>Join Our Network</h2>
+        <p>Interested in becoming a distributor or partner? Join VVM Agro Industries to expand our reach and deliver innovative agricultural solutions. Contact us to explore opportunities.</p>
+        <a href="mailto:partnerships@vvmagro.com" class="cta-btn">Get in Touch</a>
+    </div>
+</div>
+
+<script class="scroll-script">
+    const sections = document.querySelectorAll('.section, .branch-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    sections.forEach(section => observer.observe(section));
+</script>
+{% endblock %}
