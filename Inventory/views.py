@@ -35,6 +35,16 @@ def careers(request):
     return render(request,'staticpages/careers.html')
 
 def contactus(request):
+    return render(request,'staticpages/contactus.html')  
+
+def tractorproducts(request):
+    return render(request,'staticpages/farmingtractor.html')  
+
+def pesticideprayer(request):
+    return render(request,'staticpages/pesticidesprayer.html')    
+
+def ricefiltering(request):
+    return render(request,'staticpages/ricefiltering.html')        
     return render(request,'staticpages/contactus.html')                
 
 

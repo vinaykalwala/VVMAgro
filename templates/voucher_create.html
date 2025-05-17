@@ -1,9 +1,14 @@
-<!DOCTYPE html>
-<html>
+{% extends 'backendpages/base.html' %}
+    {% block content %}
+    <!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Create Voucher</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document</title>
 </head>
 <body>
+    <div class="main-content">
     <h1>Create Voucher</h1>
     <form method="post">
         {% csrf_token %}
@@ -50,5 +55,7 @@
         <input type="hidden" name="product_count" value="{{ products|length }}">
         <button type="submit">Save Voucher</button>
     </form>
+ </div>
+  {% endblock %}
 </body>
 </html>
