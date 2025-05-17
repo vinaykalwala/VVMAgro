@@ -1,0 +1,192 @@
+{% extends 'backendpages/base.html' %}
+    {% block content %}
+  !DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document</title>  
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+  <div class="main-content">
+    <h1>Add Products to Exchange</h1>
+    <form method="post" id="product-form">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <table id="products-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Movement Type</th>
+                    <th>Warehouse</th>
+                    <th>Quantity</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                <tr class="form-row">
+                    <td>
+                        {{ form.product }}
+                        {% for error in form.product.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ form.movement_type }}
+                        {% for error in form.movement_type.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ form.warehouse }}
+                        {% for error in form.warehouse.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ form.quantity }}
+                        {% for error in form.quantity.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </td>
+                    <td><button type="button" class="remove-row">Remove</button></td>
+                </tr>
+                {% if form.non_field_errors %}
+                <tr>
+                    <td colspan="5" class="error">
+                        {{ form.non_field_errors }}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="button" id="add-product">Add Product</button>
+        <br><br>
+        <button type="submit">Next: Create Voucher</button>
+    </form>
+
+    <script>
+        const totalForms = document.querySelector('#id_products-TOTAL_FORMS');
+        const productsTableBody = document.querySelector('#products-table tbody');
+        const addButton = document.getElementById('add-product');
+
+        let firstMovementType = null;
+
+        // Supply types mapping from Django context variable
+        const productSupplyTypes = {
+            {% for product in products %}
+                "{{ product.id }}": "{{ product.type_of_supply }}",
+            {% endfor %}
+        };
+
+        function filterProductsForJobwork() {
+            const isJobwork = firstMovementType === 'jobwork';
+            const productSelects = document.querySelectorAll('select[name$="-product"]');
+
+            productSelects.forEach(select => {
+                for (const option of select.options) {
+                    const supplyType = productSupplyTypes[option.value];
+                    if (isJobwork && supplyType !== 'raw_material') {
+                        option.disabled = true;
+                    } else {
+                        option.disabled = false;
+                    }
+                }
+            });
+        }
+
+        function syncMovementTypes() {
+            const movementSelects = document.querySelectorAll('select[name$="-movement_type"]');
+
+            movementSelects.forEach((select, index) => {
+                if (index === 0) {
+                    firstMovementType = select.value;
+                } else {
+                    select.value = firstMovementType;
+                    for (const option of select.options) {
+                        option.disabled = option.value !== firstMovementType;
+                    }
+                }
+            });
+
+            filterProductsForJobwork();
+        }
+
+        productsTableBody.addEventListener('change', function(e) {
+            if (e.target && e.target.name.includes('-movement_type')) {
+                const index = [...productsTableBody.querySelectorAll('tr')].indexOf(e.target.closest('tr'));
+                if (index === 0) {
+                    syncMovementTypes();
+                }
+            }
+        });
+
+        addButton.addEventListener('click', () => {
+            const formCount = parseInt(totalForms.value);
+            const firstRow = document.querySelector('.form-row');
+            const newRow = firstRow.cloneNode(true);
+
+            newRow.querySelectorAll('input, select').forEach(input => {
+                const nameAttr = input.name;
+                const idAttr = input.id;
+
+                if (nameAttr) input.name = nameAttr.replace(/\d+/, formCount);
+                if (idAttr) input.id = idAttr.replace(/\d+/, formCount);
+
+                if (input.tagName.toLowerCase() === 'select') {
+                    input.value = firstMovementType || "";
+                } else {
+                    input.value = '';
+                }
+            });
+
+            productsTableBody.appendChild(newRow);
+            totalForms.value = formCount + 1;
+
+            syncMovementTypes();
+        });
+
+        productsTableBody.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-row')) {
+                const row = e.target.closest('tr');
+                row.remove();
+
+                const forms = document.querySelectorAll('.form-row');
+                totalForms.value = forms.length;
+
+                forms.forEach((row, i) => {
+                    row.querySelectorAll('input, select').forEach(input => {
+                        if (input.name) input.name = input.name.replace(/\d+/, i);
+                        if (input.id) input.id = input.id.replace(/\d+/, i);
+                    });
+                });
+
+                syncMovementTypes();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const firstSelect = document.querySelector('select[name$="-movement_type"]');
+            if (firstSelect && firstSelect.value) {
+                syncMovementTypes();
+            }
+        });
+    </script>
+ </div>
+  {% endblock %}
+</body>
+</html>

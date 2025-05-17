@@ -1,18 +1,457 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 {% extends 'staticpages/base.html' %}
-<body>
-    {% block content %}
+{% load static %}
+{% block title %}Careers at VVM Agro Industries{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
 
-    
-  <h1>careers</h1>
+    body {
+        /* background: linear-gradient(180deg, #C8E6C9, #F1F8E9); */
+        color: #1B5E20;
+        overflow-x: hidden;
+        
+    }
 
-    {% endblock %}
+    /* Hero Section */
+    .hero {
+        height: 60vh;
+        width: 100%;
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('{% static "images/careers-bg.jpg" %}') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #FFFFFF;
+        position: relative;
+        overflow: hidden;
+    }
 
-</body>
-</html>
+    .hero-content {
+        z-index: 2;
+        opacity: 0;
+        animation: scaleIn 1s ease-out forwards;
+    }
+
+    .hero h1 {
+        font-size: 5rem;
+        color: #FFFFFF;
+        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 4px solid #FFFFFF;
+        animation: typewriter 3s steps(30) forwards, blink 0.7s infinite;
+    }
+
+    .hero p {
+        font-size: 2rem;
+        color: #C8E6C9;
+        max-width: 900px;
+        margin: 0 auto;
+        opacity: 0;
+        animation: fadeIn 1s ease-in 3s forwards;
+    }
+
+    /* Split Card Container */
+    .split-card-container {
+        display: flex;
+        width: 100%;
+        padding: 0 1rem;
+        gap: 2rem;
+        opacity: 0;
+        animation: scaleIn 1s ease-out 0.5s forwards;
+    }
+
+    /* Card Styles */
+    .card-left, .card-right {
+        flex: 1;
+        background: #E8F5E9;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        margin: 2rem 0;
+    }
+
+    .card-left:hover, .card-right:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-left {
+        border-left: 8px solid #4CAF50;
+    }
+
+    .card-right {
+        border-right: 8px solid #2E7D32;
+        background: linear-gradient(145deg, #2E7D32, #4CAF50);
+        color: #FFFFFF;
+        overflow-y: auto;
+    }
+
+    /* Scrollbar Styling for Open Positions */
+    .card-right::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .card-right::-webkit-scrollbar-track {
+        background: #C8E6C9;
+        border-radius: 10px;
+    }
+
+    .card-right::-webkit-scrollbar-thumb {
+        background: #4CAF50;
+        border-radius: 10px;
+    }
+
+    .card-right::-webkit-scrollbar-thumb:hover {
+        background: #2E7D32;
+    }
+
+    .card-left h2, .card-right h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 3px solid;
+        animation: typewriter 2s steps(20) forwards, blink 0.7s infinite;
+    }
+
+    .card-left h2 {
+        color: #2E7D32;
+        border-right-color: #2E7D32;
+    }
+
+    .card-right h2 {
+        border-right-color: #FFFFFF;
+    }
+
+    .card-left p, .card-right p {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: fadeIn 1s ease-in 2s forwards;
+    }
+
+    .card-right p {
+        color: #C8E6C9;
+    }
+
+    .card-left ul, .card-right ul {
+        list-style: none;
+        margin-top: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .card-left ul li, .card-right ul li {
+        padding: 1rem 0;
+        position: relative;
+        padding-left: 2.5rem;
+        font-size: 1.2rem;
+        opacity: 0;
+        animation: slideUp 0.5s ease forwards;
+        animation-delay: calc(0.2s * var(--i));
+    }
+
+    .card-left ul li::before, .card-right ul li::before {
+        content: '🌿';
+        position: absolute;
+        left: 0;
+        font-size: 1.3rem;
+        color: #4CAF50;
+    }
+
+    /* Job Grid in Card Right */
+    .job-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .job-card {
+        background: #E8F5E9;
+        border-radius: 15px;
+        padding: 1.5rem;
+        transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
+        opacity: 0;
+        animation: slideUp 0.5s ease forwards;
+        animation-delay: calc(0.2s * var(--i));
+    }
+
+    .job-card:hover {
+        transform: scale(1.05);
+        background: #DCE775;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .job-card h3 {
+        font-size: 1.5rem;
+        color: #2E7D32;
+        margin-bottom: 0.8rem;
+        font-weight: 600;
+    }
+
+    .job-card p {
+        font-size: 1rem;
+        color: #1B5E20;
+        margin-bottom: 1rem;
+    }
+
+    .job-card .apply-btn {
+        display: inline-block;
+        background: #4CAF50;
+        color: #FFFFFF;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: background 0.5s ease, transform 0.5s ease;
+    }
+
+    .job-card .apply-btn:hover {
+        background: #2E7D32;
+        transform: translateY(-3px);
+    }
+
+    /* Single Card Section */
+    .card-section {
+        width: 100%;
+        background: #E8F5E9;
+        border-radius: 20px;
+        padding: 3rem;
+        margin: 2rem 0;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        border-top: 8px solid #4CAF50;
+        opacity: 0;
+        animation: scaleIn 1s ease-out forwards;
+    }
+
+    .card-section h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2E7D32;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 3px solid #2E7D32;
+        animation: typewriter 2s steps(20) forwards, blink 0.7s infinite;
+    }
+
+    .card-section p {
+        font-size: 1.2rem;
+        color: #1B5E20;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: fadeIn 1s ease-in 2s forwards;
+    }
+
+    .card-section ul {
+        list-style: none;
+        margin-top: 1.5rem;
+    }
+
+    .card-section ul li {
+        padding: 1rem 0;
+        position: relative;
+        padding-left: 2.5rem;
+        font-size: 1.2rem;
+        opacity: 0;
+        animation: slideUp 0.5s ease forwards;
+        animation-delay: calc(0.2s * var(--i));
+    }
+
+    .card-section ul li::before {
+        content: '🌿';
+        position: absolute;
+        left: 0;
+        font-size: 1.3rem;
+        color: #4CAF50;
+    }
+
+    /* Animations */
+    @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes typewriter {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+
+    @keyframes blink {
+        50% { border-color: transparent; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .hero h1 {
+            font-size: 4rem;
+        }
+
+        .hero p {
+            font-size: 1.6rem;
+        }
+
+        .split-card-container {
+            flex-direction: column;
+            padding: 0 1rem;
+        }
+
+        .card-left, .card-right {
+            height: auto;
+            min-height: 400px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 3rem;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+        }
+
+        .card-left, .card-right, .card-section {
+            padding: 2rem;
+        }
+
+        .card-left h2, .card-right h2, .card-section h2 {
+            font-size: 2rem;
+        }
+
+        .job-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero {
+            height: 80vh;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+        }
+
+        .card-left, .card-right, .card-section {
+            padding: 1.5rem;
+        }
+
+        .card-left h2, .card-right h2, .card-section h2 {
+            font-size: 1.6rem;
+        }
+
+        .card-left p, .card-right p, .card-section p {
+            font-size: 1rem;
+        }
+
+        .job-card h3 {
+            font-size: 1.2rem;
+        }
+
+        .job-card p, .job-card .apply-btn {
+            font-size: 0.9rem;
+        }
+
+        .card-left ul li, .card-right ul li, .card-section ul li {
+            font-size: 1rem;
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+        }
+    }
+</style>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Join VVM Agro Industries</h1>
+        <p>Grow Your Career with a Leader in Agricultural Innovation</p>
+    </div>
+</section>
+
+<div class="split-card-container">
+    <div class="card-left">
+        <h2>Why Join Us?</h2>
+        <p>At VVM Agro Industries, we’re passionate about revolutionizing agriculture through innovative machinery. Join our team to make an impact in a dynamic, growth-oriented environment committed to sustainability and excellence.</p>
+        <ul>
+            <li style="--i: 1;">Innovate with cutting-edge agricultural technology.</li>
+            <li style="--i: 2;">Grow through continuous learning and career development.</li>
+            <li style="--i: 3;">Contribute to sustainable farming solutions.</li>
+            <li style="--i: 4;">Work in a collaborative, inclusive culture.</li>
+        </ul>
+    </div>
+    <div class="card-right">
+        <h2>Open Positions</h2>
+        <p>Explore exciting opportunities to join our team in Hyderabad, Telangana:</p>
+        <div class="job-grid">
+            <div class="job-card" style="--i: 1;">
+                <h3>Mechanical Engineer</h3>
+                <p>Design and develop advanced wood working and tractor attachment machinery. Requires a B.Tech in Mechanical Engineering and 3+ years of experience.</p>
+                <a href="#" class="apply-btn">Apply Now</a>
+            </div>
+            <div class="job-card" style="--i: 2;">
+                <h3>Production Supervisor</h3>
+                <p>Oversee manufacturing processes for waste recycling machines. Requires 5+ years in production management and strong leadership skills.</p>
+                <a href="#" class="apply-btn">Apply Now</a>
+            </div>
+            <div class="job-card" style="--i: 3;">
+                <h3>Quality Control Technician</h3>
+                <p>Ensure the quality of agricultural machinery parts. Requires 2+ years in quality assurance and attention to detail.</p>
+                <a href="#" class="apply-btn">Apply Now</a>
+            </div>
+            <div class="job-card" style="--i: 4;">
+                <h3>Sales Executive</h3>
+                <p>Promote our forestry tools and build client relationships. Requires 2+ years in B2B sales and excellent communication skills.</p>
+                <a href="#" class="apply-btn">Apply Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card-section">
+    <h2>Application Process</h2>
+    <p>Ready to join us? Follow these simple steps to apply:</p>
+    <ul>
+        <li style="--i: 1;">Browse open positions and select a role that matches your skills.</li>
+        <li style="--i: 2;">Submit your resume and cover letter via our online application portal.</li>
+        <li style="--i: 3;">Participate in interviews to showcase your expertise.</li>
+        <li style="--i: 4;">Receive an offer and start your journey with VVM Agro Industries!</li>
+    </ul>
+</div>
+
+<div class="card-section">
+    <h2>Our Culture</h2>
+    <p>At VVM Agro Industries, we foster a culture of innovation, teamwork, and sustainability. Our team thrives in a supportive environment where every idea counts, and we’re committed to creating a positive impact on agriculture and the planet.</p>
+    <ul>
+        <li style="--i: 1;">Collaborative: Work closely with passionate professionals.</li>
+        <li style="--i: 2;">Innovative: Drive advancements in machinery design.</li>
+        <li style="--i: 3;">Sustainable: Contribute to eco-friendly solutions.</li>
+    </ul>
+</div>
+{% endblock %}

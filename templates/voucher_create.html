@@ -1,0 +1,61 @@
+{% extends 'backendpages/base.html' %}
+    {% block content %}
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document</title>
+</head>
+<body>
+    <div class="main-content">
+    <h1>Create Voucher</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ voucher_form.as_p }}
+
+        <h2>Products to Add</h2>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Movement Type</th>
+                    <th>Warehouse</th>
+                    <th>Quantity</th>
+                    <th>Phase {% comment %}Shown only for jobwork{% endcomment %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in products %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.movement_type }}</td>
+                    <td>{{ item.warehouse }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>
+    {% if item.movement_type == "job_work" %}
+        <select name="phase_{{ item.index }}">
+            {% for value, label in product_phase_choices %}
+                <option value="{{ value }}" {% if item.phase == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="is_job_work_{{ item.index }}" value="1">
+    {% else %}
+        <input type="hidden" name="is_job_work_{{ item.index }}" value="0">
+        N/A
+    {% endif %}
+    <input type="hidden" name="product_index_{{ item.index }}" value="{{ item.index }}">
+</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <input type="hidden" name="product_count" value="{{ products|length }}">
+        <button type="submit">Save Voucher</button>
+    </form>
+ </div>
+  {% endblock %}
+</body>
+</html>
