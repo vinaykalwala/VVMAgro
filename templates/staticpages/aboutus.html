@@ -7,22 +7,19 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
+        font-family: 'Poppins', sans-serif;
     }
 
-    /* Ensure content fits within layout */
-    .layout {
-        background: linear-gradient(180deg, #C8E6C9, #F1F8E9);
-        color: #1B5E20;
+    body {
+        background: #F8FAF5;
+        color: #2D3E40;
         overflow-x: hidden;
     }
 
     /* Hero Section */
     .hero {
-        height: 80vh;
-        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/agriculture-bg.jpg" %}') center/contain no-repeat;
-        background-size: cover;
-        background-position: center;
+        height: 100vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "images/agriculture-bg.jpg" %}') center/cover no-repeat;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -32,93 +29,82 @@
         overflow: hidden;
     }
 
-    .hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, #2E7D32, #4CAF50);
-        opacity: 0.3;
-        z-index: 1;
-    }
-
     .hero-content {
-        z-index: 2;
-        animation: fadeInUp 1.5s ease-out;
+        max-width: 1200px;
+        padding: 2rem;
+        animation: fadeIn 1.5s ease-in-out;
     }
 
     .hero h1 {
-        font-size: 3.5rem;
-        color: #FFFFFF;
-        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        font-size: 4.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        line-height: 1.2;
         margin-bottom: 1rem;
+        text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
     }
 
     .hero p {
-        font-size: 1.3rem;
-        color: #C8E6C9;
-        max-width: 600px;
-        margin: 0 auto;
+        font-size: 1.5rem;
+        color: #D4E4D2;
+        font-weight: 300;
+        margin-bottom: 2rem;
     }
 
     /* Container */
     .container {
-        max-width: 100% !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 2rem 2rem !important;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+        background: linear-gradient(180deg, #F8FAF5, #E8F0E5);
     }
 
     /* Section Styles */
     .section {
-        background: #E8F5E9;
-        border: 2px solid #4CAF50;
-        border-radius: 12px;
+        background: #FFFFFF;
+        border-radius: 20px;
         padding: 3rem;
-        margin-bottom: 3rem;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        margin: 0 1rem 4rem 1rem;
         position: relative;
-        overflow: hidden;
         opacity: 0;
-        transform: translateY(50px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
+        transform: scale(0.95);
+        transition: opacity 1s ease, transform 1s ease;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid #E0E8E0;
     }
 
     .section.visible {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1);
     }
 
     .section h2 {
-        color: #FFFFFF;
-        background: #2E7D32;
-        font-size: 2.2rem;
-        margin-bottom: 1.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        display: inline-block;
+        font-size: 3rem;
+        color: #2D3E40;
+        margin-bottom: 2rem;
+        position: relative;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .section h2::before {
+        content: '🌿';
+        font-size: 2.5rem;
     }
 
     .section h2::after {
         content: '';
-        width: 80px;
-        height: 4px;
-        background: #81C784;
-        position: absolute;
-        bottom: -10px;
-        left: 1rem;
-        transition: width 0.3s ease;
-    }
-
-    .section:hover h2::after {
-        width: 120px;
+        flex-grow: 1;
+        height: 3px;
+        background: linear-gradient(to right, #6BBF47, transparent);
     }
 
     .section p, .section ul {
-        font-size: 1.1rem;
-        color: #1B5E20;
+        font-size: 1.2rem;
+        color: #2D3E40;
+        line-height: 1.9;
     }
 
     .section ul {
@@ -127,84 +113,125 @@
     }
 
     .section ul li {
-        padding: 0.8rem 0;
+        padding: 1rem 0;
         position: relative;
-        padding-left: 2rem;
-        animation: slideIn 0.5s ease forwards;
-        animation-delay: calc(0.1s * var(--i));
+        padding-left: 2.5rem;
+        transition: background 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .section ul li:hover {
+        background: #F0F5F0;
     }
 
     .section ul li::before {
-        content: '🌿';
+        content: '🌱';
         position: absolute;
         left: 0;
-        color: #4CAF50;
+        color: #6BBF47;
+        font-size: 1.5rem;
+    }
+
+    /* Section Images */
+    .section-image {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 16px;
+        margin: 2rem 0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.5s ease;
+    }
+
+    .section-image:hover {
+        transform: translateY(-5px);
     }
 
     /* Products Grid */
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2.5rem;
+        margin-top: 2.5rem;
     }
 
     .product-card {
-        background: linear-gradient(145deg, #C8E6C9, #A5D6A7);
-        border: 2px solid #2E7D32;
-        border-radius: 12px;
+        background: #F9FCF9;
+        border-radius: 16px;
         padding: 2rem;
         text-align: center;
         transition: transform 0.4s ease, box-shadow 0.4s ease;
+        border: 1px solid #E5ECE5;
         position: relative;
-        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #6BBF47;
+        transition: height 0.4s ease;
+    }
+
+    .product-card:hover::before {
+        height: 100%;
+        opacity: 0.1;
     }
 
     .product-card:hover {
-        transform: translateY(-10px) rotateX(10deg);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-        border-color: #4CAF50;
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     }
 
     .product-card h3 {
-        color: #FFFFFF;
-        background: #4CAF50;
-        font-size: 1.4rem;
+        font-size: 1.7rem;
+        color: #2D3E40;
         margin-bottom: 0.8rem;
-        padding: 0.3rem;
-        border-radius: 4px;
+        font-weight: 500;
     }
 
     .product-card p {
-        font-size: 0.95rem;
-        color: #1B5E20;
+        font-size: 1rem;
+        color: #2D3E40;
+        line-height: 1.7;
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card img:hover {
+        transform: scale(1.03);
     }
 
     /* Timeline */
     .timeline {
         position: relative;
-        margin: 2rem 0;
-    }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        width: 6px;
-        background: #2E7D32;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        margin: 3rem 0;
+        padding: 0 1rem;
     }
 
     .timeline-item {
-        padding: 1rem 3rem;
-        position: relative;
+        background: #F9FCF9;
+        border-radius: 16px;
+        padding: 2rem;
         margin: 2rem 0;
-        width: 50%;
+        position: relative;
         opacity: 0;
-        transform: translateX(-50px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
+        transform: translateX(-30px);
+        transition: opacity 1s ease, transform 1s ease;
+        border-left: 4px solid #6BBF47;
     }
 
     .timeline-item.visible {
@@ -212,60 +239,23 @@
         transform: translateX(0);
     }
 
-    .timeline-item:nth-child(even) {
-        left: 50%;
-        transform: translateX(50px);
-    }
-
-    .timeline-item:nth-child(even).visible {
-        transform: translateX(0);
-    }
-
-    .timeline-item::before {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background: #E8F5E9;
-        border: 3px solid #4CAF50;
-        border-radius: 50%;
-        top: 1.5rem;
-        left: calc(100% - 13px);
-    }
-
-    .timeline-item:nth-child(even)::before {
-        left: -13px;
-    }
-
-    .timeline-content {
-        background: #A5D6A7;
-        padding: 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        border: 1px solid #4CAF50;
-    }
-
     .timeline-content h3 {
-        color: #FFFFFF;
-        background: #2E7D32;
-        padding: 0.3rem 0.6rem;
-        border-radius: 4px;
-        display: inline-block;
+        font-size: 1.8rem;
+        color: #2D3E40;
+        margin-bottom: 0.8rem;
+        font-weight: 500;
     }
 
     .timeline-content p {
-        color: #1B5E20;
+        font-size: 1.1rem;
+        color: #2D3E40;
+        line-height: 1.7;
     }
 
     /* Animations */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(50px); }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateX(-20px); }
-        to { opacity: 1; transform: translateX(0); }
     }
 
     /* Scroll Animation Script */
@@ -274,7 +264,83 @@
     }
 
     /* Responsive Design */
+    @media (max-width: 1200px) {
+        .hero h1 {
+            font-size: 4rem;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+        }
+
+        .section {
+            padding: 2.5rem;
+            margin: 0 0.8rem 3rem 0.8rem;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+        }
+
+        .section-image {
+            height: 300px;
+        }
+
+        .products-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+    }
+
     @media (max-width: 768px) {
+        .hero {
+            height: 80vh;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        .container {
+            padding: 3rem 1.5rem;
+        }
+
+        .section {
+            padding: 2rem;
+            margin: 0 0.5rem 2rem 0.5rem;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+        }
+
+        .section-image {
+            height: 250px;
+        }
+
+        .products-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .product-card img {
+            height: 180px;
+        }
+
+        .timeline {
+            padding: 0 0.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero {
+            height: 70vh;
+        }
+
         .hero h1 {
             font-size: 2.5rem;
         }
@@ -283,49 +349,52 @@
             font-size: 1rem;
         }
 
+        .container {
+            padding: 2rem 1rem;
+        }
+
         .section {
-            padding: 2rem;
-        }
-
-        .timeline::before {
-            left: 30px;
-        }
-
-        .timeline-item {
-            width: 100%;
-            padding-left: 60px;
-            padding-right: 20px;
-            left: 0 !important;
-            transform: translateX(-50px) !important;
-        }
-
-        .timeline-item.visible {
-            transform: translateX(0) !important;
-        }
-
-        .timeline-item::before {
-            left: 17px !important;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .hero {
-            height: 60vh;
+            padding: 1.5rem;
+            margin: 0 0.3rem 1.5rem 0.3rem;
         }
 
         .section h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
 
-        .products-grid {
-            grid-template-columns: 1fr;
+        .section h2::before {
+            font-size: 2rem;
+        }
+
+        .section p, .section ul {
+            font-size: 1rem;
+        }
+
+        .section-image {
+            height: 200px;
+        }
+
+        .product-card img {
+            height: 150px;
+        }
+
+        .timeline-item {
+            padding: 1.5rem;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.5rem;
+        }
+
+        .timeline-content p {
+            font-size: 1rem;
         }
     }
 </style>
 
 <section class="hero">
     <div class="hero-content">
-        <h1>About VVM Agro Industries</h1>
+        <h1>ABOUT VVM AGRO INDUSTRIES</h1>
         <p>Pioneering Agricultural Machinery and Tractors Since 2016</p>
     </div>
 </section>
@@ -333,6 +402,7 @@
 <div class="container">
     <div class="section">
         <h2>Our Journey</h2>
+        <img src="{% static 'images/tractor-field.jpg' %}" alt="Tractor in field" class="section-image">
         <p>Founded on 27-Jun-2016, VVM Agro Industries is a Micro enterprise (2023-24) dedicated to transforming agriculture and electrical contracting through innovative equipment. Our journey began in Hyderabad, Telangana, and expanded to Hayathanagar, Ranga Reddy District, Telangana, with additional operations in Mancherial, Telangana.</p>
         <p>Under our V VMotors division, we manufacture high-performance tractors ranging from 33 HP to 90 HP and serve as an authorized state distributor for Indofarm Tractor spare parts across Telangana & Andhra Pradesh. Our innovative Hole Lifter, designed for electrical contractors, digs holes up to 6 feet and lifts poles (8m, 9.1m, 11m), significantly reducing manpower and costs.</p>
         <p>We also specialize in:</p>
@@ -347,6 +417,7 @@
 
     <div class="section">
         <h2>Our Vision</h2>
+        <img src="{% static 'images/Sustainable farming.jpg' %}" alt="Sustainable farming" class="section-image">
         <p>At VVM Agro Industries, our vision is to lead the global agricultural and electrical equipment industry by offering high multi-featured, fuel-efficient solutions at optimum cost. We aim to deliver world-class performance, backed by exceptional after-sales services, empowering farmers and contractors with innovative tools that enhance productivity and sustainability.</p>
         <p>We strive to:</p>
         <ul>
@@ -359,6 +430,7 @@
 
     <div class="section">
         <h2>Our Management</h2>
+        <img src="{% static 'images/our-management.jpg' %}" alt="Our Management" class="section-image">
         <p>Our leadership is driven by V. Sudharshan, the Proprietor and CEO of VVM Agro Industries:</p>
         <ul>
             <li style="--i: 1;">Served as an Electrical Contractor for 10 years (1997–2006), specializing in HVDS, RGGVY, and APDRP works.</li>
@@ -372,30 +444,37 @@
         <p>Discover our innovative range of machinery and services tailored for agriculture, forestry, and electrical contracting:</p>
         <div class="products-grid">
             <div class="product-card">
+                <img src="{% static 'images/tractor.jpg' %}" alt="Tractor">
                 <h3>Tractors</h3>
                 <p>High-performance tractors ranging from 33 HP to 90 HP, designed for efficiency and durability.</p>
             </div>
             <div class="product-card">
+                <img src="{% static 'images/hole-lifter.png' %}" alt="Hole Lifter">
                 <h3>Hole Lifter</h3>
                 <p>Innovative equipment for electrical contractors, digs holes up to 6 ft and lifts poles (8m, 9.1m, 11m).</p>
             </div>
             <div class="product-card">
+                <img src="{% static 'images/wood-working-machine.png' %}" alt="Wood Working Machine">
                 <h3>Wood Working Machine</h3>
                 <p>Precision machines for efficient wood processing.</p>
             </div>
             <div class="product-card">
+                <img src="{% static 'images/tractor-attachments.png' %}" alt="Tractor Attachments">
                 <h3>Tractor Attachments</h3>
                 <p>Durable earthmoving machinery for agricultural tasks.</p>
             </div>
             <div class="product-card">
+                <img src="{% static 'images/waste-recycling-machine.jpg' %}" alt="Waste Recycling Machine">
                 <h3>Waste Recycling Machine</h3>
                 <p>Sustainable horticulture waste recycling solutions.</p>
             </div>
             <div class="product-card">
+                <img src="{% static 'images/spare-parts.png' %}" alt="Spare Parts">
                 <h3>Spare Parts</h3>
                 <p>Authorized distributor for Indofarm Tractor spare parts across Telangana & Andhra Pradesh.</p>
             </div>
             <div class="product-card">
+                <img src="{% static 'images/forestry-tools.png' %}" alt="Forestry Tools">
                 <h3>Forestry Tools</h3>
                 <p>Advanced machines for efficient forestry operations.</p>
             </div>
@@ -404,6 +483,7 @@
 
     <div class="section">
         <h2>Organization Details</h2>
+        <img src="{% static 'images/hyderabad-office.jpg' %}" alt="Hyderabad office" class="section-image">
         <ul>
             <li style="--i: 1;"><strong>Name:</strong> VVM Agro Industries (V VMotors)</li>
             <li style="--i: 2;"><strong>CEO:</strong> Vuppala Sudharshan</li>
@@ -423,6 +503,7 @@
 
     <div class="section">
         <h2>Our Milestones</h2>
+        <img src="{% static 'images/timeline-history.jpg' %}" alt="Timeline history" class="section-image">
         <div class="timeline">
             <div class="timeline-item">
                 <div class="timeline-content">
@@ -465,6 +546,7 @@
 
     <div class="section">
         <h2>Industry Standards</h2>
+        <img src="{% static 'images/industry-standards.jpg' %}" alt="Industry standards" class="section-image">
         <p><strong>Classification:</strong> Manufacture of lifting and handling equipment (NIC: Machinery and equipment n.e.c.).</p>
         <ul>
             <li style="--i: 1;"><strong>HSN 84322910:</strong> Rotary hoes</li>
