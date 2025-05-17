@@ -54,43 +54,44 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
- .logout-button {
-  padding: 6px 14px;
-  border-radius: 15px;
-  font-weight: 600;
-  color: green;
-  background-color: #fff;
-  border: 2px solid green;
-  cursor: pointer;
-  transition: all 0.4s ease;
-  animation: glow 2s infinite alternate;
-  position: relative;
-  z-index: 10;
-  box-shadow: 0 0 6px rgba(0, 128, 0, 0.3);
-}
+    .logout-button {
+      padding: 6px 14px;
+      border-radius: 15px;
+      font-weight: 600;
+      color: green;
+      background-color: #fff;
+      border: 2px solid green;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      animation: glow 2s infinite alternate;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 0 6px rgba(0, 128, 0, 0.3);
+    }
 
-.logout-button:hover {
-  background-color: rgb(187, 245, 187);
-  color: #fff;
-  transform: scale(1.07);
-  box-shadow: 0 0 18px 8px rgba(0, 255, 0, 0.6);
-  animation: none;
-}
+    .logout-button:hover {
+      background-color: rgb(187, 245, 187);
+      color: #fff;
+      transform: scale(1.07);
+      box-shadow: 0 0 18px 8px rgba(0, 255, 0, 0.6);
+      animation: none;
+    }
 
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 6px 2px rgba(0, 128, 0, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 16px 6px rgba(0, 255, 0, 0.9);
-  }
-  100% {
-    box-shadow: 0 0 6px 2px rgba(0, 128, 0, 0.4);
-  }
-}
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 6px 2px rgba(0, 128, 0, 0.4);
+      }
 
+      50% {
+        box-shadow: 0 0 16px 6px rgba(0, 255, 0, 0.9);
+      }
 
-   .hamburger {
+      100% {
+        box-shadow: 0 0 6px 2px rgba(0, 128, 0, 0.4);
+      }
+    }
+
+    .hamburger {
       display: none;
       flex-direction: column;
       cursor: pointer;
@@ -105,54 +106,68 @@
       transition: 0.3s;
     }
 
-  @media (max-width: 900px) {
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    flex-direction: column;
-    background: green;
-    padding: 15px 20px;
-    gap: 10px;
-  }
-
-  .nav-links.open {
-    display: flex;
-  }
-
-  .hamburger {
-    display: flex;
-    order: 3;
-  }
-
-  .logo {
-    order: 1;
-  }
-
-  form {
-    order: 2;
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    margin-left: 0;
-  }
-
-  .logout-button {
-    animation: glow 1.5s ease-in-out infinite alternate;
-  }
-
-  @keyframes glow {
-    0% {
-      box-shadow: 0 0 5px #00ff00;
+    /* Added logout-container class for flex ordering */
+    .logout-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    100% {
-      box-shadow: 0 0 20px #00ff00;
-    }
-  }
-}
 
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background: green;
+        padding: 15px 20px;
+        gap: 10px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .hamburger {
+        display: flex;
+        order: 3;
+      }
+
+      .logo {
+        order: 1;
+      }
+
+      /* Apply order to logout container to position it between logo and hamburger */
+      .logout-container {
+        order: 2;
+      }
+
+      
+      form {
+        order: 2;
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        margin-left: 0;
+      }
+     
+
+      .logout-button {
+        animation: glow 1.5s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        0% {
+          box-shadow: 0 0 5px #00ff00;
+        }
+
+        100% {
+          box-shadow: 0 0 20px #00ff00;
+        }
+      }
+    }
   </style>
 </head>
 
@@ -161,6 +176,16 @@
     <div class="logo">
       <h4>VVM Agro Industries</h4>
     </div>
+
+    {% if request.user.is_authenticated %}
+    {% if request.path == '/dashboard/' %}
+    <div style="color: white; font-weight: 600;">Hello, {{ request.user.username }}</div>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="logout-button">Logout</button>
+    </form>
+    {% else %}
+    <!-- Show nav links only on other pages -->
     <div class="hamburger" onclick="toggleMenu()">
       <div></div>
       <div></div>
@@ -173,20 +198,42 @@
       <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
       <li><a href="{% url 'careers' %}">Careers</a></li>
       <li><a href="{% url 'contactus' %}">Contact Us</a></li>
-      
     </ul>
-    <form method="POST" action="{% url 'login'%}" style="margin-left: 10px;">
+    <div class="logout-container">
+      <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-button">Logout</button>
+      </form>
+    </div>
+    {% endif %}
+    {% else %}
+    <!-- Not logged in -->
+    <div class="hamburger" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <ul class="nav-links" id="menu">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'aboutus' %}">About Us</a></li>
+      <li><a href="{% url 'products' %}">Products</a></li>
+      <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
+      <li><a href="{% url 'careers' %}">Careers</a></li>
+      <li><a href="{% url 'contactus' %}">Contact Us</a></li>
+    </ul>
+    <form method="POST" action="{% url 'login' %}" style="margin-left: 10px;">
       {% csrf_token %}
       <button type="submit" class="logout-button">Login</button>
     </form>
+    {% endif %}
   </nav>
-
   <script>
     function toggleMenu() {
-      const menu = document.getElementById('menu');
-      menu.classList.toggle('open');
+      var menu = document.getElementById("menu");
+      menu.classList.toggle("open");
     }
   </script>
+
 </body>
 
 </html>

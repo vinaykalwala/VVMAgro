@@ -1,0 +1,9 @@
+<h2>Vouchers for Operation {{ form.id }} - {{ form.operation_type }}</h2>
+
+<a href="{% url 'create_voucher' form.id %}">+ Create New Voucher</a>
+
+<ul>
+  {% for voucher in vouchers %}
+    <li>{{ voucher.voucher_number }} - {{ voucher.voucher_type }} - {{ voucher.date }}</li>
+  {% endfor %}
+</ul>

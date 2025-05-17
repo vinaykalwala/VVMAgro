@@ -1,0 +1,11 @@
+<h2>Create Stock Exchange Form</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <h3>Products</h3>
+  {{ formset.management_form }}
+  {% for form in formset %}
+    {{ form.as_p }}
+  {% endfor %}
+  <button type="submit">Save</button>
+</form>
