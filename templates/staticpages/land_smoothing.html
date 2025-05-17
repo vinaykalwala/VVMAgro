@@ -1,0 +1,457 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="product-detail">
+    <div class="product-hero">
+        <img src="{% static 'images/land-smoothing.jpg' %}" alt="Land Smoothing Machine" class="product-image">
+    </div>
+    <div class="product-info">
+        <h1>Land Smoothing Machine</h1>
+        <div class="product-description">
+            <h2>Product Overview</h2>
+            <p>Our advanced Land Smoothing Machine is designed for efficient and precise land leveling operations. Perfect for agricultural preparation and landscape management.</p>
+            <div class="specs-grid">
+                <div class="specs-column">
+            <h2>Key Features</h2>
+            <ul>
+                <li>High-precision leveling system</li>
+                <li>Durable construction for long-term reliability</li>
+                <li>Adjustable blade angles for various terrain types</li>
+                <li>Easy-to-use controls for precise operation</li>
+                <li>Compatible with most standard tractors</li>
+            </ul>
+        </div>
+        <div class="specs-column">
+            <h2>Technical Specifications</h2>
+            <ul>
+                <li>Working Width: 2.5 meters</li>
+                <li>Operating Speed: Up to 10 km/h</li>
+                <li>Power Requirement: 60-80 HP</li>
+                <li>Weight: 850 kg</li>
+            </ul>
+        </div>
+    </div>
+        </div>
+        <div class="contact-section">
+            <h2>Interested in this product?</h2>
+            <a href="{% url 'contactus' %}" class="contact-btn">Contact Us</a>
+        </div>
+    </div>
+</div>
+
+<!-- Product Image Carousel -->
+<div class="product-carousel">
+    <h2>Product Gallery</h2>
+    <div class="carousel-container">
+        <div class="carousel-track">
+            <div class="carousel-slide">
+                <img src="{% static 'images/land-smoothing.jpg' %}" alt="Land Smoothing Machine Front">
+                <div class="slide-info">
+                    <h3>Machine Overview</h3>
+                    <p>High-precision land leveling equipment</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/land-smoothing.jpg' %}" alt="Blade System">
+                <div class="slide-info">
+                    <h3>Blade System</h3>
+                    <p>Adjustable blade angles for various terrains</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/land-smoothing.jpg' %}" alt="Control System">
+                <div class="slide-info">
+                    <h3>Control System</h3>
+                    <p>Easy-to-use precision controls</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/land-smoothing.jpg' %}" alt="In Operation">
+                <div class="slide-info">
+                    <h3>In Operation</h3>
+                    <p>Efficient land leveling in action</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Related Products Section -->
+<section class="products-section">
+    <h2 class="section-title">Explore Our Other Products</h2>
+    <div class="products-grid">
+        <div class="product-card">
+            <a href="{% url 'irrigation_system' %}">
+                <div class="product-image" style="background-image: url('{% static 'images/irrigation.jpg' %}')"></div>
+                <div class="product-overlay">
+                    <h3 class="product-title">
+                        Irrigation System
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card">
+            <a href="{% url 'crop_harvester' %}">
+                <div class="product-image" style="background-image: url('{% static 'images/harvester.jpeg' %}')"></div>
+                <div class="product-overlay">
+                    <h3 class="product-title">
+                        Crop Harvester
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card">
+            <a href="{% url 'land_smoothing' %}">
+                <div class="product-image" style="background-image: url('{% static 'images/sprayer.jpeg' %}')"></div>
+                <div class="product-overlay">
+                    <h3 class="product-title">
+                        Pesticide Sprayer
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+      <div class="product-card">
+        <a href="{% url 'tractor' %}">
+            <div class="product-image" style="background-image: url('{% static "images/tractor.jpg" %}')"></div>
+            <div class="product-overlay">
+                <h3 class="product-title">
+                    Advanced Farming Tractor
+                    <i class="fas fa-arrow-right"></i>
+                </h3>
+            </div>
+        </a>
+    </div>
+
+          <div class="product-card">
+    <a href="{% url 'rice_filtering' %}">
+        <div class="product-image" style="background-image: url('{% static "images/rice-filter.jpg" %}')"></div>
+        <div class="product-overlay">
+            <h3 class="product-title">
+                Rice Filtering System
+                <i class="fas fa-arrow-right"></i>
+            </h3>
+        </div>
+    </a>
+</div>
+    </div>
+</section>
+
+<style>
+       :root {
+            --primary: #388e3c; /* Darker green */
+            --secondary: #689f38; 
+            --accent: #ffa000; /* Amber */
+            --light: #f5f5f5;
+            --dark: #263238;
+            --text: #424242;
+        }
+    .product-detail {
+        max-width: 1600px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .product-hero {
+        max-width: 1700px;
+        height: 700px;
+        overflow: hidden;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-info {
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .product-info h1 {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 2rem;
+    }
+
+    .product-description h2 {
+        color: var(--dark);
+        margin: 1.5rem 0 1rem;
+        font-size: 1.8rem;
+    }
+
+    .product-description ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .product-description li {
+        padding: 0.5rem 0;
+       
+    }
+
+    .contact-section {
+        margin-top: 3rem;
+        text-align: center;
+        padding: 2rem;
+        background: var(--light);
+        border-radius: 12px;
+    }
+
+    .contact-btn {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        border: 2px solid green;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .contact-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(56, 142, 60, 0.3);
+    }
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+
+    .specs-column {
+        background: var(--light);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .specs-column h2 {
+        color: var(--primary);
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--accent);
+    }
+
+    .specs-column ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .specs-column li {
+        padding: 0.8rem 0;
+       
+        display: flex;
+        align-items: center;
+    }
+
+    .specs-column li:last-child {
+        border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+        .specs-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .specs-column {
+            padding: 1.5rem;
+        }
+        
+        .specs-column h2 {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .product-hero {
+            height: 300px;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h1 {
+            font-size: 2rem;
+        }
+    }
+
+/* Product Carousel Styles */
+.product-carousel {
+    max-width: 1600px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
+
+.product-carousel h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    color: var(--primary);
+    margin-bottom: 2rem;
+}
+
+.carousel-container {
+    position: relative;
+    overflow-x: auto;
+    padding: 1rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--light);
+}
+
+.carousel-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.carousel-container::-webkit-scrollbar-track {
+    background: var(--light);
+    border-radius: 4px;
+}
+
+.carousel-container::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.carousel-slide {
+    min-width: calc(33.333% - 1.33rem);
+    flex: 0 0 auto;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.carousel-slide:hover {
+    transform: translateY(-5px);
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.slide-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: white;
+}
+
+.slide-info h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.slide-info p {
+    font-size: 1rem;
+}
+
+/* Products Section Styles */
+.products-section {
+    padding: 4rem 2rem;
+    background: var(--light);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.2rem;
+    color: var(--primary);
+    margin-bottom: 3rem;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.product-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 300px;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease;
+}
+
+.product-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: white;
+}
+
+.product-title {
+    font-size: 1.4rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.1);
+}
+
+@media (max-width: 1200px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-card {
+        height: 250px;
+    }
+}
+</style>
+{% endblock %}

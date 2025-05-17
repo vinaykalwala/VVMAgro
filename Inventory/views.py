@@ -10,6 +10,24 @@ def aboutus(request):
 def products(request):
     return render(request,'staticpages/products.html')
 
+def tractor(request):
+    return render(request, 'staticpages/tractor.html')
+
+def land_smoothing(request):
+    return render(request, 'staticpages/land_smoothing.html')
+
+def rice_filtering(request):
+    return render(request, 'staticpages/rice_filtering.html')
+    
+def pesticide_view(request):
+    return render(request, 'staticpages/pesticide.html')
+
+def crop_harvester(request):
+    return render(request, 'staticpages/crop_harvester.html')
+
+def irrigation_system(request):
+    return render(request, 'staticpages/irrigation_system.html')
+
 def branchesanddistributors(request):
     return render(request,'staticpages/branchesanddistributors.html')
 

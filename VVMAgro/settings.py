@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'VVMAgro.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'agrodb.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'surya_db',
+        'USER': 'surya_user',
+        'PASSWORD': 'Surya@123',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 

@@ -1,0 +1,1044 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="product-detail">
+    <div class="product-hero">
+       
+        <img src="{% static 'images/tractor.jpg' %}" alt="Advanced Farming Tractor" class="product-image">
+    </div>
+    <div class="product-info">
+        <h1>Advanced Farming Tractor</h1>
+        <div class="product-description">
+            <h2>Product Overview</h2>
+            <p>Our state-of-the-art farming tractor combines power with precision for optimal agricultural operations. Designed for both small and large-scale farming needs.</p>
+
+            <div class="quick-specs">
+                <h2>Quick Specifications</h2>
+                <div class="specs-table">
+                    <div class="spec-item">
+                        <span class="spec-label">Model</span>
+                        <span class="spec-value">VVM-T100</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Engine Type</span>
+                        <span class="spec-value">4-Cylinder Diesel</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">PTO Power</span>
+                        <span class="spec-value">65-85 HP</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Transmission Type</span>
+                        <span class="spec-value">Synchromesh</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="price-company-info">
+                <div class="price-info">
+                    <h2>Price Information</h2>
+                    <p class="price">Starting from ₹12,50,000*</p>
+                    <p class="price-note">*Price may vary based on features and location</p>
+                </div>
+                <div class="company-info">
+                    <h2>Company Details</h2>
+                    <ul>
+                        <li>Manufacturer: VVM Agro Industries</li>
+                        <li>Warranty: 2 Years</li>
+                        <li>After-sales Service: Available 24/7</li>
+                        <li>Financing Options: Available</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="specs-grid">
+                <div class="specs-column">
+                    <h2>Key Features</h2>
+                    <ul>
+                        <li>Advanced GPS navigation system</li>
+                        <li>High-power engine performance</li>
+                        <li>Precision steering control</li>
+                        <li>Ergonomic operator cabin with climate control</li>
+                        <li>Smart monitoring system</li>
+                    </ul>
+                </div>
+                <div class="specs-column">
+                    <h2>Technical Specifications</h2>
+                    <ul>
+                        <li>Engine Power: 75-100 HP</li>
+                        <li>Fuel Capacity: 120 liters</li>
+                        <li>Transmission: 12F + 12R</li>
+                        <li>Hydraulic Lift: 2200 kg</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="comparison-section">
+                <h2>Model Comparison</h2>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Features</th>
+                                <th>VVM-T100 (Current)</th>
+                                <th>VVM-T80</th>
+                                <th>VVM-T120</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Engine Power</td>
+                                <td>75-100 HP</td>
+                                <td>60-80 HP</td>
+                                <td>100-120 HP</td>
+                            </tr>
+                            <tr>
+                                <td>Fuel Capacity</td>
+                                <td>120 L</td>
+                                <td>100 L</td>
+                                <td>150 L</td>
+                            </tr>
+                            <tr>
+                                <td>Transmission</td>
+                                <td>12F + 12R</td>
+                                <td>8F + 8R</td>
+                                <td>16F + 16R</td>
+                            </tr>
+                            <tr>
+                                <td>Price Range</td>
+                                <td>₹12.5L - ₹15L</td>
+                                <td>₹10L - ₹12L</td>
+                                <td>₹15L - ₹18L</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="contact-section">
+            <div class="finance-calculator">
+                <h2>Financing Calculator</h2>
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="loan-amount">Loan Amount (₹)</label>
+                        <input type="number" id="loan-amount" value="1250000" min="100000" max="2000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="loan-term">Loan Term (Years)</label>
+                        <input type="number" id="loan-term" value="5" min="1" max="7">
+                    </div>
+                    <div class="form-group">
+                        <label for="interest-rate">Interest Rate (%)</label>
+                        <input type="number" id="interest-rate" value="8.5" min="5" max="15" step="0.1">
+                    </div>
+                    <button class="calc-btn" onclick="calculateEMI()">Calculate EMI</button>
+                    <div class="emi-result">
+                        <p>Estimated Monthly EMI:</p>
+                        <h3 id="emi-amount">₹ 25,620</h3>
+                    </div>
+                </div>
+            </div>
+            <h2>Interested in this product?</h2>
+            <a href="{% url 'contactus' %}" class="contact-btn">Contact Us</a>
+        </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Product Image Carousel -->
+<div class="product-carousel">
+    <h2>Product Gallery</h2>
+    <div class="carousel-container">
+        <div class="carousel-track">
+            <div class="carousel-slide">
+                <img src="{% static 'images/tractor.jpg' %}" alt="Tractor Front View">
+                <div class="slide-info">
+                    <h3>Front View</h3>
+                    <p>Powerful engine with advanced control systems</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/tractor.jpg' %}" alt="Tractor Side View">
+                <div class="slide-info">
+                    <h3>Side View</h3>
+                    <p>Spacious cabin with ergonomic controls</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/tractor.jpg' %}" alt="Tractor Interior">
+                <div class="slide-info">
+                    <h3>Interior View</h3>
+                    <p>Modern dashboard with digital displays</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/tractor.jpg' %}" alt="Tractor Features">
+                <div class="slide-info">
+                    <h3>Features</h3>
+                    <p>Advanced hydraulic system and attachments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Related Products Section -->
+<section class="products-section">
+    <h2 class="section-title">Explore Our Other Products</h2>
+    <div class="products-grid" id="products-grid">
+        <div class="product-card">
+            <a href="{% url 'irrigation_system' %}">
+                <div class="product-image" style="background-image: url('{% static 'images/irrigation.jpg' %}')"></div>
+                <div class="product-overlay">
+                    <h3 class="product-title">
+                        Irrigation System
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card">
+            <a href="{% url 'pesticide' %}">
+                <div class="product-image" style="background-image: url('{% static 'images/sprayer.jpeg' %}')"></div>
+                <div class="product-overlay">
+                    <h3 class="product-title">
+                        Pesticide Sprayer
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card">
+            <a href="{% url 'crop_harvester' %}">
+                <div class="product-image" style="background-image: url('{% static 'images/harvester.jpeg' %}')"></div>
+                <div class="product-overlay">
+                    <h3 class="product-title">
+                        Crop Harvester
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card">
+          <a href="{% url 'land_smoothing' %}">
+              <div class="product-image" style="background-image: url('{% static "images/land-smoothing.jpg" %}')"></div>
+              <div class="product-overlay">
+                  <h3 class="product-title">
+                      Land Smoothing Machine
+                      <i class="fas fa-arrow-right"></i>
+                  </h3>
+              </div>
+          </a>
+      </div>
+
+          <div class="product-card">
+    <a href="{% url 'rice_filtering' %}">
+        <div class="product-image" style="background-image: url('{% static "images/rice-filter.jpg" %}')"></div>
+        <div class="product-overlay">
+            <h3 class="product-title">
+                Rice Filtering System
+                <i class="fas fa-arrow-right"></i>
+            </h3>
+        </div>
+    </a>
+</div>
+    </div>
+    <div class="loading-spinner" id="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+</section>
+
+<style>
+       :root {
+            --primary: #388e3c; /* Darker green */
+            --secondary: #689f38; 
+            --accent: #ffa000; /* Amber */
+            --light: #f5f5f5;
+            --dark: #263238;
+            --text: #424242;
+
+        }
+    /* Product Detail Styles */
+    .product-detail {
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .product-hero {
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .product-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-info {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .product-info h1 {
+        text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-size: 2.5rem;
+            font-weight: 700;
+    }
+
+    .product-description h2 {
+        font-size: 1.8rem;
+        color: var(--primary);
+        margin: 2rem 0 1rem;
+    }
+
+    .product-description p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+    .quick-specs {
+        margin: 2rem 0;
+        padding: 2rem;
+        background: var(--light);
+        border-radius: 12px;
+    }
+
+    .specs-table {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .spec-item {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .spec-label {
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .spec-value {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+
+
+    .price-company-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin: 2rem 0;
+        padding: 2rem;
+        background: var(--light);
+        border-radius: 12px;
+    }
+
+    .price-info, .company-info {
+        padding: 1.5rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .price-info .price {
+        font-size: 2rem;
+        color: var(--primary);
+        font-weight: 700;
+        margin: 1rem 0;
+    }
+
+    .price-info .price-note {
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
+    }
+
+    .company-info ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .company-info ul li {
+        padding: 0.5rem 0;
+        font-size: 1.1rem;
+        color: #444;
+        display: flex;
+        align-items: center;
+    }
+
+    .company-info ul li:before {
+        content: "•";
+        color: var(--primary);
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+
+    .specs-column h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .specs-column ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .specs-column ul li {
+        padding: 0.5rem 0;
+        font-size: 1.1rem;
+        color: #444;
+        display: flex;
+        align-items: center;
+    }
+
+    .specs-column ul li:before {
+        content: "•";
+        color: var(--primary);
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+    .finance-calculator {
+        position: relative;
+        margin: 3rem auto;
+        max-width: 500px;
+        padding: 2rem;
+        background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('{% static "images/tractor.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .calculator-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .form-group input {
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+    .calc-btn {
+        padding: 1rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .calc-btn:hover {
+        background: var(--secondary);
+    }
+
+    .emi-result {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .emi-result h3 {
+        color: var(--primary);
+        font-size: 2rem;
+        margin-top: 0.5rem;
+    }
+
+    .contact-section {
+        position: relative;
+        text-align: center;
+        margin-top: 3rem;
+        padding: 2rem;
+        background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('{% static "images/tractor.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+
+
+    .contact-section h2 {
+        text-align: center;
+        font-size: 2rem;
+        color: var(--primary);
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+    .contact-section .contact-btn {
+        display: block;
+        width: fit-content;
+        margin: 0 auto;
+        padding: 1rem 2.5rem;
+        background: var(--primary);
+        color: white;
+        border: 2px solid var(--primary);
+        text-decoration: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .contact-section .contact-btn:hover {
+        background: transparent;
+        color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    
+    /* Product Carousel Styles */
+    .product-carousel {
+        max-width: 1600px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+    }
+
+    .carousel-container {
+        position: relative;
+        overflow-x: auto;
+        padding: 1rem 0;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) var(--light);
+    }
+
+    .carousel-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .carousel-container::-webkit-scrollbar-track {
+        background: var(--light);
+        border-radius: 4px;
+    }
+
+    .carousel-container::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 4px;
+    }
+
+    .carousel-track {
+        display: flex;
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+
+    .carousel-slide {
+        min-width: calc(33.333% - 1.33rem);
+        flex: 0 0 auto;
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .carousel-slide:hover {
+        transform: translateY(-5px);
+    }
+
+    .carousel-slide img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .slide-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.5rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        color: white;
+    }
+
+    /* Related Products Section Styles */
+    .products-section {
+        padding: 4rem 2rem;
+        background: var(--light);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.2rem;
+        color: var(--primary);
+        margin-bottom: 3rem;
+    }
+
+    .products-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 2rem;
+        padding: 1rem 0;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+    .products-grid::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+    }
+
+    
+.product-card {
+    flex: 0 0 300px;
+    min-width: 300px;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 300px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.5s ease;
+    }
+
+    .product-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.5rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        color: white;
+    }
+
+    .product-title {
+        font-size: 1.4rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .product-title i {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: all 0.3s ease;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.1);
+    }
+
+    .product-card:hover .product-title i {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+        .products-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .specs-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .price-company-info {
+            grid-template-columns: 1fr;
+        }
+        .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .carousel-slide {
+            min-width: calc(50% - 1rem);
+        }
+        
+        .product-hero {
+            height: 400px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .product-info h1 {
+            font-size: 2rem;
+        }
+        
+        .product-description h2 {
+            font-size: 1.5rem;
+        }
+        
+        .contact-section {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .carousel-slide {
+            min-width: 100%;
+        }
+        
+        .product-hero {
+            height: 300px;
+        }
+        
+        .product-detail {
+            padding: 1rem;
+        }
+    }
+
+    /* Continuous Scrolling Styles */
+    .loading-spinner {
+        text-align: center;
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+
+    .spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(56, 142, 60, 0.2);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .products-grid {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    .products-grid.loading {
+        opacity: 0.7;
+    }
+
+    /* Add smooth scroll behavior */
+    .products-section {
+        scroll-behavior: smooth;
+    }
+    
+/* Hero Section Enhancement */
+.product-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+}
+
+.hero-content {
+    max-width: 50%;
+    z-index: 1;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2.5rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.stat-label {
+    color: var(--text);
+    font-size: 1rem;
+}
+
+/* Comparison Table Styles */
+.comparison-section {
+    margin: 4rem 0;
+    padding: 2rem;
+    background: var(--light);
+    border-radius: 12px;
+}
+
+.comparison-table {
+    overflow-x: auto;
+}
+
+.comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.comparison-table th, .comparison-table td {
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid #eee;
+}
+
+.comparison-table th {
+    background: var(--primary);
+    color: white;
+}
+
+.comparison-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+
+.author-info h4 {
+    margin: 0;
+    color: var(--primary);
+}
+
+.author-info span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .product-hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-content {
+        max-width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    .hero-stats {
+        justify-content: center;
+    }
+
+    .testimonial-slide {
+        min-width: 300px;
+    }
+}
+    #products-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 20px;
+        padding: 20px 0;
+        -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+    }
+    
+    #products-grid::-webkit-scrollbar {
+        display: none; /* Hide scrollbar */
+    }
+    
+    .product-card {
+        flex: 0 0 auto;
+        width: 250px; /* Adjust as needed */
+        scroll-snap-align: start; /* Optional for better snapping */
+    }
+</style>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Your existing scrolling and loading variables/functions
+        const productsGrid = document.getElementById('products-grid');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        
+        // Variables for infinite loading
+        let isLoading = false;
+        let page = 1;
+        let hasMoreProducts = true;
+        
+        // Variables for continuous scrolling
+        let scrollInterval;
+        let isMouseOver = false;
+        const initialProducts = Array.from(productsGrid.children);
+    
+        // Clone products for continuous scrolling
+        function cloneForScroll() {
+            initialProducts.forEach(product => {
+                const clone = product.cloneNode(true);
+                productsGrid.appendChild(clone);
+            });
+        }
+    
+        // Load more products for infinite scroll
+        function loadMoreProducts() {
+            if (isLoading || !hasMoreProducts) return;
+            
+            isLoading = true;
+            loadingSpinner.style.display = 'block';
+            productsGrid.classList.add('loading');
+    
+            // Simulate loading delay
+            setTimeout(() => {
+                // Clone and append products
+                initialProducts.forEach(product => {
+                    const clone = product.cloneNode(true);
+                    productsGrid.appendChild(clone);
+                });
+    
+                isLoading = false;
+                loadingSpinner.style.display = 'none';
+                productsGrid.classList.remove('loading');
+                page++;
+    
+                // For demo purposes, limit the number of pages
+                if (page > 3) {
+                    hasMoreProducts = false;
+                    loadingSpinner.style.display = 'none';
+                }
+            }, 800);
+        }
+    
+        // Continuous scroll function
+        function startScroll() {
+            if (!isMouseOver) {
+                productsGrid.scrollLeft += 1;
+                
+                // When nearing the end, load more products
+                if (productsGrid.scrollLeft >= (productsGrid.scrollWidth - productsGrid.clientWidth - 500)) {
+                    loadMoreProducts();
+                }
+                
+                // Reset scroll position when reaching the middle (since we have clones)
+                if (productsGrid.scrollLeft >= (productsGrid.scrollWidth / 2)) {
+                    productsGrid.scrollLeft = 0;
+                }
+            }
+        }
+    
+        // Initialize product scrolling
+        cloneForScroll(); // Create initial clones for smooth looping
+        scrollInterval = setInterval(startScroll, 30);
+    
+        // Intersection Observer for infinite scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !isLoading && hasMoreProducts) {
+                    loadMoreProducts();
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '100px',
+            threshold: 0.1
+        });
+    
+        // Observe the loading spinner
+        observer.observe(loadingSpinner);
+    
+        // Pause scrolling on mouse enter
+        productsGrid.addEventListener('mouseenter', () => {
+            isMouseOver = true;
+        });
+    
+        // Resume scrolling on mouse leave
+        productsGrid.addEventListener('mouseleave', () => {
+            isMouseOver = false;
+        });
+    
+        // EMI Calculation Functionality
+        function calculateEMI() {
+            const principal = parseFloat(document.getElementById('loan-amount').value) || 0;
+            const years = parseFloat(document.getElementById('loan-term').value) || 0;
+            const rate = parseFloat(document.getElementById('interest-rate').value) || 0;
+    
+            const monthlyRate = rate / 12 / 100;
+            const months = years * 12;
+            
+            // Prevent division by zero and invalid calculations
+            if (monthlyRate > 0 && months > 0 && principal > 0) {
+                const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / 
+                           (Math.pow(1 + monthlyRate, months) - 1);
+                
+                document.getElementById('emi-amount').textContent = 
+                    `₹ ${emi.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+            } else {
+                document.getElementById('emi-amount').textContent = '₹ 0';
+            }
+        }
+    
+        // Add event listeners for EMI calculation
+        document.getElementById('loan-amount')?.addEventListener('input', calculateEMI);
+        document.getElementById('loan-term')?.addEventListener('input', calculateEMI);
+        document.getElementById('interest-rate')?.addEventListener('input', calculateEMI);
+    
+        // Initial EMI calculation
+        calculateEMI();
+    
+        // Clean up
+        window.addEventListener('unload', () => {
+            clearInterval(scrollInterval);
+            observer.disconnect();
+        });
+    });
+    </script>
+{% endblock %}
