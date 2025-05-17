@@ -37,9 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Inventory',
-    'django.contrib.humanize',
-
+    'Inventory'
 ]
 
 MIDDLEWARE = [
@@ -79,22 +77,18 @@ WSGI_APPLICATION = 'VVMAgro.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'surya_db',
-        'USER': 'surya_user',
-        'PASSWORD': 'Surya@123',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'Agro2',
-#         'USER': 'root',
-#         'PASSWORD': 'Durgaprakash@143',
-#         'HOST': 'localhost',
+#         'NAME': '',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
 #         'PORT': '3306',
 #     }
 # }
@@ -125,13 +119,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'Inventory.CustomUser'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

@@ -1,0 +1,819 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <style>
+    body {
+  
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h2{
+        text-align: center;
+            margin-bottom: 1.5rem;
+            color: green;
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+    }
+.product-hero-section {
+  width: 100%;
+  height: 600px;
+}
+
+.product-banner {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+}
+
+.product-description {
+  width: 100%;
+  padding: 20px;
+  /* background-color: #D3E671; */
+  text-align: center;
+}
+
+.product-description h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  color: green;
+  font-size: 1.5rem;
+  padding: 10px;
+}
+
+.product-description p {
+  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.products-section {
+  /* background-color: #D3E671; */
+  padding: 50px 0;
+  text-align: center;
+}
+
+.section-heading {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 40px;
+}
+
+/* Product Carousel Styles */
+    .product-carousel {
+    max-width: 1600px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
+
+.carousel-container {
+    position: relative;
+    overflow: hidden; /* hide scrollbar and disable manual scroll */
+    padding: 1rem 0;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 2rem;
+    padding: 0 1rem;
+    /* We'll animate this with JS, so no scroll here */
+    scroll-behavior: smooth; /* smooth scroll for JS */
+}
+
+.carousel-slide {
+    min-width: calc(33.333% - 1.33rem);
+    flex: 0 0 auto;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.carousel-slide:hover {
+    transform: translateY(-5px);
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.slide-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: white;
+}
+
+
+.product-types {
+  display: flex;
+  min-height: 100vh;
+}
+
+.product-types {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  height: 100vh; /* keep full viewport height */
+  overflow: hidden; /* prevent overflow */
+}
+
+.product-types {
+  display: flex; /* keep horizontal layout */
+  /* no height change here, image-section controls height */
+}
+
+.image-section {
+  position: sticky;
+  top: 0;
+  height: 100vh;  /* KEEP this as is */
+  flex: 0 0 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.specs-section {
+  flex: 1;
+  height: 100vh; /* FIXED height matching image-section */
+  overflow-y: auto; /* vertical scroll */
+  padding: 60px 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.image-section img {
+  max-width: 100%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 10px;
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 2s ease-out, transform 2s ease-out;
+}
+
+.image-section img.animate-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.specs-section {
+  flex: 1;
+  padding: 60px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  overflow-y: auto; /* enable vertical scroll */
+  max-height: 100vh;
+  box-sizing: border-box;
+}
+
+.spec-item {
+  padding: 25px;
+  border-bottom: 2px solid black;
+  transform: translateY(40px);
+  opacity: 0;
+  transition: all 0.6s ease-out;
+  gap: 10px;
+}
+
+.spec-item.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.spec-item h2 {
+  margin-bottom: 10px;
+}
+
+.spec-item p {
+  margin: 5px 0;
+  color: black;
+}
+
+.spec-item button {
+  background-color: white;
+  color: black;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.spec-item a {
+  margin-left: 15px;
+  color: black;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+
+.warranty {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  padding: 80px 40px;
+  flex-wrap: wrap;
+}
+
+.warranty-left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.warranty-left h2 {
+  
+        text-align: center;
+            margin-bottom: 1.5rem;
+            color: green;
+            font-size: 2.5rem;
+            font-weight: 700;
+    
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.accordion-item {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.accordion-item.active .accordion-body {
+  display: block;
+}
+
+.accordion-header {
+  font-size: 18px;
+  font-weight: 600;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-body {
+  font-size: 16px;
+  color: black;
+  margin-top: 10px;
+  display: none;
+}
+
+.accordion-item.active .accordion-body {
+  display: block;
+}
+
+.know-more-btn {
+  background-color: green;
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 30px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.warranty-right {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.warranty-right img {
+  width: 100%;
+  max-width: 700px;
+  height: 600px;
+}
+
+
+
+
+.agri-products-scroll {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  background-color: #f7f7f7;
+  padding: 30px 0;
+}
+
+.agri-products-section {
+  padding: 0 40px;
+}
+
+.agri-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.agri-product-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.agri-product-card:hover {
+  transform: scale(1.02);
+}
+
+.agri-product-image {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.agri-product-overlay {
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  text-align: center;
+}
+
+.agri-product-title {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.agri-product-title i {
+  margin-left: 8px;
+}
+
+/* Horizontal continuous scrolling container */
+.agri-scroll-container {
+  display: flex;
+  overflow-x: hidden; /* hide scrollbar */
+  gap: 20px;
+  padding: 20px;
+  scroll-behavior: smooth;
+  animation: scrollLeft 30s linear infinite;
+}
+
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* scroll half width for seamless loop */
+}
+
+/* Hide scrollbar for webkit browsers */
+.agri-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.agri-card {
+  flex: 0 0 auto;
+  width: 260px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.agri-overlay {
+  position: absolute;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  width: 100%;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.agri-overlay i {
+  margin-left: 6px;
+}
+.agri-scroll-wrapper {
+  overflow: hidden;
+  width: 100%;  /* visible area */
+}
+
+.agri-scroll-container {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: scrollLeft 30s linear infinite;
+}
+
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.agri-card {
+  flex: 0 0 auto;
+  width: 260px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.agri-overlay {
+  position: absolute;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  width: 100%;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.agri-overlay i {
+  margin-left: 6px;
+}
+
+
+  </style>
+</head>
+
+<div class="product-hero-section">
+  <img class="product-banner" src="{% static 'images/tractorbanner.png' %}" alt="Tractor Banner">
+</div>
+
+<div class="product-description">
+  <h2>Revolutionizing Modern Farming with Advanced Tractors</h2>
+  <p>Experience unmatched efficiency and power with our next-generation agriculture tractor, engineered for precision
+    farming. Designed with cutting-edge technology, robust performance, and superior comfort, it's the perfect
+    companion for farmers looking to maximize productivity and minimize effort across all terrains.</p>
+</div>
+
+<div class="products-section">
+  <h2 class="section-heading">Advanced Machines Driving the Future of Farming</h2>
+
+<!-- Product Image Carousel -->
+<div class="product-carousel">
+    <h2>our-products</h2>
+    <div class="carousel-container">
+        <div class="carousel-track">
+            <div class="carousel-slide">
+                <img src="{% static 'images/tractorproduct3.jpeg' %}" alt="Tractor Front View">
+                <div class="slide-info">
+                    <h1>Front View</h1>
+                    <p>Powerful engine with advanced control systems</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/tractorproduct3.jpeg' %}" alt="Tractor Side View">
+                <div class="slide-info">
+                    <h1>Side View</h1>
+                    <p>Spacious cabin with ergonomic controls</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/tractorproduct3.jpeg' %}" alt="Tractor Interior">
+                <div class="slide-info">
+                    <h1>Interior View</h1>
+                    <p>Modern dashboard with digital displays</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{% static 'images/tractorproduct3.jpeg' %}" alt="Tractor Features">
+                <div class="slide-info">
+                    <h1>Features</h1>
+                    <p>Advanced hydraulic system and attachments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const carouselContainer = document.querySelector('.carousel-container');
+const carouselTrack = document.querySelector('.carousel-track');
+
+let scrollAmount = 0;
+const scrollStep = 0.5;   // slower scroll: 0.5 pixel per frame
+const scrollDelay = 30;   // slightly more delay: 30ms per frame
+
+function autoScroll() {
+    scrollAmount += scrollStep;
+
+    // Reset scroll when we reach the end
+    if (scrollAmount >= carouselTrack.scrollWidth - carouselContainer.clientWidth) {
+        scrollAmount = 0;
+    }
+
+    carouselContainer.scrollLeft = scrollAmount;
+    setTimeout(autoScroll, scrollDelay);
+}
+
+autoScroll();
+</script>
+
+
+<div class="product-types">
+  <div class="image-section">
+    <img src="{% static 'images/tractorproducts2.avif' %}" alt="VVM Tractor">
+  </div>
+  <div class="specs-section">
+    <div class="specs-scroll">
+      <div class="spec-item">
+        <h3>VVM-200 Compact Tractor</h3>
+        <p>Power: 21 HP</p>
+        <p>Engine: 1500cc, 3-cylinder diesel</p>
+        <p>Transmission: 12 Forward + 12 Reverse</p>
+        <p>Hydraulics: 950 kg lifting capacity</p>
+        <p><strong>Price: ₹5,50,000</strong></p>
+      </div>
+
+      <div class="spec-item">
+        <h3>VVM-210 Smart Tractor</h3>
+        <p>Power: 24 HP</p>
+        <p>Fuel Tank: 35 Liters</p>
+        <p>Brakes: Oil-immersed disc brakes</p>
+        <p>Steering: Power-assisted steering</p>
+        <p><strong>Price: ₹6,20,000</strong></p>
+      </div>
+
+      <div class="spec-item">
+        <h3>VVM-225 Precision Tractor</h3>
+        <p>Power: 27 HP</p>
+        <p>Smart Modes: Field & Orchard</p>
+        <p>Drive: 4WD with advanced traction</p>
+        <p>Technology: Integrated digital dashboard</p>
+        <p><strong>Price: ₹7,10,000</strong></p>
+      </div>
+
+      <div class="spec-item">
+        <h3>VVM-230 Agro Pro</h3>
+        <p>Power: 30 HP</p>
+        <p>Cooling: Liquid cooled engine</p>
+        <p>Fuel Economy: High efficiency</p>
+        <p>Implements: Supports rotavator, cultivator</p>
+        <p><strong>Price: ₹7,80,000</strong></p>
+      </div>
+
+      <div class="spec-item">
+        <h3>VVM-240 Field Max</h3>
+        <p>Power: 35 HP</p>
+        <p>Comfort: Adjustable seat & suspension</p>
+        <p>Gearbox: Dual clutch system</p>
+        <p>Warranty: 5 years engine warranty</p>
+        <p><strong>Price: ₹8,50,000</strong></p>
+      </div>
+
+      <!-- New added items -->
+      <div class="spec-item">
+        <h3>VVM-250 Turbo Max</h3>
+        <p>Power: 40 HP</p>
+        <p>Turbocharged engine</p>
+        <p>Transmission: 16 Forward + 16 Reverse</p>
+        <p>Fuel Efficiency: Enhanced fuel saving mode</p>
+        <p><strong>Price: ₹9,20,000</strong></p>
+      </div>
+
+      <div class="spec-item">
+        <h3>VVM-260 Power Plus</h3>
+        <p>Power: 45 HP</p>
+        <p>Hydraulics: 1200 kg lifting capacity</p>
+        <p>Smart Display: Advanced touchscreen</p>
+        <p>Drive: 4WD with differential lock</p>
+        <p><strong>Price: ₹10,00,000</strong></p>
+      </div>
+
+      <div class="spec-item">
+        <h3>VVM-270 Ultra Agro</h3>
+        <p>Power: 50 HP</p>
+        <p>Comfort: Air-conditioned cabin</p>
+        <p>Technology: GPS assisted steering</p>
+        <p>Warranty: 7 years comprehensive</p>
+        <p><strong>Price: ₹11,50,000</strong></p>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<section class="warranty-section">
+  <div class="warranty">
+    <div class="warranty-left">
+      <h2>Empower Your Farm<br>with VVM Tractors</h2>
+
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            High Torque Performance
+            <span class="arrow">&#9660;</span>
+          </div>
+          <div class="accordion-body">
+            Delivers exceptional torque at low RPMs for tough farm tasks.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">
+            Fuel-Efficient Operation
+            <span class="arrow">&#9660;</span>
+          </div>
+          <div class="accordion-body">
+            Optimized engine ensures less fuel consumption with more output.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">
+            Smart Farm Technology
+            <span class="arrow">&#9660;</span>
+          </div>
+          <div class="accordion-body">
+            Equipped with digital dashboard and precision control features.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header">
+            6-Year Engine Warranty
+            <span class="arrow">&#9660;</span>
+          </div>
+          <div class="accordion-body">
+            Peace of mind with a long-term engine warranty.
+          </div>
+        </div>
+      </div>
+
+      <button class="know-more-btn">Know More</button>
+    </div>
+
+    <div class="warranty-right">
+      <img src="{% static 'images/tractorwarranty.webp' %}" alt="VVM Tractor with Warranty" />
+    </div>
+  </div>
+</section>
+<script>
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const item = header.parentElement;
+      const isActive = item.classList.contains('active');
+
+      // Close all items
+      document.querySelectorAll('.accordion-item').forEach(i => {
+        i.classList.remove('active');
+        i.querySelector('.accordion-body').style.display = 'none';
+        i.querySelector('.arrow').innerHTML = '&#9660;';
+      });
+
+      // Open current if it was not active
+      if (!isActive) {
+        item.classList.add('active');
+        item.querySelector('.accordion-body').style.display = 'block';
+        item.querySelector('.arrow').innerHTML = '&#9650;';
+      }
+    });
+  });
+</script>
+
+
+
+
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Animate image when product-types section is 50% visible
+    const image = document.querySelector('.image-section img');
+    const productSection = document.querySelector('.product-types');
+
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          image.classList.add('animate-in');
+          observer.unobserve(entry.target); // Animate only once
+        }
+      });
+    }, {
+      threshold: 0.5 // 50% of section visible to trigger
+    });
+
+    if (productSection) {
+      imageObserver.observe(productSection);
+    }
+
+    // Swiper initialization
+    const swiper = new Swiper('.swiper-container', {
+      loop: true,
+      slidesPerView: 3,
+      spaceBetween: 30,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        0: { slidesPerView: 1 },
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 }
+      }
+    });
+
+    // Observer for specs items to add 'visible' class when in view
+    const specsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('.spec-item').forEach(item => {
+      specsObserver.observe(item);
+    });
+  });
+</script>
+
+
+<h2>Our-Products</h2>
+<div class="agri-scroll-container">
+  <div class="agri-card" style="background-image: url('{% static "images/tractor.jpg" %}')">
+    <div class="agri-overlay">Advanced Farming Tractor <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/land-smoothing.jpg" %}')">
+    <div class="agri-overlay">Land Smoothing Machine <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/sprayer.jpg" %}')">
+    <div class="agri-overlay">Pesticide Sprayer <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/harvester.jpg" %}')">
+    <div class="agri-overlay">Crop Harvester <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/rice-filter.jpg" %}')">
+    <div class="agri-overlay">Rice Filtering System <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/irrigation.jpg" %}')">
+    <div class="agri-overlay">Irrigation System <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/tractor.jpg" %}')">
+    <div class="agri-overlay">Advanced Farming Tractor <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/land-smoothing.jpg" %}')">
+    <div class="agri-overlay">Land Smoothing Machine <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/sprayer.jpg" %}')">
+    <div class="agri-overlay">Pesticide Sprayer <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/harvester.jpg" %}')">
+    <div class="agri-overlay">Crop Harvester <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/rice-filter.jpg" %}')">
+    <div class="agri-overlay">Rice Filtering System <i class="fas fa-arrow-right"></i></div>
+  </div>
+
+  <div class="agri-card" style="background-image: url('{% static "images/irrigation.jpg" %}')">
+    <div class="agri-overlay">Irrigation System <i class="fas fa-arrow-right"></i></div>
+  </div>
+</div>
+
+
+
+{% endblock %}
