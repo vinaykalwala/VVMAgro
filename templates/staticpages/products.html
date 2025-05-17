@@ -1,16 +1,310 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+ {% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-</head>
-{% extends 'staticpages/base.html' %}
-<body>
-    {% block content %}
+    <style>
+        body{
+            font-family: 'Poppins', sans-serif;
+        }
+      .products-hero {
+        height: 80vh;
+        min-height: 400px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: url('{% static "images/5.png" %}');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: heroFadeIn 1.5s ease-out;
+        overflow: hidden;
+    }
 
+    .products-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+
+        animation: shine 3s infinite;
+    }
+
+    .hero-content {
+        max-width: 800px;
+        padding: 2rem;
+        z-index: 2;
+        
+        border-radius: 20px;
+        backdrop-filter: blur(5px);
+        opacity: 0;
+        transform: translateY(30px);
+        animation: contentFadeIn 1s ease-out forwards;
+        animation-delay: 0.5s;
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideUp 0.8s ease-out forwards;
+        animation-delay: 1s;
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideUp 0.8s ease-out forwards;
+        animation-delay: 1.3s;
+    }
+
+    @keyframes heroFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(1.1);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes contentFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes shine {
+        0% {
+            left: -100%;
+        }
+        20% {
+            left: 100%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+
+    .products-section {
+        padding: 4rem 5%;
+        background-color: white;
+        min-height: 100vh;
+    }
+  
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+  
+    .product-card {
+        position: relative;
+        height: 0;
+        padding-bottom: 75%;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+    }
+  
+    .product-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.5s ease;
+    }
+  
+      .product-card:hover .product-image {
+          transform: scale(1.1);
+      }
+  
+      .product-overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 2rem;
+          background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+          color: white;
+          transform: translateY(0);
+          transition: transform 0.3s ease;
+      }
+  
+      .product-title {
+        font-size: clamp(1.2rem, 2vw, 1.8rem);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+  
+    .product-title i {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.3s ease;
+  }
+  
+      .product-card:hover .product-title i {
+          opacity: 1;
+          transform: translateX(0);
+      }
+  
+      @media (max-width: 1200px) {
+        .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .product-overlay {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .product-card {
+            padding-bottom: 66.67%; /* Adjust aspect ratio for mobile */
+        }
+        
+        .product-overlay {
+            padding: 1rem;
+        }
+    }
+  </style>
     
-  <h1>Products</h1>
+</head>
+
+<body>
+  <section class="products-hero">
+    <div class="hero-content">
+        <h1>Our Agricultural Products</h1>
+        <p>Discover our range of advanced farming equipment and machinery designed to enhance your agricultural productivity</p>
+    </div>
+</section>
+   
+
+  <section class="products-section">
+    <div class="products-grid">
+      <div class="product-card">
+        <a href="{% url 'tractor' %}">
+            <div class="product-image" style="background-image: url('{% static "images/tractor.jpg" %}')"></div>
+            <div class="product-overlay">
+                <h3 class="product-title">
+                    Advanced Farming Tractor
+                    <i class="fas fa-arrow-right"></i>
+                </h3>
+            </div>
+        </a>
+    </div>
+
+        <div class="product-card">
+          <a href="{% url 'land_smoothing' %}">
+              <div class="product-image" style="background-image: url('{% static "images/land-smoothing.jpg" %}')"></div>
+              <div class="product-overlay">
+                  <h3 class="product-title">
+                      Land Smoothing Machine
+                      <i class="fas fa-arrow-right"></i>
+                  </h3>
+              </div>
+          </a>
+      </div>
+
+      <div class="product-card">
+        <a href="{% url 'pesticide' %}">
+            <div class="product-image" style="background-image: url('{% static "images/sprayer.jpeg" %}')"></div>
+            <div class="product-overlay">
+                <h3 class="product-title">
+                    Pesticide Sprayer
+                    <i class="fas fa-arrow-right"></i>
+                </h3>
+            </div>
+        </a>
+    </div>
+
+    <div class="product-card">
+      <a href="{% url 'crop_harvester' %}">
+          <div class="product-image" style="background-image: url('{% static "images/side-view.png" %}')"></div>
+          <div class="product-overlay">
+              <h3 class="product-title">
+                  Crop Harvester
+                  <i class="fas fa-arrow-right"></i>
+              </h3>
+          </div>
+      </a>
+  </div>
+
+  <div class="product-card">
+    <a href="{% url 'rice_filtering' %}">
+        <div class="product-image" style="background-image: url('{% static "images/rice-filter.jpg" %}')"></div>
+        <div class="product-overlay">
+            <h3 class="product-title">
+                Rice Filtering System
+                <i class="fas fa-arrow-right"></i>
+            </h3>
+        </div>
+    </a>
+</div>
+
+        <div class="product-card">
+          <a href="{% url 'irrigation_system' %}">
+              <div class="product-image" style="background-image: url('{% static "images/irrigation.jpg" %}')"></div>
+              <div class="product-overlay">
+                  <h3 class="product-title">
+                      Irrigation System
+                      <i class="fas fa-arrow-right"></i>
+                  </h3>
+              </div>
+          </a>
+      </div>
+</section>
 
     {% endblock %}
 
