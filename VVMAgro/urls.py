@@ -19,7 +19,9 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('admin_dashboard/', admin_dashboard, name='admin_dashboard'),
     path('user_dashboard/', user_dashboard, name='user_dashboard'),
-
+    path('product-exchange/', product_exchange_view, name='product_exchange'),
+    path('voucher/create/', voucher_create_view, name='voucher_create'),
+    path('voucher/<int:voucher_id>/',voucher_detail_view, name='voucher_detail'),
 
 
 
