@@ -1,118 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar</title>
-    {% load static %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-        
-        .sidebar {
-            width: 240px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            overflow-y: scroll;
-        }
-        
-        .sidebar::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-        }
-        
-        .sidebar {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        
-        .sidebar h2 {
-            margin-top: 80px;
-            font-size: 21px;
-            padding: 0 16px;
-            color: #0c005a;
-            text-decoration: none;
-        }
-        
-        .sidebar ul {
-            list-style-type: none;
-            cursor: pointer;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar label {
-            display: block;
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
-            background-color: #0c005a;
-        }
-        
-        .sidebar ul li {
-            padding: 15px 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.3s;
-            color: #4859a4;
-            justify-content: space-between;
-        }
-        
-        .sidebar ul li a {
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-        
-        .sidebar ul li:hover {
-            background-color: #0c0055af;
-            color: white;
-        }
-        
-        .sidebar ul li i {
-            margin-right: 10px;
-        }
-        
-        .sidebar ul li i:last-child {
-            margin-left: auto;
-            color: #9197B3;
-        }
-        
-        .sidebar ul li:hover i:last-child {
-            color: white;
-        }
-        
-        .main-content {
-            flex-grow: 1;
-            padding: 20px;
-            margin-left: 250px;
-            border-radius: 8px;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sidebar Toggle Fix</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<style>
+  body {
+    margin: 0;
+    font-family: sans-serif;
+  }
+  .sidebar {
+    width: 240px;
+    height: 100vh;
+    position: fixed;
+    top: 300;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(0);
+  }
+  .sidebar h2 {
+    padding: 20px 10px 10px 10px;
+    color: green;
+    font-size: 20px;
+    font-weight: 700;
+    background-color: #e6ffe6;
+    border-bottom: 1px solid green;
+    text-align: center;
+  }
+  #closeSidebarBtn {
+    display: none;
+    margin: 15px 16px 5px;
+    padding: 5px 10px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .sidebar ul li {
+    padding: 15px 20px;
+    cursor: pointer;
+    color: green;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.3s;
+  }
+  .sidebar ul li:hover {
+    background-color: green;
+    color: white;
+  }
+  .sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+  }
+  .sidebar ul li i {
+    margin-right: 10px;
+  }
+  .sidebar ul li i:last-child {
+    margin-left: auto;
+    color: #9197b3;
+  }
+  .sidebar ul li:hover i:last-child {
+    color: white;
+  }
+  .main-content {
+    margin-left: 250px;
+    padding: 10px 20px;
+  }
+  
+  .sidebar-toggle {
+    display: none;
+    position: relative;
+    margin: 15px;
+    background: white;
+    border: 1px solid green;
+    color: green;
+    padding: 10px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      transform: translateX(-100%);
+      top: 0px;
+      z-index: 1000;
+    }
+    .sidebar.active {
+      transform: translateX(0);
+    }
+    .sidebar-toggle {
+      display: inline-block;
+    }
+    .main-content {
+      margin-left: 0;
+    }
+    #closeSidebarBtn {
+      display: inline-block;
+    }
+  }
+</style>
 </head>
-
 <body>
-    <div class="dashboard">
-        <aside class="sidebar">
-            <h2> Admin Dashboard</h2>
-        </aside>
-    </div>
+<button class="sidebar-toggle" id="toggleBtn" aria-label="Toggle sidebar">
+  <i class="fas fa-bars"></i>
+</button>
+<aside class="sidebar" id="sidebar">
+  <button id="closeSidebarBtn" aria-label="Close sidebar">Close ✕</button>
+  <h2>Admin Dashboard</h2>
+  <ul>
+    <li>
+                    <a href="{% url 'signup' %}"><i class="fas fa-user-plus"></i>  Signup <i class="fas fa-chevron-right"></i></a>
+                </li>
+                
+  </ul>
+</aside>
 
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const closeBtn = document.getElementById('closeSidebarBtn');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+  });
+
+  document.addEventListener('click', (event) => {
+    const isClickInsideSidebar = sidebar.contains(event.target);
+    const isClickOnToggle = toggleBtn.contains(event.target);
+    if (!isClickInsideSidebar && !isClickOnToggle && window.innerWidth <= 768) {
+      sidebar.classList.remove('active');
+    }
+  });
+</script>
 </body>
-
 </html>
