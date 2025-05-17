@@ -14,8 +14,9 @@ urlpatterns = [
     path('branchesanddistributors',branchesanddistributors, name='branchesanddistributors'),
     path('careers',careers, name='careers'),
     path('contactus',contactus, name='contactus'),
-
-
+    path('tractorfarming',tractorproducts, name='tractorproducts'),
+    path('pesticidesprayer',pesticideprayer,name='pesticidesprayer'),
+    path('ricefiltering',ricefiltering,name='ricefiltering'),
 
 
 ]
