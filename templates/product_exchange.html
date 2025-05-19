@@ -1,192 +1,274 @@
 {% extends 'backendpages/base.html' %}
-    {% block content %}
-  !DOCTYPE html>
+{% block content %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Document</title>  
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding: 5px;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+  <title>Exchange Products</title>
+
+  <!-- Select2 and jQuery -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <style>
+    h1 {
+      text-align: center;
+      color: green;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    .main-content {
+      padding: 20px;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #f8fff8;
+    }
+
+    table th, table td {
+      border: 1px solid green;
+      padding: 10px;
+      text-align: left;
+      min-width: 150px;
+    }
+
+    th {
+      background-color: #dfffdc;
+      color: #006400;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.85em;
+    }
+
+    .green-button {
+      background-color: green;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .green-button:hover {
+      background-color: darkgreen;
+    }
+
+    .remove-row {
+      background-color: red;
+      padding: 5px;
+      border-radius: 5px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .form-buttons {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-start;
+    }
+
+    @media screen and (max-width: 768px) {
+      .form-buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .green-button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="main-content">
-    <h1>Add Products to Exchange</h1>
-    <form method="post" id="product-form">
-        {% csrf_token %}
-        {{ formset.management_form }}
-        <table id="products-table">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Movement Type</th>
-                    <th>Warehouse</th>
-                    <th>Quantity</th>
-                    <th>Remove</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in formset %}
-                <tr class="form-row">
-                    <td>
-                        {{ form.product }}
-                        {% for error in form.product.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {{ form.movement_type }}
-                        {% for error in form.movement_type.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {{ form.warehouse }}
-                        {% for error in form.warehouse.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {{ form.quantity }}
-                        {% for error in form.quantity.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
-                    </td>
-                    <td><button type="button" class="remove-row">Remove</button></td>
-                </tr>
-                {% if form.non_field_errors %}
-                <tr>
-                    <td colspan="5" class="error">
-                        {{ form.non_field_errors }}
-                    </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="main-content">
+  <h1>Add Products to Exchange</h1>
+  <form method="post" id="product-form">
+    {% csrf_token %}
+    {{ formset.management_form }}
 
-        <button type="button" id="add-product">Add Product</button>
-        <br><br>
-        <button type="submit">Next: Create Voucher</button>
-    </form>
+    <div class="table-wrapper">
+      <table id="products-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Movement Type</th>
+            <th>Warehouse</th>
+            <th>Quantity</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for form in formset %}
+          <tr class="form-row">
+            <td>
+              {{ form.product }}
+              {% for error in form.product.errors %}
+              <div class="error">{{ error }}</div>
+              {% endfor %}
+            </td>
+            <td>
+              {{ form.movement_type }}
+              {% for error in form.movement_type.errors %}
+              <div class="error">{{ error }}</div>
+              {% endfor %}
+            </td>
+            <td>
+              {{ form.warehouse }}
+              {% for error in form.warehouse.errors %}
+              <div class="error">{{ error }}</div>
+              {% endfor %}
+            </td>
+            <td>
+              {{ form.quantity }}
+              {% for error in form.quantity.errors %}
+              <div class="error">{{ error }}</div>
+              {% endfor %}
+            </td>
+            <td><button type="button" class="remove-row">Remove</button></td>
+          </tr>
+          {% if form.non_field_errors %}
+          <tr><td colspan="5" class="error">{{ form.non_field_errors }}</td></tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    
 
-    <script>
-        const totalForms = document.querySelector('#id_products-TOTAL_FORMS');
-        const productsTableBody = document.querySelector('#products-table tbody');
-        const addButton = document.getElementById('add-product');
+    <div class="form-buttons">
+      <button type="button" id="add-product" class="green-button">Add Product</button>
+      <button type="submit" class="green-button">Next: Create Voucher</button>
+    </div>
+  </form>
+</div>
+</div>
+<script>
+  const totalForms = document.querySelector('#id_products-TOTAL_FORMS');
+  const productsTableBody = document.querySelector('#products-table tbody');
+  const addButton = document.getElementById('add-product');
+  let firstMovementType = null;
 
-        let firstMovementType = null;
+  const productSupplyTypes = {
+    {% for product in products %}
+      "{{ product.id }}": "{{ product.type_of_supply }}",
+    {% endfor %}
+  };
 
-        // Supply types mapping from Django context variable
-        const productSupplyTypes = {
-            {% for product in products %}
-                "{{ product.id }}": "{{ product.type_of_supply }}",
-            {% endfor %}
-        };
+  function applySelect2ToRow(row) {
+    $(row).find('select[name$="-product"]').select2({
+      width: '100%',
+      placeholder: 'Search product',
+      allowClear: true
+    });
+    $(row).find('select[name$="-warehouse"]').select2({
+      width: '100%',
+      placeholder: 'Search warehouse',
+      allowClear: true
+    });
+  }
 
-        function filterProductsForJobwork() {
-            const isJobwork = firstMovementType === 'jobwork';
-            const productSelects = document.querySelectorAll('select[name$="-product"]');
+  function filterProductsForJobwork() {
+    const isJobwork = firstMovementType === 'jobwork';
+    const productSelects = document.querySelectorAll('select[name$="-product"]');
+    productSelects.forEach(select => {
+      for (const option of select.options) {
+        const supplyType = productSupplyTypes[option.value];
+        option.disabled = isJobwork && supplyType !== 'raw_material';
+      }
+    });
+  }
 
-            productSelects.forEach(select => {
-                for (const option of select.options) {
-                    const supplyType = productSupplyTypes[option.value];
-                    if (isJobwork && supplyType !== 'raw_material') {
-                        option.disabled = true;
-                    } else {
-                        option.disabled = false;
-                    }
-                }
-            });
+  function syncMovementTypes() {
+    const movementSelects = document.querySelectorAll('select[name$="-movement_type"]');
+    movementSelects.forEach((select, index) => {
+      if (index === 0) {
+        firstMovementType = select.value;
+      } else {
+        select.value = firstMovementType;
+        for (const option of select.options) {
+          option.disabled = option.value !== firstMovementType;
         }
+      }
+    });
+    filterProductsForJobwork();
+  }
 
-        function syncMovementTypes() {
-            const movementSelects = document.querySelectorAll('select[name$="-movement_type"]');
+  productsTableBody.addEventListener('change', function (e) {
+    if (e.target && e.target.name.includes('-movement_type')) {
+      const index = [...productsTableBody.querySelectorAll('tr')].indexOf(e.target.closest('tr'));
+      if (index === 0) syncMovementTypes();
+    }
+  });
 
-            movementSelects.forEach((select, index) => {
-                if (index === 0) {
-                    firstMovementType = select.value;
-                } else {
-                    select.value = firstMovementType;
-                    for (const option of select.options) {
-                        option.disabled = option.value !== firstMovementType;
-                    }
-                }
-            });
+  addButton.addEventListener('click', () => {
+    const formCount = parseInt(totalForms.value);
+    const firstRow = document.querySelector('.form-row');
+    const newRow = firstRow.cloneNode(true);
 
-            filterProductsForJobwork();
-        }
+    newRow.querySelectorAll('input, select').forEach(input => {
+      const nameAttr = input.name;
+      const idAttr = input.id;
+      if (nameAttr) input.name = nameAttr.replace(/\d+/, formCount);
+      if (idAttr) input.id = idAttr.replace(/\d+/, formCount);
+      if (input.tagName.toLowerCase() === 'select') {
+        input.value = '';
+        $(input).next('.select2').remove();
+      } else {
+        input.value = '';
+      }
+    });
 
-        productsTableBody.addEventListener('change', function(e) {
-            if (e.target && e.target.name.includes('-movement_type')) {
-                const index = [...productsTableBody.querySelectorAll('tr')].indexOf(e.target.closest('tr'));
-                if (index === 0) {
-                    syncMovementTypes();
-                }
-            }
+    productsTableBody.appendChild(newRow);
+    totalForms.value = formCount + 1;
+
+    applySelect2ToRow(newRow);
+    syncMovementTypes();
+  });
+
+  productsTableBody.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-row')) {
+      const row = e.target.closest('tr');
+      row.remove();
+
+      const forms = document.querySelectorAll('.form-row');
+      totalForms.value = forms.length;
+
+      forms.forEach((row, i) => {
+        row.querySelectorAll('input, select').forEach(input => {
+          if (input.name) input.name = input.name.replace(/\d+/, i);
+          if (input.id) input.id = input.id.replace(/\d+/, i);
         });
+      });
 
-        addButton.addEventListener('click', () => {
-            const formCount = parseInt(totalForms.value);
-            const firstRow = document.querySelector('.form-row');
-            const newRow = firstRow.cloneNode(true);
+      syncMovementTypes();
+    }
+  });
 
-            newRow.querySelectorAll('input, select').forEach(input => {
-                const nameAttr = input.name;
-                const idAttr = input.id;
-
-                if (nameAttr) input.name = nameAttr.replace(/\d+/, formCount);
-                if (idAttr) input.id = idAttr.replace(/\d+/, formCount);
-
-                if (input.tagName.toLowerCase() === 'select') {
-                    input.value = firstMovementType || "";
-                } else {
-                    input.value = '';
-                }
-            });
-
-            productsTableBody.appendChild(newRow);
-            totalForms.value = formCount + 1;
-
-            syncMovementTypes();
-        });
-
-        productsTableBody.addEventListener('click', function(e) {
-            if (e.target.classList.contains('remove-row')) {
-                const row = e.target.closest('tr');
-                row.remove();
-
-                const forms = document.querySelectorAll('.form-row');
-                totalForms.value = forms.length;
-
-                forms.forEach((row, i) => {
-                    row.querySelectorAll('input, select').forEach(input => {
-                        if (input.name) input.name = input.name.replace(/\d+/, i);
-                        if (input.id) input.id = input.id.replace(/\d+/, i);
-                    });
-                });
-
-                syncMovementTypes();
-            }
-        });
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const firstSelect = document.querySelector('select[name$="-movement_type"]');
-            if (firstSelect && firstSelect.value) {
-                syncMovementTypes();
-            }
-        });
-    </script>
- </div>
-  {% endblock %}
+  window.addEventListener('DOMContentLoaded', () => {
+    const firstMovement = document.querySelector('select[name$="-movement_type"]');
+    if (firstMovement && firstMovement.value) {
+      syncMovementTypes();
+    }
+    document.querySelectorAll('.form-row').forEach(row => applySelect2ToRow(row));
+  });
+</script>
 </body>
 </html>
+{% endblock %}
