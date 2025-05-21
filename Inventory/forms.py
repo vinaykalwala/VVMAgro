@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
 from django.contrib.auth.forms import AuthenticationForm
+from .models import *
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -29,75 +30,6 @@ class CustomUserCreationForm(UserCreationForm):
 
 class CustomAuthenticationForm(AuthenticationForm):
     pass
-
-# from django import forms
-# from .models import StockExchangeForm, StockExchangeProduct, Voucher, VoucherProduct
-
-# class StockExchangeFormForm(forms.ModelForm):
-#     class Meta:
-#         model = StockExchangeForm
-#         fields = ['operation_type', 'warehouse', 'party', 'description']
-
-# class StockExchangeProductForm(forms.ModelForm):
-#     class Meta:
-#         model = StockExchangeProduct
-#         fields = ['product', 'quantity', 'phase']
-
-# StockExchangeProductFormSet = forms.inlineformset_factory(
-#     StockExchangeForm,
-#     StockExchangeProduct,
-#     form=StockExchangeProductForm,
-#     extra=1,
-#     can_delete=True
-# )
-
-# class VoucherForm(forms.ModelForm):
-#     class Meta:
-#         model = Voucher
-#         fields = ['voucher_type']
-
-# class VoucherProductForm(forms.ModelForm):
-#     class Meta:
-#         model = VoucherProduct
-#         fields = ['product', 'quantity', 'phase']
-
-# VoucherProductFormSet = forms.inlineformset_factory(
-#     Voucher,
-#     VoucherProduct,
-#     form=VoucherProductForm,
-#     extra=1,
-#     can_delete=True
-# )
-
-
-# from django import forms
-# from .models import Product, Warehouse, Party
-
-# MOVEMENT_CHOICES = [('in', 'In'), ('out', 'Out'), ('job_work', 'Job Work')]
-
-# class ProductExchangeForm(forms.Form):
-#     product = forms.ModelChoiceField(queryset=Product.objects.all())
-#     movement_type = forms.ChoiceField(choices=MOVEMENT_CHOICES)
-#     warehouse = forms.ModelChoiceField(queryset=Warehouse.objects.all())
-#     party = forms.ModelChoiceField(queryset=Party.objects.all())
-#     quantity = forms.DecimalField(max_digits=10, decimal_places=2)
-
-# from .models import Voucher
-
-# class VoucherForm(forms.ModelForm):
-#     class Meta:
-#         model = Voucher
-#         fields = ['voucher_type']
-
-from django import forms
-from .models import Product
-
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['name', 'group', 'price_per_unit', 'unit_of_measurement', 
-                  'stock_quantity', 'warehouse', 'phase']  # <- include phase
-
 
 from django import forms
 from .models import Product, Warehouse, Party, VoucherProductItem, Voucher
@@ -132,3 +64,29 @@ class VoucherForm(forms.ModelForm):
             self.fields['voucher_type'].choices = [
                 (k, v) for k, v in Voucher.VOUCHER_TYPES if k in allowed_voucher_types
             ]
+
+
+class ProductGroupForm(forms.ModelForm):
+    class Meta:
+        model = ProductGroup
+        fields = '__all__'
+
+class WarehouseForm(forms.ModelForm):
+    class Meta:
+        model = Warehouse
+        fields = '__all__'
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+class PartyGroupForm(forms.ModelForm):
+    class Meta:
+        model = PartyGroup
+        fields = '__all__'
+
+class PartyForm(forms.ModelForm):
+    class Meta:
+        model = Party
+        fields = '__all__'

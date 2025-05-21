@@ -1,0 +1,26 @@
+<h1>Product Groups</h1>
+<a href="{% url 'productgroup_create' %}">Create New Product Group</a>
+
+<table border="1" cellpadding="8">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group in groups %}
+        <tr>
+            <td>{{ group.name }}</td>
+            <td>{{ group.description|default:"N/A" }}</td>
+            <td>
+                <a href="{% url 'productgroup_update' group.id %}">Edit</a> |
+                <a href="{% url 'productgroup_delete' group.id %}">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No product groups found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
