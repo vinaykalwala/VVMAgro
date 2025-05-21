@@ -13,14 +13,14 @@ def products(request):
 def tractor(request):
     return render(request, 'staticpages/tractor.html')
 
-def land_smoothing(request):
-    return render(request, 'staticpages/land_smoothing.html')
+def hydraulicboomlift(request):
+    return render(request, 'staticpages/hydraulicboomlift.html')
 
 def rice_filtering(request):
     return render(request, 'staticpages/rice_filtering.html')
     
-def pesticide_view(request):
-    return render(request, 'staticpages/pesticide.html')
+def frontendloader(request):
+    return render(request, 'staticpages/frontendloader.html')
 
 def crop_harvester(request):
     return render(request, 'staticpages/crop_harvester.html')
