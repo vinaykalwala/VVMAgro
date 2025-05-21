@@ -1640,8 +1640,8 @@
             <h1 id="typed-text"></h1>
             <p>Powerful software and services to manage your agricultural inventory, track imports/exports, and optimize supply chains.</p>
             <div>
-                <a href="software.html" class="btn pulse">View Software Demo</a>
-                <a href="contact.html" class="btn btn-outline">Contact Sales</a>
+                <a href="{% url 'products' %}" class="btn pulse">View Products</a>
+                <a href="{% url 'contact_create' %}" class="btn btn-outline">Contact Sales</a>
             </div>
         </div>
     </section>
@@ -2037,8 +2037,8 @@
         <h2>Ready to Transform Your Agriculture Business?</h2>
         <p>Get started with our inventory management software or explore our agriculture products and import/export services today.</p>
         <div class="cta-buttons">
-            <a href="contact.html" class="btn">Request Demo</a>
-            <a href="contact.html" class="btn btn-outline">Talk to an Expert</a>
+            <a href="{% url 'contact_create' %}" class="btn">Request Demo</a>
+           
         </div>
     </section>
     <div class="scroll-to-top">
