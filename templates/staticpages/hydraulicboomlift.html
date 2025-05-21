@@ -787,7 +787,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     .related-products {
-        margin-top: 60px;
+        
         padding: 4rem 0;
         overflow: hidden;
         position: relative;
@@ -1214,7 +1214,8 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .accordion-header {
-    background: #f8f9fa;
+    background: green;
+    color: white;
     padding: 1rem;
     cursor: pointer;
     display: flex;
@@ -1224,9 +1225,7 @@ document.addEventListener('DOMContentLoaded', function() {
     transition: all 0.3s ease;
 }
 
-.accordion-header:hover {
-    background: #e9ecef;
-}
+
 
 .accordion-body {
     padding: 0 1rem;
@@ -1236,6 +1235,17 @@ document.addEventListener('DOMContentLoaded', function() {
     background: white;
 }
 
+.accordion-item.active .accordion-body {
+    padding: 1rem;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.accordion-item.active .arrow {
+    transform: rotate(180deg);
+}
 .accordion-item.active .accordion-body {
     padding: 1rem;
 }
