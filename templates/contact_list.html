@@ -1,0 +1,30 @@
+<h1>Contact List</h1>
+<a href="{% url 'contact_create' %}">Create New Contact</a>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in contacts %}
+        <tr>
+            <td>{{ contact.name }}</td>
+            <td>{{ contact.company }}</td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.phone }}</td>
+            <td>{{ contact.subject }}</td>
+            <td>{{ contact.message }}</td>
+            <td>{{ contact.created_at }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">No contacts found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

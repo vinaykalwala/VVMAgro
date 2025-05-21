@@ -1,0 +1,40 @@
+<h1>Parties</h1>
+<a href="{% url 'party_create' %}">Create New Party</a>
+
+<table border="1" cellpadding="8">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Group</th>
+            <th>GSTIN/UIN</th>
+            <th>Address</th>
+            <th>Location</th>
+            <th>Pincode</th>
+            <th>State</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for party in parties %}
+        <tr>
+            <td>{{ party.name }}</td>
+            <td>{{ party.group.name }}</td>
+            <td>{{ party.gstin_uin_number }}</td>
+            <td>{{ party.address }}</td>
+            <td>{{ party.location }}</td>
+            <td>{{ party.pincode }}</td>
+            <td>{{ party.state }}</td>
+            <td>{{ party.phone|default:"N/A" }}</td>
+            <td>{{ party.email|default:"N/A" }}</td>
+            <td>
+                <a href="{% url 'party_update' party.id %}">Edit</a> |
+                <a href="{% url 'party_delete' party.id %}">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="10">No parties available.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

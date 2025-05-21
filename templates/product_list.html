@@ -1,0 +1,55 @@
+<h1>Products</h1>
+<a href="{% url 'product_create' %}">Create New Product </a>
+
+<table border="1" cellpadding="8">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Group</th>
+            <th>Price per Unit</th>
+            <th>Units</th>
+            <th>Stock Quantity</th>
+            <th>Warehouse</th>
+            <th>HSN/SAC</th>
+            
+            <th>GST Applicable</th>
+            
+            <th>CGST %</th>
+            <th>SGST %</th>
+            
+            <th>Type of Supply</th>
+            <th>Phase</th>
+           
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.group.name }}</td>
+            <td>{{ product.price_per_unit }}</td>
+            <td>{{ product.unit_of_measurement }}</td>
+            <td>{{ product.stock_quantity }}</td>
+            <td>{{ product.warehouse.name}}</td>
+            <td>{{ product.hsn_sac }}</td>
+            
+            <td>{{ product.gst_applicable|yesno:"Yes,No" }}</td>
+            
+            <td>{{ product.cgst_percent }}</td>
+            <td>{{ product.sgst_percent }}</td>
+            
+            <td>{{ product.get_type_of_supply_display }}</td>
+            <td>{{ product.get_phase_display|default:"N/A" }}</td>
+
+            
+            <td>
+                <a href="{% url 'product_update' product.id %}">Edit</a> |
+                <a href="{% url 'product_delete' product.id %}">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="23">No products available.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

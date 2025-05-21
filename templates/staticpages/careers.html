@@ -4,13 +4,7 @@
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
-    }
-
+   
     body {
         color: #1B5E20;
         overflow-x: hidden;
@@ -20,7 +14,7 @@
     .hero {
         height: 60vh;
         width: 100%;
-        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('{% static "images/careers-bg.jpg" %}') center/cover no-repeat;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('{% static "tractorbg.png" %}') center/cover no-repeat;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -37,7 +31,7 @@
     }
 
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         color: #FFFFFF;
         text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
         margin-bottom: 1.5rem;
@@ -48,7 +42,7 @@
     }
 
     .hero p {
-        font-size: 2rem;
+        font-size: 1.5rem;
         color: #C8E6C9;
         max-width: 900px;
         margin: 0 auto;
@@ -73,17 +67,13 @@
         border-radius: 20px;
         padding: 3rem;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        transition: transform 0.5s ease, box-shadow 0.5s ease;
         height: 600px;
         display: flex;
         flex-direction: column;
         margin: 2rem 0;
     }
 
-    .card-left:hover, .card-right:hover {
-        transform: translateY(-15px) scale(1.02);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-    }
+   
 
     .card-left {
         border-left: 8px solid #4CAF50;
@@ -116,10 +106,9 @@
     }
 
     .card-left h2, .card-right h2 {
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
-        overflow: hidden;
         white-space: nowrap;
         border-right: 3px solid;
         animation: typewriter 2s steps(20) forwards, blink 0.7s infinite;
@@ -132,13 +121,13 @@
 
     .card-right h2 {
         border-right-color: #FFFFFF;
+        
     }
 
     .card-left p, .card-right p {
         font-size: 1.2rem;
         margin-bottom: 1.5rem;
-        opacity: 0;
-        animation: fadeIn 1s ease-in 2s forwards;
+       
     }
 
     .card-right p {
@@ -408,6 +397,8 @@
     </div>
     <div class="card-right">
         <h2>Open Positions</h2>
+               
+
         <p>Explore exciting opportunities to join our team in Hyderabad, Telangana:</p>
         <div class="job-grid">
             <div class="job-card" style="--i: 1;">
@@ -434,8 +425,8 @@
     </div>
 </div>
 
-<div class="split-card-container">
-<div class="card-left">
+<div class="split-card-container" >
+<div class="card-left" style="height:500px;">
     <h2>Application Process</h2>
     <p>Ready to join us? Follow these simple steps to apply:</p>
     <ul>
@@ -446,7 +437,7 @@
     </ul>
 </div>
 
-<div class="card-right">
+<div class="card-right" style="height:500px;">
     <h2>Our Culture</h2>
     <p>At VVM Agro Industries, we foster a culture of innovation, teamwork, and sustainability. Our team thrives in a supportive environment where every idea counts, and we’re committed to creating a positive impact on agriculture and the planet.</p>
     <ul>
