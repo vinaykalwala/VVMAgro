@@ -16,7 +16,7 @@ urlpatterns = [
     path('pesticide/', pesticide_view, name='pesticide'),
     path('crop-harvester/', crop_harvester, name='crop_harvester'),
     path('rice-filtering/', rice_filtering, name='rice_filtering'),
-    path('irrigation-system/', irrigation_system, name='irrigation_system'),
+
     path('branchesanddistributors',branchesanddistributors, name='branchesanddistributors'),
     path('careers',careers, name='careers'),
     path('contactus',contactus, name='contactus'),

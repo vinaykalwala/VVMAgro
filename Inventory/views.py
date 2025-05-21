@@ -25,8 +25,7 @@ def pesticide_view(request):
 def crop_harvester(request):
     return render(request, 'staticpages/crop_harvester.html')
 
-def irrigation_system(request):
-    return render(request, 'staticpages/irrigation_system.html')
+
 
 def branchesanddistributors(request):
     return render(request,'staticpages/branchesanddistributors.html')
