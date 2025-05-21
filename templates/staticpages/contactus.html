@@ -63,101 +63,38 @@
         margin: 0 auto;
     }
 
-    /* Content Sections */
+    /* Content Section */
     .content-section {
         padding: 2rem 5%;
         width: 100%;
         max-width: 1200px;
         margin: 0 auto;
-        display: flex;
-        gap: 2rem;
-        align-items: flex-start;
         position: relative;
-        background: url('{% static "images/contact-bg.jpg" %}') center/cover fixed;
         border-radius: 10px;
+        text-align: center;
     }
 
-    .content-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 10px;
-    }
-
-    .contact-info, .form-section {
-        flex: 1;
+    .form-section {
         background: #FFFFFF;
         border-radius: 10px;
         padding: 2rem;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        position: relative;
-        z-index: 1;
+        margin-bottom: 2rem;
     }
 
-    .content-section h2 {
+    .form-section h2 {
         color: #4CAF50;
         font-size: 1.8rem;
         margin-bottom: 1.5rem;
         font-weight: 600;
     }
 
-    .contact-info ul {
-        list-style: none;
-        margin-top: 1rem;
-    }
-
-    .contact-info ul li {
-        display: flex;
-        align-items: center;
-        padding: 0.5rem 0;
-        font-size: 1rem;
-        color: #1B5E20;
-    }
-
-    .contact-info ul li i {
-        color: #4CAF50;
-        font-size: 1.5rem;
-        margin-right: 1rem;
-        background: #E8F5E9;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-    }
-
-    .social-icons {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1.5rem;
-    }
-
-    .social-icons h3 {
-        font-size: 1rem;
-        color: #4CAF50;
-        margin-bottom: 0.5rem;
-    }
-
-    .social-icons a {
-        color: #303F9F;
-        font-size: 1.5rem;
-        transition: color 0.3s ease;
-    }
-
-    .social-icons a:hover {
-        color: #2E7D32;
-    }
-
-    /* Contact Form */
     .contact-form {
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
     }
 
     .contact-form input,
@@ -182,10 +119,10 @@
         min-height: 100px;
     }
 
-    .contact-form button {
+    .submit-btn {
         background: #2E7D32;
         color: #FFFFFF;
-        padding: 0.8rem;
+        padding: 0.8rem 2rem;
         border: none;
         border-radius: 5px;
         font-size: 1rem;
@@ -193,8 +130,78 @@
         transition: background 0.3s ease;
     }
 
-    .contact-form button:hover {
+    .submit-btn:hover {
         background: #4CAF50;
+    }
+
+    .contact-cards {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .card {
+        flex: 1;
+        max-width: 300px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        text-align: center;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card i {
+        color: #4CAF50;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        background: #E8F5E9;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+
+    .card p {
+        font-size: 1rem;
+        color: #1B5E20;
+        margin: 0.5rem 0;
+    }
+
+    .card a {
+        color: #4CAF50;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .card a:hover {
+        color: #2E7D32;
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .social-icons a {
+        color: #4CAF50;
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+        color: #2E7D32;
     }
 
     /* Map Section */
@@ -210,6 +217,14 @@
         width: 100%;
         height: 100%;
         border: none;
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 1rem;
+        color: #1B5E20;
+        font-size: 0.9rem;
     }
 
     /* Animations */
@@ -232,13 +247,13 @@
 
     /* Responsive Design */
     @media (max-width: 1024px) {
-        .content-section {
+        .contact-cards {
             flex-direction: column;
-            gap: 1.5rem;
+            align-items: center;
         }
 
-        .contact-info, .form-section {
-            width: 100%;
+        .card {
+            max-width: 100%;
         }
     }
 
@@ -253,10 +268,6 @@
 
         .content-section {
             padding: 1.5rem 5%;
-        }
-
-        .content-section h2 {
-            font-size: 1.5rem;
         }
 
         .map-container {
@@ -281,8 +292,8 @@
             padding: 1rem 5%;
         }
 
-        .contact-info, .form-section {
-            padding: 1.5rem;
+        .form-section, .card {
+            padding: 1rem;
         }
     }
 </style>
@@ -295,21 +306,6 @@
 </section>
 
 <div class="content-section">
-    <div class="contact-info">
-        <h2>Get in Touch</h2>
-        <ul>
-            <li><i class="fas fa-map-marker-alt"></i><span><strong>Head Office:</strong> 1104&1105, Opp Petrol Pump, Doolapally, 02, M G Road, Hyderabad, Telangana, 500055</span></li>
-            <li><i class="fas fa-envelope"></i><span><strong>Email Us:</strong> info@vvmagro.com</span></li>
-            <li><i class="fas fa-phone-alt"></i><span><strong>Call Us:</strong> +91-123-456-7890</span></li>
-        </ul>
-        <div class="social-icons">
-            <h3>Follow Our Social Media</h3>
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-    </div>
-
     <div class="form-section">
         <h2>Send Us a Message</h2>
         <form class="contact-form" action="#" method="POST">
@@ -320,12 +316,38 @@
             <input type="email" name="email" placeholder="Email" required>
             <input type="text" name="subject" placeholder="Subject">
             <textarea name="message" placeholder="Message" required></textarea>
-            <button type="submit">Send</button>
+            <button type="submit" class="submit-btn">SUBMIT</button>
         </form>
+    </div>
+
+    <div class="contact-cards">
+        <div class="card">
+            <i class="fas fa-envelope"></i>
+            <p><strong>Email Us:</strong></p>
+            <p><a href="mailto:info@vvmagro.com">info@vvmagro.com</a></p>
+        </div>
+        <div class="card">
+            <i class="fas fa-phone-alt"></i>
+            <p><strong>Call Us:</strong></p>
+            <p>+91-123-456-7890</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-share-alt"></i>
+            <p><strong>Follow Our Social Media</strong></p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="map-container">
     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.2878920546876!2d78.44134711487436!3d17.49748798799992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93c0b3b0b3b3%3A0x8c0b0b0b0b0b0b0b!2sDoolapally%2C%20Hyderabad%2C%20Telangana%20500055!5e0!3m2!1sen!2sin!4v1698765432109!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
 </div>
+
+<footer>
+    <p>&copy; 2025 VVM Agro Industries. All rights reserved.</p>
+</footer>
 {% endblock %}
