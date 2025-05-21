@@ -90,3 +90,11 @@ class PartyForm(forms.ModelForm):
     class Meta:
         model = Party
         fields = '__all__'
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['name', 'company', 'email', 'phone', 'subject', 'message']
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 5}),
+        }

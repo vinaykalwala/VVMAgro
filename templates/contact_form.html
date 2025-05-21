@@ -1,0 +1,7 @@
+<h1>Create Contact</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+    <a href="{% url 'contact_list' %}">Back to Contact List</a>
+</form>

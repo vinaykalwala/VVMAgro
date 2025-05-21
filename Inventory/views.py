@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from .models import *
+from .forms import *
 
 # Create your views here.
 def home(request):
@@ -515,3 +517,18 @@ def party_delete(request, pk):
         party.delete()
         return redirect('party_list')
     return render(request, 'confirm_delete.html', {'object': party})
+
+
+def contact_create_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('contact_list')
+    else:
+        form = ContactForm()
+    return render(request, 'contact_form.html', {'form': form})
+
+def contact_list_view(request):
+    contacts = Contact.objects.all().order_by('-created_at')
+    return render(request, 'contact_list.html', {'contacts': contacts})
