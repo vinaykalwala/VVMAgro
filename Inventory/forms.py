@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
 from django.contrib.auth.forms import AuthenticationForm
 from .models import *
-
+from .models import JobApplication
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(required=True)
@@ -90,3 +90,17 @@ class PartyForm(forms.ModelForm):
     class Meta:
         model = Party
         fields = '__all__'
+
+class JobApplicationForm(forms.ModelForm):
+    class Meta:
+        model = JobApplication
+        fields = ["first_name", "last_name", "email", "phone", "resume", "cover_letter"]
+
+    def clean_resume(self):
+        resume = self.cleaned_data.get("resume")
+        if resume:
+            if not resume.name.endswith(".pdf"):
+                raise forms.ValidationError("Resume must be a PDF file.")
+            if resume.size > 5 * 1024 * 1024:  # 5MB limit
+                raise forms.ValidationError("Resume file size must be under 5MB.")
+        return resume

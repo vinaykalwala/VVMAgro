@@ -12,3 +12,6 @@ admin.site.register(Voucher)
 admin.site.register(VoucherProductItem)
 # admin.site.register(StockExchangeProduct)
 # admin.site.register(StockExchangeForm)
+
+admin.site.register(Job)
+admin.site.register(JobApplication)

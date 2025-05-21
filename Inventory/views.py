@@ -515,3 +515,30 @@ def party_delete(request, pk):
         party.delete()
         return redirect('party_list')
     return render(request, 'confirm_delete.html', {'object': party})
+
+
+
+from .models import Job, JobApplication
+from .forms import JobApplicationForm
+
+def apply_for_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    
+    if request.method == "POST":
+        form = JobApplicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.job = job
+            application.save()
+            messages.success(request, "Your application has been submitted successfully!")
+            return redirect("careers")  
+        else:
+            messages.error(request, "There was an error with your application. Please check the form.")
+    else:
+        form = JobApplicationForm()
+
+    return render(request, "staticpages/apply.html", {"form": form, "job": job})
+
+def careers(request):
+    jobs = Job.objects.all()
+    return render(request, "staticpages/careers.html", {"jobs": jobs})

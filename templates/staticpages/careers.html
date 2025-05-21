@@ -1,10 +1,11 @@
 {% extends 'staticpages/base.html' %}
 {% load static %}
+
 {% block title %}Careers at VVM Agro Industries{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
-   
     body {
         color: #1B5E20;
         overflow-x: hidden;
@@ -73,8 +74,6 @@
         margin: 2rem 0;
     }
 
-   
-
     .card-left {
         border-left: 8px solid #4CAF50;
     }
@@ -121,13 +120,11 @@
 
     .card-right h2 {
         border-right-color: #FFFFFF;
-        
     }
 
     .card-left p, .card-right p {
         font-size: 1.2rem;
         margin-bottom: 1.5rem;
-       
     }
 
     .card-right p {
@@ -213,10 +210,9 @@
 
     /* Single Card Section */
     .card-section {
-        /* width: 100%; */
         background: #E8F5E9;
         border-radius: 20px;
-        padding: 3rem 5rem; 
+        padding: 3rem 5rem;
         margin: 2rem 0;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         border-top: 8px solid #4CAF50;
@@ -397,54 +393,42 @@
     </div>
     <div class="card-right">
         <h2>Open Positions</h2>
-               
-
         <p>Explore exciting opportunities to join our team in Hyderabad, Telangana:</p>
         <div class="job-grid">
-            <div class="job-card" style="--i: 1;">
-                <h3>Mechanical Engineer</h3>
-                <p>Design and develop advanced wood working and tractor attachment machinery. Requires a B.Tech in Mechanical Engineering and 3+ years of experience.</p>
-                <a href="#" class="apply-btn">Apply Now</a>
+            {% for job in jobs %}
+            <div class="job-card" style="--i: {{ forloop.counter }}">
+                <h3>{{ job.title }}</h3>
+                <p><strong>Location:</strong> {{ job.location }}</p>
+                <p>{{ job.description }}</p>
+                <a href="{% url 'apply_for_job' job.id %}" class="apply-btn">Apply Now</a>
             </div>
-            <div class="job-card" style="--i: 2;">
-                <h3>Production Supervisor</h3>
-                <p>Oversee manufacturing processes for waste recycling machines. Requires 5+ years in production management and strong leadership skills.</p>
-                <a href="#" class="apply-btn">Apply Now</a>
-            </div>
-            <div class="job-card" style="--i: 3;">
-                <h3>Quality Control Technician</h3>
-                <p>Ensure the quality of agricultural machinery parts. Requires 2+ years in quality assurance and attention to detail.</p>
-                <a href="#" class="apply-btn">Apply Now</a>
-            </div>
-            <div class="job-card" style="--i: 4;">
-                <h3>Sales Executive</h3>
-                <p>Promote our forestry tools and build client relationships. Requires 2+ years in B2B sales and excellent communication skills.</p>
-                <a href="#" class="apply-btn">Apply Now</a>
-            </div>
+            {% empty %}
+            <p>No open positions available at the moment.</p>
+            {% endfor %}
         </div>
     </div>
 </div>
 
-<div class="split-card-container" >
-<div class="card-left" style="height:500px;">
-    <h2>Application Process</h2>
-    <p>Ready to join us? Follow these simple steps to apply:</p>
-    <ul>
-        <li style="--i: 1;">Browse open positions and select a role that matches your skills.</li>
-        <li style="--i: 2;">Submit your resume and cover letter via our online application portal.</li>
-        <li style="--i: 3;">Participate in interviews to showcase your expertise.</li>
-        <li style="--i: 4;">Receive an offer and start your journey with VVM Agro Industries!</li>
-    </ul>
+<div class="split-card-container">
+    <div class="card-left" style="height:500px;">
+        <h2>Application Process</h2>
+        <p>Ready to join us? Follow these simple steps to apply:</p>
+        <ul>
+            <li style="--i: 1;">Browse open positions and select a role that matches your skills.</li>
+            <li style="--i: 2;">Submit your resume and cover letter via our online application portal.</li>
+            <li style="--i: 3;">Participate in interviews to showcase your expertise.</li>
+            <li style="--i: 4;">Receive an offer and start your journey with VVM Agro Industries!</li>
+        </ul>
+    </div>
+    <div class="card-right" style="height:500px;">
+        <h2>Our Culture</h2>
+        <p>At VVM Agro Industries, we foster a culture of innovation, teamwork, and sustainability. Our team thrives in a supportive environment where every idea counts, and we’re committed to creating a positive impact on agriculture and the planet.</p>
+        <ul>
+            <li style="--i: 1;">Collaborative: Work closely with passionate professionals.</li>
+            <li style="--i: 2;">Innovative: Drive advancements in machinery design.</li>
+            <li style="--i: 3;">Sustainable: Contribute to eco-friendly solutions.</li>
+        </ul>
+    </div>
 </div>
 
-<div class="card-right" style="height:500px;">
-    <h2>Our Culture</h2>
-    <p>At VVM Agro Industries, we foster a culture of innovation, teamwork, and sustainability. Our team thrives in a supportive environment where every idea counts, and we’re committed to creating a positive impact on agriculture and the planet.</p>
-    <ul>
-        <li style="--i: 1;">Collaborative: Work closely with passionate professionals.</li>
-        <li style="--i: 2;">Innovative: Drive advancements in machinery design.</li>
-        <li style="--i: 3;">Sustainable: Contribute to eco-friendly solutions.</li>
-    </ul>
-</div>
-</div>
 {% endblock %}

@@ -69,7 +69,8 @@ urlpatterns = [
     path('parties/<int:pk>/update/', party_update, name='party_update'),
     path('parties/<int:pk>/delete/', party_delete, name='party_delete'),
 
-
+    # JobApplication
+    path("apply/<int:job_id>/", apply_for_job, name="apply_for_job"),
 
 ]
 if settings.DEBUG:
