@@ -6,11 +6,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Document</title>
     <style>
-        body{
-            font-family: 'Poppins', sans-serif;
+        :root {
+            --primary: #388e3c; /* Darker green */
+            --secondary: #689f38; 
+            --accent: #ffa000; /* Amber */
+            --light: #f5f5f5;
+            --dark: #263238;
+            --text: #424242;
+
         }
+        
       .products-hero {
         height: 80vh;
         min-height: 400px;
@@ -27,6 +35,7 @@
         animation: heroFadeIn 1.5s ease-out;
         overflow: hidden;
     }
+    
 
     .products-hero::before {
         content: '';
@@ -115,6 +124,22 @@
             left: 100%;
         }
     }
+    .section-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
 
     .products-section {
         padding: 4rem 5%;
@@ -187,6 +212,73 @@
           opacity: 1;
           transform: translateX(0);
       }
+      .farming-benefits {
+        background: #f4fbe5;
+        padding: 5rem 5%;
+        text-align: center;
+        border-top: 2px solid #d6eadd;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s ease;
+    }
+    
+    .farming-benefits.animate {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .benefits-header h2 {
+        font-size: 2.2rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+    
+    .benefits-header p {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 3rem;
+    }
+    
+    .benefits-list {
+        list-style: none;
+        padding: 0;
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .benefit-item {
+        font-size: 1.15rem;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        transition: all 0.4s ease;
+        cursor: default;
+    }
+    
+    .benefit-item i {
+        color: var(--primary);
+        font-size: 1.5rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .benefit-item:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        background-color: green;
+        color: white;
+    }
+    
+    .benefit-item:hover i {
+        transform: rotate(10deg) scale(1.2);
+    }
   
       @media (max-width: 1200px) {
         .products-grid {
@@ -236,10 +328,10 @@
     <div class="products-grid">
       <div class="product-card">
         <a href="{% url 'tractor' %}">
-            <div class="product-image" style="background-image: url('{% static "images/tractor.jpg" %}')"></div>
+            <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}')"></div>
             <div class="product-overlay">
                 <h3 class="product-title">
-                    Advanced Farming Tractor
+                    Front Dozer Tractor
                     <i class="fas fa-arrow-right"></i>
                 </h3>
             </div>
@@ -248,10 +340,10 @@
 
         <div class="product-card">
           <a href="{% url 'land_smoothing' %}">
-              <div class="product-image" style="background-image: url('{% static "images/land-smoothing.jpg" %}')"></div>
+              <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}')"></div>
               <div class="product-overlay">
                   <h3 class="product-title">
-                      Land Smoothing Machine
+                      Hydraulic Boom Lift Tractor
                       <i class="fas fa-arrow-right"></i>
                   </h3>
               </div>
@@ -260,10 +352,10 @@
 
       <div class="product-card">
         <a href="{% url 'pesticide' %}">
-            <div class="product-image" style="background-image: url('{% static "images/sprayer.jpeg" %}')"></div>
+            <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}')"></div>
             <div class="product-overlay">
                 <h3 class="product-title">
-                    Pesticide Sprayer
+                    Boom Sprayer Tractor
                     <i class="fas fa-arrow-right"></i>
                 </h3>
             </div>
@@ -272,10 +364,10 @@
 
     <div class="product-card">
       <a href="{% url 'crop_harvester' %}">
-          <div class="product-image" style="background-image: url('{% static "images/side-view.png" %}')"></div>
+          <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}')"></div>
           <div class="product-overlay">
               <h3 class="product-title">
-                  Crop Harvester
+                  Heavy-Duty Hydraulic Lift Tractor
                   <i class="fas fa-arrow-right"></i>
               </h3>
           </div>
@@ -284,10 +376,10 @@
 
   <div class="product-card">
     <a href="{% url 'rice_filtering' %}">
-        <div class="product-image" style="background-image: url('{% static "images/rice-filter.jpg" %}')"></div>
+        <div class="product-image" style="background-image: url('{% static "images/img6.png" %}')"></div>
         <div class="product-overlay">
             <h3 class="product-title">
-                Rice Filtering System
+                Hydraulic Post Hole Digger
                 <i class="fas fa-arrow-right"></i>
             </h3>
         </div>
@@ -306,11 +398,38 @@
           </a>
       </div>
 </section>
-<<<<<<< HEAD
-
-=======
+<section class="farming-benefits" data-animate>
+    <div class="benefits-header">
+      <h2 class="section-title">Why Choose Our Agricultural Solutions?</h2>
+      <p class="section-subtitle">More than just machines — we deliver innovation, efficiency, and sustainability to your fields.</p>
+    </div>
   
->>>>>>> dc17cede2bbb684a885b96e7efd83013a539a485
+    <ul class="benefits-list">
+      <li class="benefit-item"><i class="fas fa-check-circle"></i> Improve crop yield through smart technology integration</li>
+      <li class="benefit-item"><i class="fas fa-check-circle"></i> Reduce operational costs with energy-efficient machinery</li>
+      <li class="benefit-item"><i class="fas fa-check-circle"></i> Access ongoing support, maintenance, and expert training</li>
+      <li class="benefit-item"><i class="fas fa-check-circle"></i> Minimize water usage with intelligent irrigation systems</li>
+      <li class="benefit-item"><i class="fas fa-check-circle"></i> Support sustainability with eco-conscious equipment</li>
+    </ul>
+  </section>
+
+
+  <script>
+    // Simple scroll-based animation trigger
+    const animSection = document.querySelector('.farming-benefits');
+    const animObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animSection.classList.add('animate');
+          animObserver.unobserve(animSection);
+        }
+      });
+    }, { threshold: 0.4 });
+  
+    if (animSection) animObserver.observe(animSection);
+  </script>
+  
+  
 
     {% endblock %}
 

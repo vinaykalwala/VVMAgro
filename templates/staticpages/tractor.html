@@ -4,11 +4,10 @@
 {% block content %}
 <div class="product-detail">
     <div class="product-hero">
-       
-        <img src="{% static 'images/tractor.jpg' %}" alt="Advanced Farming Tractor" class="product-image">
+        <img src="{% static 'images/tractor.jpg' %}" alt="Front Dozer Tractor" class="product-image">
     </div>
     <div class="product-info">
-        <h1>Advanced Farming Tractor</h1>
+        <h1>Front Dozer Tractor</h1>
         <div class="product-description">
             <h2>Product Overview</h2>
             <p>Our state-of-the-art farming tractor combines power with precision for optimal agricultural operations. Designed for both small and large-scale farming needs.</p>
@@ -117,34 +116,72 @@
         </div>
         <div class="contact-section">
             <div class="finance-calculator">
-                <h2>Financing Calculator</h2>
-                <div class="calculator-form">
-                    <div class="form-group">
-                        <label for="loan-amount">Loan Amount (₹)</label>
-                        <input type="number" id="loan-amount" value="1250000" min="100000" max="2000000">
+                <h2>Financing Options</h2>
+                <div class="calculator-container">
+                    <div class="calculator-visual">
+                        <div class="calculator-graphic">
+                            <div class="graphic-bar" id="principal-bar"></div>
+                            <div class="graphic-bar" id="interest-bar"></div>
+                            <div class="graphic-labels">
+                                <div class="graphic-label">
+                                    <span class="label-color principal-color"></span>
+                                    <span>Principal</span>
+                                </div>
+                                <div class="graphic-label">
+                                    <span class="label-color interest-color"></span>
+                                    <span>Interest</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calculator-summary">
+                            <div class="summary-item">
+                                <span>Total Cost</span>
+                                <span id="total-cost">₹ 12,50,000</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Monthly EMI</span>
+                                <span id="emi-amount">₹ 25,620</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Total Interest</span>
+                                <span id="total-interest">₹ 2,87,200</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="loan-term">Loan Term (Years)</label>
-                        <input type="number" id="loan-term" value="5" min="1" max="7">
-                    </div>
-                    <div class="form-group">
-                        <label for="interest-rate">Interest Rate (%)</label>
-                        <input type="number" id="interest-rate" value="8.5" min="5" max="15" step="0.1">
-                    </div>
-                    <button class="calc-btn" onclick="calculateEMI()">Calculate EMI</button>
-                    <div class="emi-result">
-                        <p>Estimated Monthly EMI:</p>
-                        <h3 id="emi-amount">₹ 25,620</h3>
+                    
+                    <div class="calculator-form">
+                        <div class="form-group">
+                            <label for="loan-amount">Loan Amount (₹)</label>
+                            <input type="range" id="loan-amount-range" min="500000" max="2000000" value="1250000" step="50000">
+                            <input type="number" id="loan-amount" value="1250000" min="500000" max="2000000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loan-term">Loan Term (Years)</label>
+                            <input type="range" id="loan-term-range" min="1" max="7" value="5">
+                            <input type="number" id="loan-term" value="5" min="1" max="7">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="interest-rate">Interest Rate (%)</label>
+                            <input type="range" id="interest-rate-range" min="5" max="15" value="8.5" step="0.1">
+                            <input type="number" id="interest-rate" value="8.5" min="5" max="15" step="0.1">
+                        </div>
+                        
+                        <button class="calc-btn" onclick="calculateEMI()">
+                            <i class="fas fa-calculator"></i> Calculate EMI
+                        </button>
+                        
+                        <div class="form-note">
+                            <i class="fas fa-info-circle"></i> Actual terms may vary based on credit approval
+                        </div>
                     </div>
                 </div>
             </div>
             <h2>Interested in this product?</h2>
             <a href="{% url 'contactus' %}" class="contact-btn">Contact Us</a>
         </div>
-
-        </div>
     </div>
-
 </div>
 
 <!-- Product Image Carousel -->
@@ -205,7 +242,7 @@
                 <div class="product-image" style="background-image: url('{% static 'images/sprayer.jpeg' %}')"></div>
                 <div class="product-overlay">
                     <h3 class="product-title">
-                        Pesticide Sprayer
+                        Boom Sprayer Tractor
                         <i class="fas fa-arrow-right"></i>
                     </h3>
                 </div>
@@ -217,7 +254,7 @@
                 <div class="product-image" style="background-image: url('{% static 'images/harvester.jpeg' %}')"></div>
                 <div class="product-overlay">
                     <h3 class="product-title">
-                        Crop Harvester
+                        Heavy-Duty Hydraulic Lift Tractor
                         <i class="fas fa-arrow-right"></i>
                     </h3>
                 </div>
@@ -229,7 +266,7 @@
               <div class="product-image" style="background-image: url('{% static "images/land-smoothing.jpg" %}')"></div>
               <div class="product-overlay">
                   <h3 class="product-title">
-                      Land Smoothing Machine
+                      Hydraulic Boom Lift Tractor
                       <i class="fas fa-arrow-right"></i>
                   </h3>
               </div>
@@ -241,7 +278,7 @@
         <div class="product-image" style="background-image: url('{% static "images/rice-filter.jpg" %}')"></div>
         <div class="product-overlay">
             <h3 class="product-title">
-                Rice Filtering System
+                Hydraulic Post Hole Digger Broucher
                 <i class="fas fa-arrow-right"></i>
             </h3>
         </div>
@@ -261,7 +298,6 @@
             --light: #f5f5f5;
             --dark: #263238;
             --text: #424242;
-
         }
     /* Product Detail Styles */
     .product-detail {
@@ -345,8 +381,6 @@
         font-weight: 600;
     }
 
-
-
     .price-company-info {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -428,41 +462,141 @@
         font-weight: bold;
         margin-right: 0.5rem;
     }
+
+    /* Finance Calculator Styles */
     .finance-calculator {
         position: relative;
         margin: 3rem auto;
-        max-width: 500px;
+        max-width: 1000px;
         padding: 2rem;
         background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('{% static "images/tractor.jpg" %}');
         background-size: cover;
         background-position: center;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        overflow: hidden;
-    }
-    
-    .calculator-form {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
     }
 
-    .form-group {
+    .calculator-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .calculator-visual {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .calculator-graphic {
+        height: 200px;
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .graphic-bar {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        transition: height 0.3s ease;
+    }
+
+    #principal-bar {
+        background: var(--primary);
+        z-index: 2;
+    }
+
+    #interest-bar {
+        background: var(--secondary);
+        opacity: 0.7;
+        z-index: 1;
+    }
+
+    .graphic-labels {
         display: flex;
-        flex-direction: column;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .graphic-label {
+        display: flex;
+        align-items: center;
         gap: 0.5rem;
     }
 
-    .form-group label {
-        color: var(--text);
-        font-weight: 500;
+    .label-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
     }
 
-    .form-group input {
+    .principal-color {
+        background: var(--primary);
+    }
+
+    .interest-color {
+        background: var(--secondary);
+        opacity: 0.7;
+    }
+
+    .calculator-summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .summary-item {
+        text-align: center;
+    }
+
+    .summary-item span:first-child {
+        display: block;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-item span:last-child {
+        display: block;
+        font-size: 1.2rem;
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .calculator-form {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group input[type="range"] {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    .form-group input[type="number"] {
+        width: 100%;
         padding: 0.8rem;
         border: 1px solid #ddd;
         border-radius: 6px;
         font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .form-note {
+        text-align: center;
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 1rem;
     }
 
     .calc-btn {
@@ -474,21 +608,15 @@
         font-size: 1.1rem;
         cursor: pointer;
         transition: all 0.3s ease;
+        width: 100%;
     }
 
     .calc-btn:hover {
         background: var(--secondary);
     }
 
-    .emi-result {
-        text-align: center;
-        margin-top: 1.5rem;
-    }
-
-    .emi-result h3 {
-        color: var(--primary);
-        font-size: 2rem;
-        margin-top: 0.5rem;
+    .calc-btn i {
+        margin-right: 8px;
     }
 
     .contact-section {
@@ -503,8 +631,6 @@
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-
-
 
     .contact-section h2 {
         text-align: center;
@@ -684,6 +810,78 @@
         transform: translateX(0);
     }
 
+    /* Hero Section Enhancement */
+    .product-hero {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2rem;
+        background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    }
+
+    .hero-content {
+        max-width: 50%;
+        z-index: 1;
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 2.5rem;
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .stat-label {
+        color: var(--text);
+        font-size: 1rem;
+    }
+
+    /* Comparison Table Styles */
+    .comparison-section {
+        margin: 4rem 0;
+        padding: 2rem;
+        background: var(--light);
+        border-radius: 12px;
+    }
+
+    .comparison-table {
+        overflow-x: auto;
+    }
+
+    .comparison-table table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .comparison-table th, .comparison-table td {
+        padding: 1rem;
+        text-align: left;
+        border: 1px solid #eee;
+    }
+
+    .comparison-table th {
+        background: var(--primary);
+        color: white;
+    }
+
+    .comparison-table tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
     /* Responsive Styles */
     @media (max-width: 1200px) {
         .products-grid {
@@ -710,6 +908,10 @@
         .product-hero {
             height: 400px;
         }
+
+        .calculator-container {
+            grid-template-columns: 1fr;
+        }
     }
 
     @media (max-width: 768px) {
@@ -723,6 +925,10 @@
         
         .contact-section {
             padding: 1.5rem;
+        }
+
+        .calculator-summary {
+            grid-template-columns: 1fr;
         }
     }
 
@@ -781,109 +987,6 @@
         scroll-behavior: smooth;
     }
     
-/* Hero Section Enhancement */
-.product-hero {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2rem;
-    background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
-}
-
-.hero-content {
-    max-width: 50%;
-    z-index: 1;
-}
-
-.hero-stats {
-    display: flex;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-value {
-    display: block;
-    font-size: 2.5rem;
-    color: var(--primary);
-    font-weight: 700;
-}
-
-.stat-label {
-    color: var(--text);
-    font-size: 1rem;
-}
-
-/* Comparison Table Styles */
-.comparison-section {
-    margin: 4rem 0;
-    padding: 2rem;
-    background: var(--light);
-    border-radius: 12px;
-}
-
-.comparison-table {
-    overflow-x: auto;
-}
-
-.comparison-table table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.comparison-table th, .comparison-table td {
-    padding: 1rem;
-    text-align: left;
-    border: 1px solid #eee;
-}
-
-.comparison-table th {
-    background: var(--primary);
-    color: white;
-}
-
-.comparison-table tr:nth-child(even) {
-    background: #f9f9f9;
-}
-
-
-.author-info h4 {
-    margin: 0;
-    color: var(--primary);
-}
-
-.author-info span {
-    color: #666;
-    font-size: 0.9rem;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .product-hero {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .hero-content {
-        max-width: 100%;
-        margin-bottom: 2rem;
-    }
-
-    .hero-stats {
-        justify-content: center;
-    }
-
-    .testimonial-slide {
-        min-width: 300px;
-    }
-}
     #products-grid {
         display: flex;
         overflow-x: auto;
@@ -1007,31 +1110,48 @@
     
         // EMI Calculation Functionality
         function calculateEMI() {
-            const principal = parseFloat(document.getElementById('loan-amount').value) || 0;
-            const years = parseFloat(document.getElementById('loan-term').value) || 0;
-            const rate = parseFloat(document.getElementById('interest-rate').value) || 0;
-    
-            const monthlyRate = rate / 12 / 100;
-            const months = years * 12;
+            const loanAmount = parseFloat(document.getElementById('loan-amount').value);
+            const loanTerm = parseFloat(document.getElementById('loan-term').value);
+            const interestRate = parseFloat(document.getElementById('interest-rate').value);
             
-            // Prevent division by zero and invalid calculations
-            if (monthlyRate > 0 && months > 0 && principal > 0) {
-                const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / 
-                           (Math.pow(1 + monthlyRate, months) - 1);
-                
-                document.getElementById('emi-amount').textContent = 
-                    `₹ ${emi.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-            } else {
-                document.getElementById('emi-amount').textContent = '₹ 0';
-            }
+            const monthlyRate = interestRate / 1200;
+            const numberOfPayments = loanTerm * 12;
+            
+            const emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            const totalAmount = emi * numberOfPayments;
+            const totalInterest = totalAmount - loanAmount;
+            
+            // Update summary values
+            document.getElementById('emi-amount').textContent = `₹ ${Math.round(emi).toLocaleString('en-IN')}`;
+            document.getElementById('total-cost').textContent = `₹ ${Math.round(totalAmount).toLocaleString('en-IN')}`;
+            document.getElementById('total-interest').textContent = `₹ ${Math.round(totalInterest).toLocaleString('en-IN')}`;
+            
+            // Update visual bars
+            const principalBar = document.getElementById('principal-bar');
+            const interestBar = document.getElementById('interest-bar');
+            
+            const totalHeight = 200; // Max height of the graphic in pixels
+            const principalHeight = (loanAmount / totalAmount) * totalHeight;
+            const interestHeight = (totalInterest / totalAmount) * totalHeight;
+            
+            principalBar.style.height = `${principalHeight}px`;
+            interestBar.style.height = `${interestHeight}px`;
         }
-    
-        // Add event listeners for EMI calculation
-        document.getElementById('loan-amount')?.addEventListener('input', calculateEMI);
-        document.getElementById('loan-term')?.addEventListener('input', calculateEMI);
-        document.getElementById('interest-rate')?.addEventListener('input', calculateEMI);
-    
-        // Initial EMI calculation
+
+        // Sync range and number inputs
+        document.querySelectorAll('input[type="range"]').forEach(range => {
+            const number = document.getElementById(range.id.replace('-range', ''));
+            range.addEventListener('input', () => {
+                number.value = range.value;
+                calculateEMI();
+            });
+            number.addEventListener('input', () => {
+                range.value = number.value;
+                calculateEMI();
+            });
+        });
+
+        // Initial calculation
         calculateEMI();
     
         // Clean up
@@ -1040,5 +1160,5 @@
             observer.disconnect();
         });
     });
-    </script>
+</script>
 {% endblock %}

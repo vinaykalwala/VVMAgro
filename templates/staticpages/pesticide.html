@@ -2,464 +2,792 @@
 {% load static %}
 
 {% block content %}
-<div class="product-detail">
-    <div class="product-hero">
-        <img src="{% static 'images/sprayer.jpeg' %}" alt="Pesticide Sprayer" class="product-image">
-    </div>
-    <div class="product-info">
-        <h1>Pesticide Sprayer</h1>
-        <div class="product-description">
-            <h2>Product Overview</h2>
-            <p>Our state-of-the-art pesticide sprayer is designed for efficient and uniform application of pesticides, herbicides, and other agricultural chemicals. With advanced features and robust construction, it ensures optimal coverage while minimizing waste and environmental impact.</p>
-            
-            <div class="specs-grid">
-                <div class="specs-column">
-                    <h2>Key Features</h2>
+<div class="product-detail-container">
+    <!-- Product Header with Image -->
+    <div class="product-header">
+        <div class="product-image-container">
+            <div class="main-image animate-zoom">
+                <img src="{% static 'images/img3.jpeg' %}" alt="Advanced Rice Filtering Machine" class="product-main-img">
+                <div class="image-badge">Premium Quality</div>
+            </div>
+        </div>
+        <div class="product-summary">
+            <h1 class="product-title animate-fadeIn">Advanced Rice Filtering Machine</h1>
+            <div class="product-highlights">
+                <div class="highlight-card animate-slideUp">
+                    <h3><i class="fas fa-star"></i> Key Features</h3>
                     <ul>
-                        <li>High capacity tank with chemical-resistant coating</li>
-                        <li>Adjustable spray nozzles for precise application</li>
-                        <li>User-friendly controls and comfortable handling</li>
-                        <li>Durable construction for long-lasting performance</li>
-                        <li>Reduced drift technology for environmental safety</li>
-                    </ul>
-                </div>
-                
-                <div class="specs-column">
-                    <h2>Technical Specifications</h2>
-                    <ul>
-                        <li>Tank Capacity: 500 liters</li>
-                        <li>Spray Width: Up to 12 meters</li>
-                        <li>Power Requirement: 30-50 HP</li>
-                        <li>Operating Pressure: 2-5 bar</li>
+                        <li><i class="fas fa-check-circle"></i> High-capacity filtering up to 5 tons/hour</li>
+                        <li><i class="fas fa-check-circle"></i> Multi-stage filtration system</li>
+                        <li><i class="fas fa-check-circle"></i> Adjustable sieve sizes for different rice grades</li>
+                        <li><i class="fas fa-check-circle"></i> Durable stainless steel construction</li>
+                        <li><i class="fas fa-check-circle"></i> Energy-efficient electric motor</li>
                     </ul>
                 </div>
             </div>
+            <div class="cta-buttons">
+                <button class="inquiry-btn animate-pulse">
+                    <i class="fas fa-envelope"></i> Send Inquiry
+                </button>
+                <button class="brochure-btn animate-bounce">
+                    <i class="fas fa-download"></i> Download Brochure
+                </button>
+            </div>
         </div>
-        <div class="contact-section">
-            <h2>Interested in this product?</h2>
-            <a href="{% url 'contactus' %}" class="contact-btn">Contact Us</a>
+    </div>
+
+    <!-- Product Specifications -->
+    <div class="product-specs">
+        <h2 class="section-title animate-fadeIn">Technical Specifications</h2>
+        <div class="spec-tabs">
+            <button class="spec-tab active animate-slideLeft" onclick="openSpecTab('filter-specs')">
+                <i class="fas fa-filter"></i> Filter Specifications
+            </button>
+            <button class="spec-tab animate-slideRight" onclick="openSpecTab('performance')">
+                <i class="fas fa-tachometer-alt"></i> Performance
+            </button>
+        </div>
+
+        <div id="filter-specs" class="spec-content animate-fadeIn" style="display: block;">
+            <div class="spec-card">
+                <table class="spec-table">
+                    <tr class="animate-row">
+                        <th>Machine Type</th>
+                        <td>Multi-stage Rice Filter</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Construction Material</th>
+                        <td>Stainless Steel 304</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Sieve Sizes</th>
+                        <td>3 adjustable levels (2mm, 3mm, 5mm)</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Power Source</th>
+                        <td>Electric Motor (3-phase)</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Dimensions</th>
+                        <td>2500mm (L) x 1500mm (W) x 2000mm (H)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="performance" class="spec-content animate-fadeIn" style="display: none;">
+            <div class="spec-card">
+                <table class="spec-table">
+                    <tr class="animate-row">
+                        <th>Capacity</th>
+                        <td>3-5 tons/hour</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Power Consumption</th>
+                        <td>5.5 kW</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Impurity Removal Rate</th>
+                        <td>≥ 98%</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Broken Grain Rate</th>
+                        <td>≤ 1%</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Noise Level</th>
+                        <td>≤ 75 dB</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Weight</th>
+                        <td>850 kg</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Features -->
+    <div class="product-features">
+        <h2 class="section-title animate-fadeIn">Why Choose Our Rice Filter?</h2>
+        <div class="features-grid">
+            <div class="feature-card animate-slideUp">
+                <div class="feature-icon" style="background-color: #ff6b6b;">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <h3>High Efficiency</h3>
+                <p>Processes up to 5 tons of rice per hour with 98% impurity removal rate.</p>
+                <div class="feature-wave"></div>
+            </div>
+            <div class="feature-card animate-slideUp" style="animation-delay: 0.2s;">
+                <div class="feature-icon" style="background-color: #48dbfb;">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3>Precision Filtration</h3>
+                <p>Adjustable sieve sizes ensure perfect grading for different rice varieties.</p>
+                <div class="feature-wave"></div>
+            </div>
+            <div class="feature-card animate-slideUp" style="animation-delay: 0.4s;">
+                <div class="feature-icon" style="background-color: #1dd1a1;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Durable Construction</h3>
+                <p>Made from food-grade stainless steel for longevity and hygiene.</p>
+                <div class="feature-wave"></div>
+            </div>
+            <div class="feature-card animate-slideUp" style="animation-delay: 0.6s;">
+                <div class="feature-icon" style="background-color: #feca57;">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h3>Grain Protection</h3>
+                <p>Gentle handling minimizes broken grains and preserves quality.</p>
+                <div class="feature-wave"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="related-products">
+        <h2 class="section-title animate-fadeIn">Explore Our Other Products</h2>
+        <div class="products-grid">
+            <div class="related-product-card animate-slideUp">
+                <a href="{% url 'pesticide' %}">
+                    <div class="related-product-image" style="background-image: url('{% static "images/img3.jpeg" %}')"></div>
+                    <div class="related-product-overlay">
+                        <h3 class="related-product-title">
+                            Boom Sprayer Tractor
+                            <i class="fas fa-arrow-right"></i>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="related-product-card animate-slideUp" style="animation-delay: 0.2s;">
+                <a href="#">
+                    <div class="related-product-image" style="background-image: url('{% static "images/img1.jpeg" %}')"></div>
+                    <div class="related-product-overlay">
+                        <h3 class="related-product-title">
+                            Rice Mill Machine
+                            <i class="fas fa-arrow-right"></i>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="related-product-card animate-slideUp" style="animation-delay: 0.4s;">
+                <a href="#">
+                    <div class="related-product-image" style="background-image: url('{% static "images/img2.jpeg" %}')"></div>
+                    <div class="related-product-overlay">
+                        <h3 class="related-product-title">
+                            Grain Dryer
+                            <i class="fas fa-arrow-right"></i>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="related-product-card animate-slideUp" style="animation-delay: 0.6s;">
+                <a href="#">
+                    <div class="related-product-image" style="background-image: url('{% static "images/img5.jpeg" %}')"></div>
+                    <div class="related-product-overlay">
+                        <h3 class="related-product-title">
+                            Seed Cleaner
+                            <i class="fas fa-arrow-right"></i>
+                        </h3>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Product Image Carousel -->
-<div class="product-carousel">
-    <h2>Product Gallery</h2>
-    <div class="carousel-container">
-        <div class="carousel-track">
-            <div class="carousel-slide">
-                <img src="{% static 'images/sprayer.jpeg' %}" alt="Pesticide Sprayer Front View">
-                <div class="slide-info">
-                    <h3>Front View</h3>
-                    <p>Complete sprayer system overview</p>
-                </div>
-            </div>
-            <div class="carousel-slide">
-                <img src="{% static 'images/sprayer.jpeg' %}" alt="Nozzle System">
-                <div class="slide-info">
-                    <h3>Nozzle System</h3>
-                    <p>Precision adjustable nozzles</p>
-                </div>
-            </div>
-            <div class="carousel-slide">
-                <img src="{% static 'images/sprayer.jpeg' %}" alt="Control Panel">
-                <div class="slide-info">
-                    <h3>Control Panel</h3>
-                    <p>User-friendly operation controls</p>
-                </div>
-            </div>
-            <div class="carousel-slide">
-                <img src="{% static 'images/sprayer.jpeg' %}" alt="In Operation">
-                <div class="slide-info">
-                    <h3>In Operation</h3>
-                    <p>Efficient spraying in action</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Related Products Section -->
-<section class="products-section">
-    <h2 class="section-title">Explore Our Other Products</h2>
-    <div class="products-grid">
-        <div class="product-card">
-            <a href="{% url 'land_smoothing' %}">
-                <div class="product-image" style="background-image: url('{% static 'images/land-smoothing.jpg' %}')"></div>
-                <div class="product-overlay">
-                    <h3 class="product-title">
-                        Land Smoothing Machine
-                        <i class="fas fa-arrow-right"></i>
-                    </h3>
-                </div>
-            </a>
-        </div>
-
-        <div class="product-card">
-            <a href="{% url 'crop_harvester' %}">
-                <div class="product-image" style="background-image: url('{% static 'images/side-view.png' %}')"></div>
-                <div class="product-overlay">
-                    <h3 class="product-title">
-                        Crop Harvester
-                        <i class="fas fa-arrow-right"></i>
-                    </h3>
-                </div>
-            </a>
-        </div>
-
-        <div class="product-card">
-        <a href="{% url 'tractor' %}">
-            <div class="product-image" style="background-image: url('{% static "images/tractor.jpg" %}')"></div>
-            <div class="product-overlay">
-                <h3 class="product-title">
-                    Advanced Farming Tractor
-                    <i class="fas fa-arrow-right"></i>
-                </h3>
-            </div>
-        </a>
-    </div>
-
-        <div class="product-card">
-            <a href="{% url 'irrigation_system' %}">
-                <div class="product-image" style="background-image: url('{% static 'images/irrigation.jpg' %}')"></div>
-                <div class="product-overlay">
-                    <h3 class="product-title">
-                        Irrigation System
-                        <i class="fas fa-arrow-right"></i>
-                    </h3>
-                </div>
-            </a>
-        </div>
-          <div class="product-card">
-    <a href="{% url 'rice_filtering' %}">
-        <div class="product-image" style="background-image: url('{% static "images/rice-filter.jpg" %}')"></div>
-        <div class="product-overlay">
-            <h3 class="product-title">
-                Rice Filtering System
-                <i class="fas fa-arrow-right"></i>
-            </h3>
-        </div>
-    </a>
-</div>
-    </div>
-</section>
-
-<style>
-       :root {
-            --primary: #388e3c; /* Darker green */
-            --secondary: #689f38; 
-            --accent: #ffa000; /* Amber */
-            --light: #f5f5f5;
-            --dark: #263238;
-            --text: #424242;
+<script>
+    function openSpecTab(tabName) {
+        // Hide all spec content
+        var specContents = document.getElementsByClassName("spec-content");
+        for (var i = 0; i < specContents.length; i++) {
+            specContents[i].style.display = "none";
         }
-    h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        color: var(--primary);
-        font-size: 2.5rem;
-        font-weight: 700;
-    }
-    .product-detail {
-        max-width: 1600px;
-        margin: 2rem auto;
-        padding: 0 2rem;
-    }
-
-    .product-hero {
-        max-width: 1700px;
-        height: 700px;
-        overflow: hidden;
-        border-radius: 12px;
-        margin-bottom: 2rem;
+        
+        // Remove active class from all tabs
+        var specTabs = document.getElementsByClassName("spec-tab");
+        for (var i = 0; i < specTabs.length; i++) {
+            specTabs[i].classList.remove("active");
+        }
+        
+        // Show the current tab and add active class
+        document.getElementById(tabName).style.display = "block";
+        event.currentTarget.classList.add("active");
+        
+        // Add animation to the active content
+        document.getElementById(tabName).classList.add("animate-fadeIn");
     }
     
+    // Add animation to table rows on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const animateRows = document.querySelectorAll('.animate-row');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        animateRows.forEach(row => {
+            observer.observe(row);
+        });
+    });
+</script>
 
-    .product-image {
+<script>
+    function openSpecTab(tabName) {
+        // Hide all spec content
+        var specContents = document.getElementsByClassName("spec-content");
+        for (var i = 0; i < specContents.length; i++) {
+            specContents[i].style.display = "none";
+        }
+        
+        // Remove active class from all tabs
+        var specTabs = document.getElementsByClassName("spec-tab");
+        for (var i = 0; i < specTabs.length; i++) {
+            specTabs[i].classList.remove("active");
+        }
+        
+        // Show the current tab and add active class
+        document.getElementById(tabName).style.display = "block";
+        event.currentTarget.classList.add("active");
+        
+        // Add animation to the active content
+        document.getElementById(tabName).classList.add("animate-fadeIn");
+    }
+    
+    // Add animation to table rows on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const animateRows = document.querySelectorAll('.animate-row');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        animateRows.forEach(row => {
+            observer.observe(row);
+        });
+    });
+</script>
+
+<style>
+    
+    :root {
+        --primary-color:  #388e3c;
+        --secondary-color: #2e86de4;
+        --accent-color: #ff9f43;
+        --dark-color: #222f3e;
+        --light-color: #f5f6fa;
+    }
+    
+    .product-detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .product-header {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 40px;
+        align-items: center;
+    }
+    
+    .product-image-container {
+        flex: 1;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .main-image {
+        width: 100%;
+        height: 400px;
+        background-color: #f5f5f5;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .product-main-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-    }
-
-    .product-info {
-        padding: 2rem;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-
-    .product-info h1 {
-        font-size: 2.5rem;
-        color: var(--primary);
-        margin-bottom: 2rem;
-    }
-
-    .product-description h2 {
-        color: var(--dark);
-        margin: 1.5rem 0 1rem;
-        font-size: 1.8rem;
-    }
-
-    .product-description ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    .product-description li {
-        padding: 0.5rem 0;
-    }
-
-    .contact-section {
-        margin-top: 3rem;
-        text-align: center;
-        padding: 2rem;
-        background: var(--light);
-        border-radius: 12px;
-    }
-
-    .contact-btn {
-        display: inline-block;
-        padding: 1rem 2rem;
-        background: var(--primary);
-        color: white;
-        text-decoration: none;
-        border-radius: 50px;
-        border: 2px solid green;
-        font-weight: 600;
-        margin-top: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .contact-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(56, 142, 60, 0.3);
+        transition: transform 0.5s ease;
     }
     
-    .specs-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        margin: 2rem 0;
+    .main-image:hover .product-main-img {
+        transform: scale(1.05);
     }
- 
-
-    .specs-column {
-        background: var(--light);
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    
+    .image-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
-    .specs-column h2 {
-        color: var(--primary);
-        font-size: 1.6rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--accent);
+    
+    .product-summary {
+        flex: 1;
     }
-
-    .specs-column ul {
-        list-style-type: none;
-        padding: 0;
+    
+    .product-title {
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        position: relative;
+        display: inline-block;
+        font-weight: 700;
+        font-family: 'Poppins', sans-serif;
     }
-
-    .specs-column li {
-        padding: 0.8rem 0;
+    
+    .product-title:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .highlight-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        border-left: 5px solid var(--primary-color);
+        margin-bottom: 25px;
+    }
+    
+    .highlight-card h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #303F9F;
         display: flex;
         align-items: center;
     }
-
-    .specs-column li:last-child {
+    
+    .highlight-card h3 i {
+        color: var(--accent-color);
+        margin-right: 10px;
+    }
+    
+    .highlight-card ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .highlight-card li {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px dashed #eee;
+    }
+    
+    .highlight-card li:last-child {
         border-bottom: none;
     }
-
-    @media (max-width: 768px) {
-        .specs-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-        
-        .specs-column {
-            padding: 1.5rem;
-        }
-        
-        .specs-column h2 {
-            font-size: 1.4rem;
-        }
+    
+    .highlight-card i.fa-check-circle {
+        color: var(--secondary-color);
+        margin-right: 10px;
+        font-size: 18px;
     }
-
-    @media (max-width: 768px) {
-        .product-hero {
-            height: 300px;
-        }
-
-        .product-info {
-            padding: 1.5rem;
-        }
-
-        .product-info h1 {
-            font-size: 2rem;
-        }
-    }
-
-    /* Product Carousel Styles */
-    .product-carousel {
-        max-width: 1600px;
-        margin: 4rem auto;
-        padding: 0 2rem;
-    }
-
-    .product-carousel h2 {
-        text-align: center;
-        font-size: 2.2rem;
-        color: var(--primary);
-        margin-bottom: 2rem;
-    }
-
-    .carousel-container {
-        position: relative;
-        overflow-x: auto;
-        padding: 1rem 0;
-        scrollbar-width: thin;
-        scrollbar-color: var(--primary) var(--light);
-    }
-
-    .carousel-container::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .carousel-container::-webkit-scrollbar-track {
-        background: var(--light);
-        border-radius: 4px;
-    }
-
-    .carousel-container::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 4px;
-    }
-
-    .carousel-track {
+    
+    .cta-buttons {
         display: flex;
-        gap: 2rem;
-        padding: 0 1rem;
+        gap: 15px;
+        margin-top: 25px;
     }
-
-    .carousel-slide {
-        min-width: calc(33.333% - 1.33rem);
-        flex: 0 0 auto;
-        position: relative;
-        border-radius: 12px;
-        overflow: hidden;
+    
+    .inquiry-btn, .brochure-btn {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 50px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
     }
-
-    .carousel-slide:hover {
-        transform: translateY(-5px);
+    
+    .inquiry-btn {
+        background: var(--primary-color);
+        color: white;
     }
-
-    .carousel-slide img {
-        width: 100%;
-        height: 300px;
-        object-fit: cover;
+    
+    .brochure-btn {
+        background: white;
+        color: var(--primary-color);
+        border: 1px solid green;
     }
-
-    .slide-info {
+    
+    .inquiry-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(46, 134, 222, 0.3);
+    }
+    
+    .brochure-btn:hover {
+        background: #f5f5f5;
+        transform: translateY(-3px);
+    }
+    
+    .product-specs {
+        margin-bottom: 60px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+    }
+    
+    .section-title {
+        font-size: 28px;
+        margin-bottom: 25px;
+        color: var(--primary-color);
+        position: relative;
+        padding-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .section-title:after {
+        content: '';
         position: absolute;
         bottom: 0;
         left: 0;
-        right: 0;
-        padding: 1.5rem;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .spec-tabs {
+        display: flex;
+        margin-bottom: 25px;
+        gap: 10px;
+    }
+    
+    .spec-tab {
+        padding: 12px 25px;
+        background: var(--primary-color);
         color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 16px;
+        position: relative;
+        transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
-
-    .slide-info h3 {
-        font-size: 1.4rem;
-        margin-bottom: 0.5rem;
+    
+    .spec-tab i {
+        font-size: 18px;
     }
-
-    .slide-info p {
-        font-size: 1rem;
+    
+    .spec-tab.active {
+        linear-gradient(135deg, var(--primary-color), #1e90ff);
+        box-shadow: 0 8px 20px rgba(16, 172, 132, 0.3);
     }
-
-    /* Products Section Styles */
-    .products-section {
-        padding: 4rem 2rem;
-        background: var(--light);
+    
+    .spec-card {
+        background: #f9f9f9;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
-
-    .section-title {
+    
+    .spec-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .spec-table th, .spec-table td {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .spec-table th {
+        width: 30%;
+        font-weight: 600;
+        color: var(--dark-color);
+        background-color: rgba(46, 134, 222, 0.1);
+    }
+    
+    .spec-table tr:hover {
+        background-color: rgba(46, 134, 222, 0.05);
+    }
+    
+    .product-features {
+        margin-bottom: 60px;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
         text-align: center;
-        font-size: 2.2rem;
-        color: var(--primary);
-        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        border-top: 4px solid var(--primary-color);
     }
-
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 30px;
+    }
+    
+    .feature-card h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #303F9F;
+    }
+    
+    .feature-card p {
+        color: #666;
+        line-height: 1.6;
+    }
+    
+    .feature-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.5s ease;
+    }
+    
+    .feature-card:hover .feature-wave {
+        transform: scaleX(1);
+    }
+    
+    .related-products {
+        margin-top: 60px;
+    }
+    
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 2rem;
-        max-width: 1600px;
-        margin: 0 auto;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
     }
-
-    .product-card {
+    
+    .related-product-card {
         position: relative;
-        border-radius: 12px;
+        height: 250px;
         overflow: hidden;
-        height: 300px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
-
-    .product-image {
+    
+    .related-product-image {
         width: 100%;
         height: 100%;
         background-size: cover;
         background-position: center;
-        transition: transform 0.3s ease;
+        transition: transform 0.5s ease;
     }
-
-    .product-overlay {
+    
+    .related-product-overlay {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        padding: 2rem;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
         color: white;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
     }
-
-    .product-title {
-        font-size: 1.4rem;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    
+    .related-product-card:hover .related-product-overlay {
+        transform: translateY(0);
     }
-
-    .product-card:hover .product-image {
+    
+    .related-product-card:hover .related-product-image {
         transform: scale(1.1);
     }
-
-    @media (max-width: 1200px) {
-        .products-grid {
-            grid-template-columns: repeat(3, 1fr);
+    
+    .related-product-title {
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Animations */
+    .animate-fadeIn {
+        animation: fadeIn 0.8s ease forwards;
+    }
+    
+    .animate-slideUp {
+        animation: slideUp 0.6s ease forwards;
+        opacity: 0;
+    }
+    
+    .animate-slideLeft {
+        animation: slideLeft 0.5s ease forwards;
+        opacity: 0;
+    }
+    
+    .animate-slideRight {
+        animation: slideRight 0.5s ease forwards;
+        opacity: 0;
+    }
+    
+    .animate-zoom {
+        animation: zoomIn 0.8s ease forwards;
+    }
+    
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+    
+    .animate-row {
+        opacity: 0;
+        transform: translateX(-20px);
+        animation: fadeInRow 0.5s ease forwards;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { 
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
         }
     }
-
-    @media (max-width: 992px) {
-        .products-grid {
-            grid-template-columns: repeat(2, 1fr);
+    
+    @keyframes slideLeft {
+        from { 
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateX(0);
         }
     }
-
-    @media (max-width: 576px) {
-        .products-grid {
-            grid-template-columns: 1fr;
+    
+    @keyframes slideRight {
+        from { 
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes zoomIn {
+        from { 
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to { 
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+    
+    @keyframes fadeInRow {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .product-header {
+            flex-direction: column;
         }
         
-        .product-card {
-            height: 250px;
+        .main-image {
+            height: 300px;
+        }
+        
+        .cta-buttons {
+            flex-direction: column;
+        }
+        
+        .spec-tabs {
+            flex-direction: column;
+        }
+        
+        .products-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
