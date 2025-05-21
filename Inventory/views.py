@@ -92,11 +92,11 @@ def logout_view(request):
 
 @login_required
 def admin_dashboard(request):
-    return render(request, 'backendpages/admin_dashboard.html')
+    return render(request, 'backendpages/admin_dashboard.html',{'user_profile': request.user})
 
 @login_required
 def user_dashboard(request):
-    return render(request, 'backendpages/user_dashboard.html')
+    return render(request, 'backendpages/user_dashboard.html',{'user_profile': request.user})
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import formset_factory
