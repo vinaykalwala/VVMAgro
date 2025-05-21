@@ -133,6 +133,8 @@ class Voucher(models.Model):
 
     party = models.ForeignKey('Party', on_delete=models.CASCADE)
     place_of_supply = models.CharField(max_length=100, blank=True, null=True)
+    freight_applicable = models.BooleanField(default=False)
+    freight_charge = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     total_subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     total_cgst = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)

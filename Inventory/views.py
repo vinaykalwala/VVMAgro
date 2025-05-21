@@ -195,6 +195,10 @@ def voucher_create_view(request):
 
                 total_amount = subtotal + cgst_amount + sgst_amount + igst_amount
 
+                if voucher.freight_applicable and voucher.freight_charge:
+                    total_amount += voucher.freight_charge
+
+
                 # Get selected phase from form input
                 selected_phase = request.POST.get(f'phase_{index}', None)
 
@@ -269,6 +273,7 @@ def voucher_create_view(request):
 
 from django.shortcuts import render, get_object_or_404
 from .models import Voucher
+from num2words import num2words
 
 def voucher_detail_view(request, voucher_id):
     voucher = get_object_or_404(Voucher, id=voucher_id)
@@ -298,6 +303,7 @@ def voucher_detail_view(request, voucher_id):
     total_sgst = sum(item.sgst_amount for item in voucher.items.all())
     total_igst = sum(item.igst_amount for item in voucher.items.all())
     grand_total = sum(item.total_amount for item in voucher.items.all())
+    amount_in_words = f"Rupees {num2words(grand_total, lang='en_IN').title()} "
 
     context = {
         'voucher': voucher,
@@ -308,5 +314,6 @@ def voucher_detail_view(request, voucher_id):
         'total_sgst': total_sgst,
         'total_igst': total_igst,
         'grand_total': grand_total,
+        'amount_in_words': amount_in_words,
     }
     return render(request, 'voucher_detail.html', context)
