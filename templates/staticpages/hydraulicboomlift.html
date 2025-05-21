@@ -1,0 +1,1309 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="product-detail-container">
+    <!-- Product Header with Image -->
+    <h1 class="product-title animate-fadeIn">Hydraulic Boom Lift Tractor</h1>
+
+    <!-- Product Header Section -->
+    <div class="product-header">
+        <div class="product-image-container">
+            <div class="main-image animate-zoom">
+                <img src="{% static 'images/img2.jpeg' %}" alt="Boom Sprayer Tractor" class="product-main-img">
+                <div class="image-badge">Premium Quality</div>
+            </div>
+        </div>
+        
+        <div class="product-summary">
+            <div class="product-highlights">
+                <div class="highlight-card animate-slideUp">
+                    <h3><i class="fas fa-star"></i> Product Overview</h3>
+                    <p class="product-description">
+                    Tractor Crane with Hydraulic Post Hole Digger (Pillar / Pole Lifter) is widely demanded in agricultural
+                    industry owing to its capacity to take immense load without any complications. The tractor crane is
+                    accomplished with stabilizers that make it capable of sustaining heavy load. The crane supported with hydraulic
+                    post-hole digger proves to be fastest method for situating electricity pole, easily loading & unloading and heavyduty channel. It has an additional feature of being easy extension of the crane boom</p>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <button class="inquiry-btn animate-pulse">
+                    <i class="fas fa-envelope"></i> Send Inquiry
+                </button>
+                <button class="brochure-btn animate-bounce">
+                    <i class="fas fa-download"></i> Download Brochure
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Specifications -->
+    <div class="product-specs">
+        <h2 class="section-title animate-fadeIn">Technical Specifications</h2>
+        <div class="spec-tabs">
+            <button class="spec-tab active animate-slideLeft" onclick="openSpecTab('sprayer-specs')">
+                <i class="fas fa-spray-can"></i> Sprayer Specifications
+            </button>
+            <button class="spec-tab animate-slideRight" onclick="openSpecTab('tractor-specs')">
+                <i class="fas fa-tractor"></i> Tractor Specifications
+            </button>
+        </div>
+
+        <div id="sprayer-specs" class="spec-content animate-fadeIn" style="display: block;">
+            <div class="spec-card">
+                <table class="spec-table">
+                    <tr class="animate-row">
+                        <th>Frame</th>
+                        <td>175X75X10+10+10 mm Channel Heavy Duty</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Jack</th>
+                        <td>3 No. Hydraulic 2 Piece 60mm x 43 inch 1 50mm x 96 inch</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Hydraulic Pipe</th>
+                        <td>R2 Hose Pipe Heavy Duty</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Approximate Weight</th>
+                        <td>1600 Kg.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="tractor-specs" class="spec-content animate-fadeIn" style="display: none;">
+            <div class="spec-card">
+                <table class="spec-table">
+                    <tr class="animate-row">
+                        <th>PTO RPM</th>
+                        <td>540</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Required Power</th>
+                        <td>40 HP & Above</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Body Frame</th>
+                        <td>100X30 mm PLATES</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Auger Frame</th>
+                        <td>100x50x6 mm SEAMLESS TUBES</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Hydraulic Jack</th>
+                        <td>2 Nos. Double Acting (With Control Panel)</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Gear Body</th>
+                        <td>Made By SG (SPECIAL GRADE IRON)</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Oil Capacity</th>
+                        <td>12 Litre</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Gear Ratio</th>
+                        <td>Bevel 5:1</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>PTO</th>
+                        <td>Telescope Type</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Auger Point</th>
+                        <td>2 Nos. 25Mm Bullet with Carbide Tips</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Auger Blade</th>
+                        <td>4 Nos. 25Mm Bullet</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Nut/Bolts</th>
+                        <td>TVS High Tensile Bolts and Nuts</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Output Capacity</th>
+                        <td>100 Hole/ 1 Hour or (Depends on Soil)</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Approximate Weight</th>
+                        <td>700 Kg.</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Auger Size</th>
+                        <td>18" Dia.x72" Depth (AS PER SIZE)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <section class="unique-features-section">
+  <h2 class="unique-features-heading">Features</h2>
+  <div class="unique-features-slider">
+   
+    <div class="unique-features-container">
+
+      <div class="unique-feature-card">
+        <img src="{% static 'images/pole-installation.png' %}" alt="Quick Pole Installation" />
+        <h4>Quick Pole Installation</h4>
+        <p>Quickest method for installing electricity poles</p>
+      </div>
+
+      <div class="unique-feature-card">
+        <img src="{% static 'images/loading.png' %}" alt="Easy Loading" />
+        <h4>Easy Loading System</h4>
+        <p>Trouble-free loading and unloading operations</p>
+      </div>
+
+      <div class="unique-feature-card">
+        <img src="{% static 'images/crane-boom.png' %}" alt="Extendable Boom" />
+        <h4>Extendable Boom</h4>
+        <p>Simple extension of the crane boom for versatility</p>
+      </div>
+
+      <div class="unique-feature-card">
+        <img src="{% static 'images/heavy-duty.png' %}" alt="Heavy Duty Channel" />
+        <h4>Heavy-Duty Channel</h4>
+        <p>Robust channel construction for maximum durability</p>
+      </div>
+
+    </div>
+   
+  </div>
+</section>
+
+    <div class="disclaimer-note">
+        <div class="note-container">
+            <h3><i class="fas fa-exclamation-circle"></i> Important Note</h3>
+            <p>The contents of this catalogue are only giving information to the end user without engagement from our side. The company can modify SPECIFICATIONS of the total machine and it's components without any previous notice. Are supplied for information only and are not binding specification and size can be altered as part of ongoing product modification/improvement.</p>
+        </div>
+    </div>
+
+    <!-- Product Features -->
+    <div class="product-features">
+        <h2 class="section-title animate-fadeIn">Why Choose Our Hydraulic Boom Lift Tractor?</h2>
+        <div class="features-grid">
+    <div class="feature-card animate-slideUp">
+        <div class="feature-icon" style="background-color: #ff6b6b;">
+            <i class="fas fa-arrows-alt-v"></i> <!-- Vertical lift icon -->
+        </div>
+        <h3>High Lift Capacity</h3>
+        <p>Hydraulic boom lift supports heavy loads with smooth vertical extension for elevated tasks.</p>
+        <div class="feature-wave"></div>
+    </div>
+        <div class="feature-card animate-slideUp" style="animation-delay: 0.2s;">
+            <div class="feature-icon" style="background-color: #48dbfb;">
+                <i class="fas fa-tools"></i> <!-- Maintenance/utility icon -->
+            </div>
+            <h3>Multi-Utility Design</h3>
+            <p>Versatile attachment options allow the tractor to handle various agricultural and construction needs.</p>
+            <div class="feature-wave"></div>
+        </div>
+        <div class="feature-card animate-slideUp" style="animation-delay: 0.4s;">
+            <div class="feature-icon" style="background-color: #1dd1a1;">
+                <i class="fas fa-user-shield"></i> <!-- Safety icon -->
+            </div>
+            <h3>Enhanced Safety</h3>
+            <p>Stabilizers and safety locks provide reliable operation on uneven terrain and elevated positions.</p>
+            <div class="feature-wave"></div>
+        </div>
+        <div class="feature-card animate-slideUp" style="animation-delay: 0.6s;">
+            <div class="feature-icon" style="background-color: #feca57;">
+                <i class="fas fa-sliders-h"></i> <!-- Control icon -->
+            </div>
+            <h3>Precision Control</h3>
+            <p>Responsive hydraulic controls ensure accurate and stable boom movement with minimal operator effort.</p>
+            <div class="feature-wave"></div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+
+    <section class="warranty-section">
+        <h2 class="section-title">Product Excellence & Warranty</h2>
+        <div class="warranty">
+            <div class="warranty-left">
+    <div class="accordion">
+        <div class="accordion-item">
+            <div class="accordion-header">
+                Robust Hydraulic Mechanism
+                <span class="arrow">&#9660;</span>
+            </div>
+            <div class="accordion-body">
+                Heavy-duty hydraulic system ensures smooth and reliable lifting, lowering, and load handling even under tough field conditions.
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header">
+                Ergonomic Control Console
+                <span class="arrow">&#9660;</span>
+            </div>
+            <div class="accordion-body">
+                User-friendly control panel with joystick and safety interlocks for precise boom operation and easy handling.
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header">
+                Field-Ready Versatility
+                <span class="arrow">&#9660;</span>
+            </div>
+            <div class="accordion-body">
+                Ideal for loading, lifting, trenching, and transporting materials across farms, orchards, and construction zones.
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header">
+                3-Year Warranty Coverage
+                <span class="arrow">&#9660;</span>
+            </div>
+            <div class="accordion-body">
+                Comprehensive 3-year warranty on boom components, hydraulics, and chassis with nationwide service support.
+            </div>
+        </div>
+    </div>
+
+    <button class="know-more-btn">Request Demonstration</button>
+</div>
+
+
+            <div class="warranty-right">
+                <img src="{% static 'images/boomlifttractor.jpeg' %}" alt="Boom Sprayer in Action" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <div class="related-products">
+        <h2 class="section-title animate-fadeIn">Explore Our Other Products</h2>
+        <div class="products-grid" id="products-grid">
+            <div class="related-product-card animate-slideUp">
+                <a href="{% url 'crop_harvester' %}">
+                    <div class="related-product-image" style="background-image: url('{% static 'images/img4.jpeg' %}')"></div>
+                    <div class="related-product-overlay">
+                        <h3 class="related-product-title">
+                            Hydraulic Lift Tractor
+                            <i class="fas fa-arrow-right"></i>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="related-product-card animate-slideUp" style="animation-delay: 0.2s;">
+                <a href="{% url 'hydraulicboomlift' %}">
+                    <div class="related-product-image" style="background-image: url('{% static 'images/img2.jpeg' %}')"></div>
+                    <div class="related-product-overlay">
+                        <h3 class="related-product-title">
+                            Agricultural Loader
+                            <i class="fas fa-arrow-right"></i>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="related-product-card animate-slideUp" style="animation-delay: 0.4s;">
+                <a href="{% url 'frontendloader' %}">
+                    <div class="related-product-image" style="background-image: url('{% static 'images/img6.png' %}')"></div>
+                    <div class="related-product-overlay">
+                        <h3 class="related-product-title">
+                            Hydraulic Post Hole Digger
+                            <i class="fas fa-arrow-right"></i>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="related-product-card animate-slideUp" style="animation-delay: 0.6s;">
+                <a href="{% url 'tractor' %}">
+                    <div class="related-product-image" style="background-image: url('{% static 'images/img1.jpeg' %}')"></div>
+                    <div class="related-product-overlay">
+                        <h3 class="related-product-title">
+                            Front Dozer Tractor
+                            <i class="fas fa-arrow-right"></i>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="loading-spinner" id="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Include the same scripts as in crop_harvester.html -->
+<script>
+    function openSpecTab(tabName) {
+        // Hide all spec content
+        var specContents = document.getElementsByClassName("spec-content");
+        for (var i = 0; i < specContents.length; i++) {
+            specContents[i].style.display = "none";
+        }
+        
+        // Remove active class from all tabs
+        var specTabs = document.getElementsByClassName("spec-tab");
+        for (var i = 0; i < specTabs.length; i++) {
+            specTabs[i].classList.remove("active");
+        }
+        
+        // Show the current tab and add active class
+        document.getElementById(tabName).style.display = "block";
+        event.currentTarget.classList.add("active");
+        
+        // Add animation to the active content
+        document.getElementById(tabName).classList.add("animate-fadeIn");
+    }
+    
+    // Add animation to table rows on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const animateRows = document.querySelectorAll('.animate-row');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        animateRows.forEach(row => {
+            observer.observe(row);
+        });
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const item = header.parentElement;
+            const body = item.querySelector('.accordion-body');
+            const arrow = header.querySelector('.arrow');
+            
+            // Toggle active state
+            item.classList.toggle('active');
+            
+            // Update arrow and body
+            if (item.classList.contains('active')) {
+                body.style.maxHeight = body.scrollHeight + "px";
+                arrow.innerHTML = '&#9650;';
+            } else {
+                body.style.maxHeight = "0";
+                arrow.innerHTML = '&#9660;';
+            }
+        });
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productsGrid = document.getElementById('products-grid');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    
+    // Variables for continuous scrolling
+    let scrollInterval;
+    let isMouseOver = false;
+    const scrollSpeed = 1; // Adjust speed as needed
+    
+    // Clone products for continuous scrolling
+    function cloneForScroll() {
+        const products = Array.from(productsGrid.children);
+        products.forEach(product => {
+            const clone = product.cloneNode(true);
+            productsGrid.appendChild(clone);
+        });
+    }
+    
+    // Initialize cloning
+    cloneForScroll();
+    
+    // Continuous scroll function
+    function startScroll() {
+        if (!isMouseOver) {
+            productsGrid.scrollLeft += scrollSpeed;
+            
+            // Reset scroll position when reaching the end
+            if (productsGrid.scrollLeft >= (productsGrid.scrollWidth / 2)) {
+                productsGrid.scrollLeft = 0;
+            }
+        }
+    }
+    
+    // Start scrolling
+    scrollInterval = setInterval(startScroll, 30);
+    
+    // Pause on hover
+    productsGrid.addEventListener('mouseenter', () => {
+        isMouseOver = true;
+    });
+    
+    productsGrid.addEventListener('mouseleave', () => {
+        isMouseOver = false;
+    });
+    
+    // Clean up on window unload
+    window.addEventListener('beforeunload', () => {
+        clearInterval(scrollInterval);
+    });
+});
+</script>
+       
+<style>
+    
+    :root {
+        --primary-color:  #388e3c;
+        --secondary-color: #2e86de4;
+        --accent-color: #ff9f43;
+        --dark-color: #222f3e;
+        --light-color: #f5f6fa;
+    }
+    
+    .product-detail-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .product-header {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 40px;
+        align-items: center;
+    }
+    
+    .product-image-container {
+        flex: 1;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .main-image {
+        width: 100%;
+        height: 400px;
+        background-color: #f5f5f5;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .product-main-img {
+        width: 100%;
+        height: 100%;
+        /* object-fit: cover; */
+        transition: transform 0.5s ease;
+    }
+    
+    .main-image:hover .product-main-img {
+        transform: scale(1.05);
+    }
+    
+    .image-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .product-summary {
+        flex: 1;
+    }
+    
+    .product-title {
+    font-size: 2.2rem;
+    margin: 2rem auto 3rem;
+    text-align: center;
+    color: var(--primary-color);
+    position: relative;
+   
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+}
+
+.product-title:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+}
+
+    .highlight-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        border-left: 5px solid var(--primary-color);
+        margin-bottom: 25px;
+    }
+    
+    .highlight-card h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #303F9F;
+        display: flex;
+        align-items: center;
+    }
+    
+    .highlight-card h3 i {
+        color: var(--accent-color);
+        margin-right: 10px;
+    }
+    
+    .highlight-card ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .highlight-card li {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px dashed #eee;
+    }
+    
+    .highlight-card li:last-child {
+        border-bottom: none;
+    }
+    
+    .highlight-card i.fa-check-circle {
+        color: var(--secondary-color);
+        margin-right: 10px;
+        font-size: 18px;
+    }
+    
+    .cta-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+    }
+    
+    .inquiry-btn, .brochure-btn {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 50px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .inquiry-btn {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .brochure-btn {
+        background: white;
+        color: var(--primary-color);
+        border: 1px solid green;
+    }
+    
+    .inquiry-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(46, 134, 222, 0.3);
+    }
+    
+    .brochure-btn:hover {
+        background: #f5f5f5;
+        transform: translateY(-3px);
+    }
+    
+    .product-specs {
+        margin-bottom: 60px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+    }
+    
+    .section-title {
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 25px;
+        color: var(--primary-color);
+        position: relative;
+        padding-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .spec-tabs {
+        display: flex;
+        margin-bottom: 25px;
+        gap: 10px;
+    }
+    
+    .spec-tab {
+        padding: 12px 25px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 16px;
+        position: relative;
+        transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .spec-tab i {
+        font-size: 18px;
+    }
+    
+    .spec-tab.active {
+        linear-gradient(135deg, var(--primary-color), #1e90ff);
+        box-shadow: 0 8px 20px rgba(16, 172, 132, 0.3);
+    }
+    
+    .spec-card {
+        background: #f9f9f9;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    
+    .spec-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .spec-table th, .spec-table td {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .spec-table th {
+        width: 30%;
+        font-weight: 600;
+        color: var(--dark-color);
+        background-color: rgba(46, 134, 222, 0.1);
+    }
+    
+    .spec-table tr:hover {
+        background-color: rgba(46, 134, 222, 0.05);
+    }
+    
+    .product-features {
+        margin-bottom: 60px;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        border-top: 4px solid var(--primary-color);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 30px;
+    }
+    
+    .feature-card h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #303F9F;
+    }
+    
+    .feature-card p {
+        color: #666;
+        line-height: 1.6;
+    }
+    
+    .feature-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.5s ease;
+    }
+    
+    .feature-card:hover .feature-wave {
+        transform: scaleX(1);
+    }
+    
+    .related-products {
+        margin-top: 60px;
+        padding: 4rem 0;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      
+      .products-grid {
+        display: flex; /* Changed from grid to flex for horizontal scrolling */
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 25px;
+        padding: 20px 0;
+        scrollbar-width: none; /* Hide scrollbar for cleaner look */
+    }
+    
+    .products-grid::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome/Safari */
+    }
+    
+    .related-product-card {
+        flex: 0 0 250px; /* Fixed width for each card */
+        height: 250px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        animation: slideUp 0.2s ease forwards;
+        opacity: 0;
+    }
+      
+      .related-product-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.5s ease;
+      }
+      
+      .related-product-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        color: white;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .related-product-card:hover .related-product-overlay {
+        transform: translateY(0);
+      }
+      
+      .related-product-card:hover .related-product-image {
+        transform: scale(1.1);
+      }
+      
+      .related-product-title {
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .related-product-title i {
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      
+      .related-product-card:hover .related-product-title i {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      
+      /* Animations */
+      @keyframes slideUp {
+        0% {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+    
+    .related-product-title {
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Animations */
+    .animate-fadeIn {
+        animation: fadeIn 0.8s ease forwards;
+    }
+    
+    .animate-slideUp {
+        animation: slideUp 0.6s ease forwards;
+        opacity: 0;
+    }
+    
+    .animate-slideLeft {
+        animation: slideLeft 0.5s ease forwards;
+        opacity: 0;
+    }
+    
+    .animate-slideRight {
+        animation: slideRight 0.5s ease forwards;
+        opacity: 0;
+    }
+    
+    .animate-zoom {
+        animation: zoomIn 0.8s ease forwards;
+    }
+    
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+    
+    .animate-row {
+        opacity: 0;
+        transform: translateX(-20px);
+        animation: fadeInRow 0.5s ease forwards;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { 
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideLeft {
+        from { 
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideRight {
+        from { 
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes zoomIn {
+        from { 
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to { 
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+    
+    @keyframes fadeInRow {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .product-header {
+            flex-direction: column;
+        }
+        
+        .main-image {
+            height: 300px;
+        }
+        
+        .cta-buttons {
+            flex-direction: column;
+        }
+        
+        .spec-tabs {
+            flex-direction: column;
+        }
+        
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+        .unique-feature-card {
+            flex: 0 0 200px;
+        }
+        
+        .unique-feature-card img {
+            width: 170px;
+            height: 130px;
+        }
+        
+        .unique-features-slider {
+            padding: 0 30px;
+        }
+        .warranty {
+            grid-template-columns: 1fr;
+        }
+        
+        .warranty-right {
+            order: -1;
+            height: 300px;
+        }
+        
+        .warranty-right img {
+            max-height: 300px;
+        }
+    }
+    .unique-features-section {
+        padding: 1rem 0;
+        background: white;
+    }
+    
+    .unique-features-heading {
+        font-size: 28px;
+        color: var(--primary-color);
+        position: relative;
+        padding-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
+        text-align: center; 
+    }
+    
+    .unique-features-heading:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .unique-features-slider {
+        position: relative;
+        max-width: 1900px;
+        margin: 0 auto;
+        padding: 0 40px;
+    }
+    
+    .unique-features-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 80px;
+        padding: 20px 0;
+        scrollbar-width: none;
+    }
+    
+    .unique-features-container::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .unique-feature-card {
+        flex: 0 0 250px;
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+    
+    .unique-feature-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .unique-feature-card img {
+        width: 220px;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .unique-feature-card h4 {
+        color: var(--primary-color);
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .unique-feature-card p {
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    .unique-slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 2;
+    }
+    
+    .unique-slider-btn:hover {
+        background: var(--secondary-color);
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .unique-slider-btn.left {
+        left: 0;
+    }
+    
+    .unique-slider-btn.right {
+        right: 0;
+    }
+    
+    .unique-slider-btn.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .warranty-section {
+        padding: 4rem 0;
+        background: #f8f9fa;
+    }
+    .warranty {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        padding: 0 2rem;
+    }
+    .warranty-left {
+        flex: 1;
+    }
+    .warranty-right {
+        flex: 1;
+        position: relative;
+        height: 400px; /* Fixed height */
+        overflow: hidden; /* Prevent image overflow */
+    }
+    
+    .warranty-right img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        position: sticky; /* Keep image fixed while accordion expands */
+        top: 0;
+    }
+  
+    .warranty-left h2 {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .warranty-left h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .accordion {
+        margin-top: 2rem;
+    }
+    
+    .accordion-item {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.accordion-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.accordion-header:hover {
+    background: #e9ecef;
+}
+
+.accordion-body {
+    padding: 0 1rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: white;
+}
+
+.accordion-item.active .accordion-body {
+    padding: 1rem;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.accordion-item.active .arrow {
+    transform: rotate(180deg);
+}
+    
+    .know-more-btn {
+        margin-top: 2rem;
+        padding: 1rem 2rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .know-more-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .warranty-right img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .disclaimer-note {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-left: 4px solid var(--primary-color);
+        border-radius: 4px;
+    }
+    
+    .note-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .disclaimer-note h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.2rem;
+    }
+    
+    .disclaimer-note p {
+        color: #666;
+        line-height: 1.6;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+    
+    .disclaimer-note i {
+        color: var(--primary-color);
+    }
+</style>
+
+{% endblock %}

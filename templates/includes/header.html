@@ -197,7 +197,7 @@
       <li><a href="{% url 'products' %}">Products</a></li>
       <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
       <li><a href="{% url 'careers' %}">Careers</a></li>
-      <li><a href="{% url 'contactus' %}">Contact Us</a></li>
+      <li><a href="{% url 'contact_create' %}">Contact Us</a></li>
       
     </ul>
     <div class="logout-container">
@@ -220,7 +220,7 @@
       <li><a href="{% url 'products' %}">Products</a></li>
       <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
       <li><a href="{% url 'careers' %}">Careers</a></li>
-      <li><a href="{% url 'contactus' %}">Contact Us</a></li>
+      <li><a href="{% url 'contact_create' %}">Contact Us</a></li>
     </ul>
     <form method="POST" action="{% url 'login' %}" style="margin-left: 10px;">
       {% csrf_token %}

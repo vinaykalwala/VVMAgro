@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from .models import *
+from .forms import *
 
 # Create your views here.
 def home(request):
@@ -13,14 +15,14 @@ def products(request):
 def tractor(request):
     return render(request, 'staticpages/tractor.html')
 
-def land_smoothing(request):
-    return render(request, 'staticpages/land_smoothing.html')
+def hydraulicboomlift(request):
+    return render(request, 'staticpages/hydraulicboomlift.html')
 
 def rice_filtering(request):
     return render(request, 'staticpages/rice_filtering.html')
     
-def pesticide_view(request):
-    return render(request, 'staticpages/pesticide.html')
+def frontendloader(request):
+    return render(request, 'staticpages/frontendloader.html')
 
 def crop_harvester(request):
     return render(request, 'staticpages/crop_harvester.html')
@@ -33,9 +35,6 @@ def branchesanddistributors(request):
 def careers(request):
     return render(request,'staticpages/careers.html')
 
-def contactus(request):
-    return render(request,'staticpages/contactus.html')  
-
 def tractorproducts(request):
     return render(request,'staticpages/farmingtractor.html')  
 
@@ -44,7 +43,6 @@ def pesticideprayer(request):
 
 def ricefiltering(request):
     return render(request,'staticpages/ricefiltering.html')        
-    return render(request,'staticpages/contactus.html')                
 
 
 from django.shortcuts import render, redirect
@@ -274,6 +272,64 @@ from django.shortcuts import render, get_object_or_404
 from .models import Voucher
 from num2words import num2words
 
+from django.db.models import Q
+from datetime import datetime
+
+def voucher_list_view(request):
+    vouchers = Voucher.objects.all().order_by('-created_at')
+
+    voucher_number = request.GET.get('voucher_number', '').strip()
+    voucher_type = request.GET.get('voucher_type', '').strip()
+    party_name = request.GET.get('party_name', '').strip()
+    date_from = request.GET.get('date_from', '').strip()
+    date_to = request.GET.get('date_to', '').strip()
+    date_exact = request.GET.get('date_exact', '').strip()
+
+    if voucher_number:
+        vouchers = vouchers.filter(voucher_number__icontains=voucher_number)
+
+    if voucher_type:
+        vouchers = vouchers.filter(voucher_type=voucher_type)
+
+    if party_name:
+        vouchers = vouchers.filter(party__name__icontains=party_name)
+
+    if date_exact:
+        try:
+            date_exact_obj = datetime.strptime(date_exact, '%Y-%m-%d')
+            vouchers = vouchers.filter(created_at__date=date_exact_obj)
+        except ValueError:
+            pass
+    else:
+        # Only apply range filters if exact date not specified
+        if date_from:
+            try:
+                date_from_obj = datetime.strptime(date_from, '%Y-%m-%d')
+                vouchers = vouchers.filter(created_at__date__gte=date_from_obj)
+            except ValueError:
+                pass
+
+        if date_to:
+            try:
+                date_to_obj = datetime.strptime(date_to, '%Y-%m-%d')
+                vouchers = vouchers.filter(created_at__date__lte=date_to_obj)
+            except ValueError:
+                pass
+
+    context = {
+        'vouchers': vouchers,
+        'search_params': {
+            'voucher_number': voucher_number,
+            'voucher_type': voucher_type,
+            'party_name': party_name,
+            'date_from': date_from,
+            'date_to': date_to,
+            'date_exact': date_exact,
+        }
+    }
+    return render(request, 'voucher_list.html', context)
+
+
 def voucher_detail_view(request, voucher_id):
     voucher = get_object_or_404(Voucher, id=voucher_id)
     items = voucher.items.all()
@@ -316,3 +372,162 @@ def voucher_detail_view(request, voucher_id):
         'amount_in_words': amount_in_words,
     }
     return render(request, 'voucher_detail.html', context)
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import ProductGroup, Warehouse, Product, PartyGroup, Party
+from .forms import ProductGroupForm, WarehouseForm, ProductForm, PartyGroupForm, PartyForm
+
+# ProductGroup Views
+def productgroup_list(request):
+    groups = ProductGroup.objects.all()
+    return render(request, 'productgroup_list.html', {'groups': groups})
+
+def productgroup_create(request):
+    form = ProductGroupForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('productgroup_list')
+    return render(request, 'productgroup_form.html', {'form': form})
+
+def productgroup_update(request, pk):
+    group = get_object_or_404(ProductGroup, pk=pk)
+    form = ProductGroupForm(request.POST or None, instance=group)
+    if form.is_valid():
+        form.save()
+        return redirect('productgroup_list')
+    return render(request, 'productgroup_form.html', {'form': form})
+
+def productgroup_delete(request, pk):
+    group = get_object_or_404(ProductGroup, pk=pk)
+    if request.method == 'POST':
+        group.delete()
+        return redirect('productgroup_list')
+    return render(request, 'confirm_delete.html', {'object': group})
+
+# Warehouse Views
+def warehouse_list(request):
+    warehouses = Warehouse.objects.all()
+    return render(request, 'warehouse_list.html', {'warehouses': warehouses})
+
+def warehouse_create(request):
+    form = WarehouseForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('warehouse_list')
+    return render(request, 'warehouse_form.html', {'form': form})
+
+def warehouse_update(request, pk):
+    warehouse = get_object_or_404(Warehouse, pk=pk)
+    form = WarehouseForm(request.POST or None, instance=warehouse)
+    if form.is_valid():
+        form.save()
+        return redirect('warehouse_list')
+    return render(request, 'warehouse_form.html', {'form': form})
+
+def warehouse_delete(request, pk):
+    warehouse = get_object_or_404(Warehouse, pk=pk)
+    if request.method == 'POST':
+        warehouse.delete()
+        return redirect('warehouse_list')
+    return render(request, 'confirm_delete.html', {'object': warehouse})
+
+# Product Views
+def product_list(request):
+    products = Product.objects.select_related('group', 'warehouse').all()
+    return render(request, 'product_list.html', {'products': products})
+
+def product_create(request):
+    form = ProductForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('product_list')
+    return render(request, 'product_form.html', {'form': form})
+
+def product_update(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    form = ProductForm(request.POST or None, instance=product)
+    if form.is_valid():
+        form.save()
+        return redirect('product_list')
+    return render(request, 'product_form.html', {'form': form})
+
+def product_delete(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('product_list')
+    return render(request, 'confirm_delete.html', {'object': product})
+
+# PartyGroup Views
+def partygroup_list(request):
+    groups = PartyGroup.objects.all()
+    return render(request, 'partygroup_list.html', {'groups': groups})
+
+def partygroup_create(request):
+    form = PartyGroupForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('partygroup_list')
+    return render(request, 'partygroup_form.html', {'form': form})
+
+def partygroup_update(request, pk):
+    group = get_object_or_404(PartyGroup, pk=pk)
+    form = PartyGroupForm(request.POST or None, instance=group)
+    if form.is_valid():
+        form.save()
+        return redirect('partygroup_list')
+    return render(request, 'partygroup_form.html', {'form': form})
+
+def partygroup_delete(request, pk):
+    group = get_object_or_404(PartyGroup, pk=pk)
+    if request.method == 'POST':
+        group.delete()
+        return redirect('partygroup_list')
+    return render(request, 'confirm_delete.html', {'object': group})
+
+# Party Views
+def party_list(request):
+    parties = Party.objects.all()
+    return render(request, 'party_list.html', {'parties': parties})
+
+def party_create(request):
+    form = PartyForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('party_list')
+    return render(request, 'party_form.html', {'form': form})
+
+def party_update(request, pk):
+    party = get_object_or_404(Party, pk=pk)
+    form = PartyForm(request.POST or None, instance=party)
+    if form.is_valid():
+        form.save()
+        return redirect('party_list')
+    return render(request, 'party_form.html', {'form': form})
+
+def party_delete(request, pk):
+    party = get_object_or_404(Party, pk=pk)
+    if request.method == 'POST':
+        party.delete()
+        return redirect('party_list')
+    return render(request, 'confirm_delete.html', {'object': party})
+
+
+def contact_create_view(request):
+    success = False  # Flag to show success message
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            success = True
+            form = ContactForm()  # Clear form after submission
+    else:
+        form = ContactForm()
+
+    return render(request, 'contact_form.html', {'form': form, 'success': success})
+
+def contact_list_view(request):
+    contacts = Contact.objects.all().order_by('-created_at')
+    return render(request, 'contact_list.html', {'contacts': contacts})
