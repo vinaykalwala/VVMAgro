@@ -35,12 +35,20 @@
             margin-bottom: 15px;
         }
 
-        .admin-welcome-subtitle {
-            font-size: 18px;
-            color: #333;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
+       .admin-welcome-subtitle {
+    font-size: 18px;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 30px;
+
+    background-color: rgba(255, 255, 255, 0.75); /* white with 75% opacity */
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* optional shadow for depth */
+    backdrop-filter: blur(6px); /* soft blur behind text */
+    -webkit-backdrop-filter: blur(6px);
+}
+
 
         .admin-welcome-buttons {
             display: flex;
@@ -56,12 +64,15 @@
             font-weight: bold;
             text-decoration: none;
             transition: background 0.3s;
+                        border: 2px solid whitesmoke;
+
            
 
         }
 
         .admin-welcome-btn:hover {
-            background:green;
+            background:white;
+            color: green;
         }
 
         .admin-welcome-btn-outline {
