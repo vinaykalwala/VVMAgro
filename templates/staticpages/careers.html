@@ -8,14 +8,12 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
+        font-family: 'Poppins', sans-serif;
     }
 
     body {
-        /* background: linear-gradient(180deg, #C8E6C9, #F1F8E9); */
         color: #1B5E20;
         overflow-x: hidden;
-        
     }
 
     /* Hero Section */
@@ -39,7 +37,7 @@
     }
 
     .hero h1 {
-        font-size: 5rem;
+        font-size: 2.5rem;
         color: #FFFFFF;
         text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
         margin-bottom: 1.5rem;
@@ -226,15 +224,17 @@
 
     /* Single Card Section */
     .card-section {
-        width: 100%;
+        /* width: 100%; */
         background: #E8F5E9;
         border-radius: 20px;
-        padding: 3rem;
+        padding: 3rem 5rem; 
         margin: 2rem 0;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         border-top: 8px solid #4CAF50;
         opacity: 0;
         animation: scaleIn 1s ease-out forwards;
+        margin-left: 23px;
+        margin-right: 23px;
     }
 
     .card-section h2 {
@@ -434,7 +434,8 @@
     </div>
 </div>
 
-<div class="card-section">
+<div class="split-card-container">
+<div class="card-left">
     <h2>Application Process</h2>
     <p>Ready to join us? Follow these simple steps to apply:</p>
     <ul>
@@ -445,7 +446,7 @@
     </ul>
 </div>
 
-<div class="card-section">
+<div class="card-right">
     <h2>Our Culture</h2>
     <p>At VVM Agro Industries, we foster a culture of innovation, teamwork, and sustainability. Our team thrives in a supportive environment where every idea counts, and we’re committed to creating a positive impact on agriculture and the planet.</p>
     <ul>
@@ -453,5 +454,6 @@
         <li style="--i: 2;">Innovative: Drive advancements in machinery design.</li>
         <li style="--i: 3;">Sustainable: Contribute to eco-friendly solutions.</li>
     </ul>
+</div>
 </div>
 {% endblock %}

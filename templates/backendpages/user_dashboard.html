@@ -1,17 +1,136 @@
 {% extends 'backendpages/base.html' %}
     {% block content %}
-    !DOCTYPE html>
+    {% load static %}
+    <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Document</title>
+  <style>
+  .green-dashboard-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 15px;
+  min-height: 100vh;
+  background: url("{% static 'tractorbg.png' %}") no-repeat center center;
+  background-size: cover;
+}
+
+/* New overlay for blur & transparency */
+.green-dashboard-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: inherit; /* use same bg image */
+  filter: blur(10px);
+  opacity: 0.5;
+  z-index: 0;
+  background-size: cover;
+  background-position: center center;
+}
+
+.green-dashboard-card {
+  position: relative; /* above overlay */
+  z-index: 1;
+background-color: rgba(255, 255, 255, 0.75); /* white with 75% opacity */
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* optional shadow for depth */
+    backdrop-filter: blur(6px); /* soft blur behind text */
+    -webkit-backdrop-filter: blur(6px);  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(75, 145, 50, 0.25);
+  max-width: 450px;
+  width: 100%;
+  padding: 40px 30px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: green;
+  backdrop-filter: none; /* remove blur */
+  -webkit-backdrop-filter: none;
+}
+
+.green-profile-image {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 30px auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #7ebf43;
+  box-shadow: 0 5px 15px rgba(126, 191, 67, 0.6);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.green-profile-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+}
+
+.green-profile-image:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(126, 191, 67, 0.9);
+}
+
+.green-dashboard-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  letter-spacing: 0.04em;
+}
+
+.green-dashboard-info {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #3b5a1a;
+  font-weight: 500;
+  margin-bottom: 0;
+  padding: 0 10px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .green-dashboard-card {
+    padding: 30px 20px;
+  }
+
+  .green-dashboard-title {
+    font-size: 1.8rem;
+  }
+
+  .green-dashboard-info {
+    font-size: 1rem;
+  }
+
+  .green-profile-image {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+}
+
+  </style>
 </head>
   <body>
   <div class="main-content">
-<h2>User Dashboard</h2>
-<p>Welcome, {{ request.user.username }}!</p>
-<a href="{% url 'logout' %}">Logout</a>
+<div class="green-dashboard-wrapper">
+  <div class="green-dashboard-card">
+    <div class="green-profile-image">
+{% if user_profile.profile_pic %}
+  <img src="{{ user_profile.profile_pic.url }}" alt="User profile image" />
+{% endif %}
+
+    </div>
+    <h2 class="green-dashboard-title">Welcome, {{ request.user.username }}!</h2>
+    <p class="green-dashboard-info">
+      Here you can manage your profile, update your personal information, check your notifications, and customize your settings for a personalized experience.
+    </p>
+  </div>
+</div>
  </div>
   {% endblock %}
 </body>

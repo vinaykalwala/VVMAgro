@@ -174,7 +174,7 @@
 <body>
   <nav class="navbar">
     <div class="logo">
-      <h4>VVM Agro Industries</h4>
+<img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 30px;">
     </div>
 
     {% if request.user.is_authenticated %}
@@ -198,6 +198,7 @@
       <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
       <li><a href="{% url 'careers' %}">Careers</a></li>
       <li><a href="{% url 'contactus' %}">Contact Us</a></li>
+      
     </ul>
     <div class="logout-container">
       <form method="POST" action="{% url 'logout' %}">

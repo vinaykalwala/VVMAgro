@@ -123,7 +123,7 @@ class ProductExchangeItemForm(forms.Form):
 class VoucherForm(forms.ModelForm):
     class Meta:
         model = Voucher
-        fields = ['voucher_type', 'igst_applicable','party','remarks','place_of_supply']  
+        fields = ['voucher_type', 'igst_applicable','party','freight_applicable','freight_charge','remarks','place_of_supply']  
 
     def __init__(self, *args, **kwargs):
         allowed_voucher_types = kwargs.pop('allowed_voucher_types', None)

@@ -5,15 +5,102 @@
 <head>
     <title>Invoice #{{ voucher.id }}</title>
     <style>
-        body { font-family: Arial, sans-serif; font-size: 14px; }
-        .container { width: 95%; margin: auto; padding: 20px; border: 1px solid #000; }
-        h2, h3 { text-align: center; margin: 5px 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #000; padding: 8px; text-align: center; }
-        .text-left { text-align: left; }
-        .text-right { text-align: right; }
-        .no-border { border: none; }
-        .section { margin-bottom: 10px; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 95%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #4CAF50;
+            box-sizing: border-box;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #2e7d32;
+            margin: 5px 0;
+        }
+        p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
+        th, td {
+            border: 1px solid #4CAF50;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+        }
+        th {
+            background-color: #A5D6A7;
+            color: #1B5E20;
+        }
+        .text-left {
+            text-align: left;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .no-border {
+            border: none !important;
+        }
+        .section {
+            margin: 10px 0;
+        }
+        .btn-print {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #2e7d32;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+        .btn-print:hover {
+            background-color: #1b5e20;
+        }
+
+        @media print {
+            body {
+                background: #ffffff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                margin: 0;
+                padding: 0;
+            }
+            .btn-print {
+                display: none !important;
+            }
+            .container {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 10px !important;
+                border: none !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+            table, th, td {
+                border: 1px solid #4CAF50 !important;
+                color: black !important;
+            }
+            th {
+                background-color: #A5D6A7 !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -30,13 +117,12 @@
     <table>
         <tr>
             <td class="text-left" colspan="2">
-    <strong>{{ party_label }}:</strong><br>
-    {{ voucher.party.name }}<br>
-    {{ voucher.party.address }}<br>
-    GSTIN/UIN: {{ voucher.party.gstin_uin_number }}<br>
-    State: {{ voucher.party.state }} Code: {{ voucher.party.pincode }}
-</td>
-
+                <strong>{{ party_label }}:</strong><br>
+                {{ voucher.party.name }}<br>
+                {{ voucher.party.address }}<br>
+                GSTIN/UIN: {{ voucher.party.gstin_uin_number }}<br>
+                State: {{ voucher.party.state }} Code: {{ voucher.party.pincode }}
+            </td>
             <td class="text-left" colspan="2">
                 <strong>Invoice No:</strong> {{ voucher.voucher_number }}<br>
                 <strong>Date:</strong> {{ voucher.created_at|date:"d M Y" }}<br>
@@ -92,12 +178,16 @@
             <td>{{ total_igst|floatformat:2|intcomma }}</td>
         </tr>
         <tr>
+            <td class="no-border text-right" colspan="6">Add: Freight Charges</td>
+            <td>{{ voucher.freight_charge|floatformat:2|intcomma }}</td>
+        </tr>
+        <tr>
             <td class="no-border text-right" colspan="6"><strong>Grand Total</strong></td>
             <td><strong>{{ grand_total|floatformat:2|intcomma }}</strong></td>
         </tr>
     </table>
 
-    <p><strong>Amount in Words:</strong> INR {{ grand_total|floatformat:2 }} only</p>
+    <p><strong>Amount in Words:</strong> {{ amount_in_words|capfirst }} only</p>
 
     <p class="section"><strong>Declaration:</strong> We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</p>
 
@@ -111,5 +201,10 @@
         Branch & IFSC: QUTUBULLAPUR, SBIN0012947
     </div>
 </div>
+
+<button onclick="window.print()" class="btn-print">
+    🖨️ Print Invoice
+</button>
+
 </body>
 </html>
