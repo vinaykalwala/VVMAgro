@@ -36,9 +36,6 @@ def branchesanddistributors(request):
 def careers(request):
     return render(request,'staticpages/careers.html')
 
-def contactus(request):
-    return render(request,'staticpages/contactus.html')  
-
 def tractorproducts(request):
     return render(request,'staticpages/farmingtractor.html')  
 
@@ -47,7 +44,6 @@ def pesticideprayer(request):
 
 def ricefiltering(request):
     return render(request,'staticpages/ricefiltering.html')        
-    return render(request,'staticpages/contactus.html')                
 
 
 from django.shortcuts import render, redirect
@@ -520,14 +516,18 @@ def party_delete(request, pk):
 
 
 def contact_create_view(request):
+    success = False  # Flag to show success message
+
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('contact_list')
+            success = True
+            form = ContactForm()  # Clear form after submission
     else:
         form = ContactForm()
-    return render(request, 'contact_form.html', {'form': form})
+
+    return render(request, 'contact_form.html', {'form': form, 'success': success})
 
 def contact_list_view(request):
     contacts = Contact.objects.all().order_by('-created_at')
