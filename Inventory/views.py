@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from .models import *
+from .forms import *
 
 # Create your views here.
 def home(request):
@@ -13,29 +15,25 @@ def products(request):
 def tractor(request):
     return render(request, 'staticpages/tractor.html')
 
-def land_smoothing(request):
-    return render(request, 'staticpages/land_smoothing.html')
+def hydraulicboomlift(request):
+    return render(request, 'staticpages/hydraulicboomlift.html')
 
 def rice_filtering(request):
     return render(request, 'staticpages/rice_filtering.html')
     
-def pesticide_view(request):
-    return render(request, 'staticpages/pesticide.html')
+def frontendloader(request):
+    return render(request, 'staticpages/frontendloader.html')
 
 def crop_harvester(request):
     return render(request, 'staticpages/crop_harvester.html')
 
-def irrigation_system(request):
-    return render(request, 'staticpages/irrigation_system.html')
+
 
 def branchesanddistributors(request):
     return render(request,'staticpages/branchesanddistributors.html')
 
 def careers(request):
     return render(request,'staticpages/careers.html')
-
-def contactus(request):
-    return render(request,'staticpages/contactus.html')  
 
 def tractorproducts(request):
     return render(request,'staticpages/farmingtractor.html')  
@@ -45,7 +43,6 @@ def pesticideprayer(request):
 
 def ricefiltering(request):
     return render(request,'staticpages/ricefiltering.html')        
-    return render(request,'staticpages/contactus.html')                
 
 
 from django.shortcuts import render, redirect
@@ -542,3 +539,20 @@ def apply_for_job(request, job_id):
 def careers(request):
     jobs = Job.objects.all()
     return render(request, "staticpages/careers.html", {"jobs": jobs})
+def contact_create_view(request):
+    success = False  # Flag to show success message
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            success = True
+            form = ContactForm()  # Clear form after submission
+    else:
+        form = ContactForm()
+
+    return render(request, 'contact_form.html', {'form': form, 'success': success})
+
+def contact_list_view(request):
+    contacts = Contact.objects.all().order_by('-created_at')
+    return render(request, 'contact_list.html', {'contacts': contacts})

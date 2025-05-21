@@ -4,27 +4,27 @@
 {% block content %}
 <div class="product-detail-container">
     <!-- Product Header with Image -->
+    <h1 class="product-title animate-fadeIn"> Hydraulic Post Hole Digger</h1>
+
+    <!-- Product Header Section -->
     <div class="product-header">
         <div class="product-image-container">
             <div class="main-image animate-zoom">
-                <img src="{% static 'images/img5.jpeg' %}" alt="Hydraulic Post Hole Digger" class="product-main-img">
-                <div class="image-badge">High Performance</div>
+                <img src="{% static 'images/img6.png' %}" alt="Advanced Rice Filtering Machine" class="product-main-img">
+                <div class="image-badge">Premium Quality</div>
             </div>
         </div>
+        
         <div class="product-summary">
-            <h1 class="product-title animate-fadeIn">Hydraulic Post Hole Digger</h1>
             <div class="product-highlights">
                 <div class="highlight-card animate-slideUp">
-                    <h3><i class="fas fa-star"></i> Key Features</h3>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> Heavy-duty 100x50x6 mm seamless tube frame</li>
-                        <li><i class="fas fa-check-circle"></i> 2 hydraulic jacks with control panel</li>
-                        <li><i class="fas fa-check-circle"></i> Special grade iron gear body</li>
-                        <li><i class="fas fa-check-circle"></i> High output capacity (100 holes/hour)</li>
-                        <li><i class="fas fa-check-circle"></i> Carbide-tipped auger points for durability</li>
-                    </ul>
+                    <h3><i class="fas fa-star"></i> Product Overview</h3>
+                    <p class="product-description">
+                        Our state-of-the-art Rice Filtering Machine is designed for efficient separation of rice grains from impurities and husks. With its high-capacity processing and precision screening technology, it ensures maximum purity and quality of output. The machine features an advanced vibration system, multiple filtering stages, and durable stainless steel construction for long-lasting performance in demanding agricultural environments.
+                    </p>
                 </div>
             </div>
+            
             <div class="cta-buttons">
                 <button class="inquiry-btn animate-pulse">
                     <i class="fas fa-envelope"></i> Send Inquiry
@@ -40,15 +40,38 @@
     <div class="product-specs">
         <h2 class="section-title animate-fadeIn">Technical Specifications</h2>
         <div class="spec-tabs">
-            <button class="spec-tab active animate-slideLeft" onclick="openSpecTab('digger-specs')">
-                <i class="fas fa-digging"></i> Digger Specifications
+            <button class="spec-tab active animate-slideLeft" onclick="openSpecTab('machine-specs')">
+                <i class="fas fa-cogs"></i> Machine Specifications
             </button>
-            <button class="spec-tab animate-slideRight" onclick="openSpecTab('auger-specs')">
-                <i class="fas fa-screwdriver"></i> Auger Details
+            <button class="spec-tab animate-slideRight" onclick="openSpecTab('performance')">
+                <i class="fas fa-tachometer-alt"></i> Performance
             </button>
         </div>
 
-        <div id="digger-specs" class="spec-content animate-fadeIn" style="display: block;">
+        <div id="machine-specs" class="spec-content animate-fadeIn" style="display: block;">
+            <div class="spec-card">
+                <table class="spec-table">
+                    <tr class="animate-row">
+                        <th>Frame</th>
+                        <td>175X75X10+10+10 mm Channel Heavy Duty</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Jack</th>
+                        <td>3 No. Hydraulic 2 Piece 60mm x 43 inch 1 50mm x 96 inch</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Hydraulic Pipe</th>
+                        <td>R2 Hose Pipe Heavy Duty</td>
+                    </tr>
+                    <tr class="animate-row">
+                        <th>Approximate Weight</th>
+                        <td>1600 Kg.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="performance" class="spec-content animate-fadeIn" style="display: none;">
             <div class="spec-card">
                 <table class="spec-table">
                     <tr class="animate-row">
@@ -83,13 +106,6 @@
                         <th>Gear Ratio</th>
                         <td>Bevel 5:1</td>
                     </tr>
-                </table>
-            </div>
-        </div>
-
-        <div id="auger-specs" class="spec-content animate-fadeIn" style="display: none;">
-            <div class="spec-card">
-                <table class="spec-table">
                     <tr class="animate-row">
                         <th>PTO</th>
                         <td>Telescope Type</td>
@@ -122,87 +138,199 @@
             </div>
         </div>
     </div>
+    
+    <section class="unique-features-section">
+        <h2 class="unique-features-heading">Features</h2>
+        <div class="unique-features-slider">
+         
+          <div class="unique-features-container">
+      
+            <div class="unique-feature-card">
+              <img src="{% static 'images/pole-installation.png' %}" alt="Quick Pole Installation" />
+              <h4>Quick Pole Installation</h4>
+              <p>Quickest method for installing electricity poles</p>
+            </div>
+      
+            <div class="unique-feature-card">
+              <img src="{% static 'images/loading.png' %}" alt="Easy Loading" />
+              <h4>Easy Loading System</h4>
+              <p>Trouble-free loading and unloading operations</p>
+            </div>
+      
+            <div class="unique-feature-card">
+              <img src="{% static 'images/crane-boom.png' %}" alt="Extendable Boom" />
+              <h4>Extendable Boom</h4>
+              <p>Simple extension of the crane boom for versatility</p>
+            </div>
+      
+            <div class="unique-feature-card">
+              <img src="{% static 'images/heavy-duty.png' %}" alt="Heavy Duty Channel" />
+              <h4>Heavy-Duty Channel</h4>
+              <p>Robust channel construction for maximum durability</p>
+            </div>
+      
+          </div>
+         
+        </div>
+      </section>
+
+    <div class="disclaimer-note">
+        <div class="note-container">
+            <h3><i class="fas fa-exclamation-circle"></i> Important Note</h3>
+            <p>The contents of this catalogue are only giving information to the end user without engagement from our side. The company can modify SPECIFICATIONS of the total machine and it's components without any previous notice. Are supplied for information only and are not binding specification and size can be altered as part of ongoing product modification/improvement.</p>
+        </div>
+    </div>
 
     <!-- Product Features -->
     <div class="product-features">
-        <h2 class="section-title animate-fadeIn">Why Choose Our Post Hole Digger?</h2>
+        <h2 class="section-title animate-fadeIn">Why Choose Our Rice Filter?</h2>
         <div class="features-grid">
             <div class="feature-card animate-slideUp">
                 <div class="feature-icon" style="background-color: #ff6b6b;">
-                    <i class="fas fa-hard-hat"></i>
+                    <i class="fas fa-filter"></i>
                 </div>
-                <h3>Rugged Construction</h3>
-                <p>Built with heavy-duty materials to withstand tough digging conditions and prolonged use.</p>
+                <h3>Superior Filtration</h3>
+                <p>Advanced multi-stage filtering system ensures 98%+ impurity removal for premium quality rice.</p>
                 <div class="feature-wave"></div>
             </div>
             <div class="feature-card animate-slideUp" style="animation-delay: 0.2s;">
                 <div class="feature-icon" style="background-color: #48dbfb;">
                     <i class="fas fa-bolt"></i>
                 </div>
-                <h3>High Productivity</h3>
-                <p>Digs up to 100 holes per hour depending on soil conditions for maximum efficiency.</p>
+                <h3>High Efficiency</h3>
+                <p>Processes 500-800 kg/hour with minimal grain breakage for maximum yield.</p>
                 <div class="feature-wave"></div>
             </div>
             <div class="feature-card animate-slideUp" style="animation-delay: 0.4s;">
                 <div class="feature-icon" style="background-color: #1dd1a1;">
-                    <i class="fas fa-ruler-combined"></i>
+                    <i class="fas fa-cog"></i>
                 </div>
-                <h3>Precision Engineering</h3>
-                <p>Precision-machined components ensure smooth operation and consistent hole dimensions.</p>
+                <h3>Durable Construction</h3>
+                <p>Food-grade stainless steel components resist corrosion and ensure long service life.</p>
                 <div class="feature-wave"></div>
             </div>
             <div class="feature-card animate-slideUp" style="animation-delay: 0.6s;">
                 <div class="feature-icon" style="background-color: #feca57;">
-                    <i class="fas fa-wrench"></i>
+                    <i class="fas fa-sliders-h"></i>
                 </div>
-                <h3>Easy Maintenance</h3>
-                <p>Simple design allows for easy access to all components requiring regular maintenance.</p>
+                <h3>Adjustable Settings</h3>
+                <p>Customizable vibration and screen sizes for different rice varieties and requirements.</p>
                 <div class="feature-wave"></div>
             </div>
         </div>
     </div>
 
-    <!-- Related Products -->
-    <div class="related-products">
-        <h2 class="section-title animate-fadeIn">Explore Our Other Products</h2>
-        <div class="products-grid">
-            <div class="related-product-card animate-slideUp">
-                <a href="{% url 'crop_harvester' %}">
-                    <div class="related-product-image" style="background-image: url('{% static "images/img4.jpeg" %}')"></div>
-                    <div class="related-product-overlay">
-                        <h3 class="related-product-title">
-                            Heavy-Duty Hydraulic Lift Tractor
-                            <i class="fas fa-arrow-right"></i>
-                        </h3>
+    <section class="warranty-section">
+        <h2 class="section-title">Product Excellence & Warranty</h2>
+        <div class="warranty">
+            <div class="warranty-left">
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            Advanced Filtration Technology
+                            <span class="arrow">&#9660;</span>
+                        </div>
+                        <div class="accordion-body">
+                            Our rice filter utilizes a patented multi-stage vibration system that ensures thorough separation of impurities while minimizing grain breakage.
+                        </div>
                     </div>
-                </a>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            Food-Grade Materials
+                            <span class="arrow">&#9660;</span>
+                        </div>
+                        <div class="accordion-body">
+                            Constructed with 304-grade stainless steel for all contact surfaces, ensuring hygiene and durability in food processing applications.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            Energy Efficient Operation
+                            <span class="arrow">&#9660;</span>
+                        </div>
+                        <div class="accordion-body">
+                            Optimized motor and vibration system reduces power consumption by up to 30% compared to conventional filters.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            3-Year Warranty Coverage
+                            <span class="arrow">&#9660;</span>
+                        </div>
+                        <div class="accordion-body">
+                            Comprehensive warranty covering all major components with dedicated service support and genuine spare parts availability.
+                        </div>
+                    </div>
+                </div>
+
+                <button class="know-more-btn">Request Demonstration</button>
             </div>
-            <div class="related-product-card animate-slideUp" style="animation-delay: 0.2s;">
-                <a href="#">
-                    <div class="related-product-image" style="background-image: url('{% static "images/img1.jpeg" %}')"></div>
-                    <div class="related-product-overlay">
-                        <h3 class="related-product-title">
-                            Tractor Mounted Crane
-                            <i class="fas fa-arrow-right"></i>
-                        </h3>
-                    </div>
-                </a>
-            </div>
-            <div class="related-product-card animate-slideUp" style="animation-delay: 0.4s;">
-                <a href="#">
-                    <div class="related-product-image" style="background-image: url('{% static "images/img2.jpeg" %}')"></div>
-                    <div class="related-product-overlay">
-                        <h3 class="related-product-title">
-                            Agricultural Loader
-                            <i class="fas fa-arrow-right"></i>
-                        </h3>
-                    </div>
-                </a>
+
+            <div class="warranty-right">
+                <img src="{% static 'images/hydralic-hole.png' %}" alt="Rice Filtering Machine Features" />
             </div>
         </div>
-    </div>
-</div>
+    </section>
 
+   
+    <!-- Related Products -->
+<div class="related-products">
+    <h2 class="section-title animate-fadeIn">Explore Our Other Products</h2>
+    <div class="products-grid" id="products-grid">
+      <div class="related-product-card animate-slideUp">
+        <a href="{% url 'tractor' %}">
+          <div class="related-product-image" style="background-image: url('{% static "images/img1.jpeg" %}')"></div>
+          <div class="related-product-overlay">
+            <h3 class="related-product-title">
+              Tractor Mounted Crane
+              <i class="fas fa-arrow-right"></i>
+            </h3>
+          </div>
+        </a>
+      </div>
+      <div class="related-product-card animate-slideUp" style="animation-delay: 0.2s;">
+        <a href="{% url 'land_smoothing' %}">
+          <div class="related-product-image" style="background-image: url('{% static "images/img2.jpeg" %}')"></div>
+          <div class="related-product-overlay">
+            <h3 class="related-product-title">
+              Agricultural Loader
+              <i class="fas fa-arrow-right"></i>
+            </h3>
+          </div>
+        </a>
+      </div>
+      <div class="related-product-card animate-slideUp" style="animation-delay: 0.4s;">
+        <a href="{% url 'pesticide' %}">
+          <div class="related-product-image" style="background-image: url('{% static "images/img6.png" %}')"></div>
+          <div class="related-product-overlay">
+            <h3 class="related-product-title">
+              Hydraulic Post Hole Digger
+              <i class="fas fa-arrow-right"></i>
+            </h3>
+          </div>
+        </a>
+      </div>
+      <div class="related-product-card animate-slideUp" style="animation-delay: 0.6s;">
+        <a href="{% url 'rice_filtering' %}">
+          <div class="related-product-image" style="background-image: url('{% static "images/img3.jpeg" %}')"></div>
+          <div class="related-product-overlay">
+            <h3 class="related-product-title">
+              Hydraulic Tipper
+              <i class="fas fa-arrow-right"></i>
+            </h3>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="loading-spinner" id="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+  </div>
+  
+</div>
 <script>
     function openSpecTab(tabName) {
         // Hide all spec content
@@ -243,20 +371,130 @@
         });
     });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.querySelector('.unique-features-container');
+  const btnLeft = document.querySelector('.unique-slider-btn.left');
+  const btnRight = document.querySelector('.unique-slider-btn.right');
+  const cards = document.querySelectorAll('.unique-feature-card');
+  
+  // Hide left button initially
+  btnLeft.classList.add('hidden');
+  
+  container.addEventListener('scroll', function() {
+    // Show/hide buttons based on scroll position
+    if (container.scrollLeft <= 0) {
+      btnLeft.classList.add('hidden');
+    } else {
+      btnLeft.classList.remove('hidden');
+    }
+    
+    if (container.scrollLeft >= container.scrollWidth - container.clientWidth - 1) {
+      btnRight.classList.add('hidden');
+    } else {
+      btnRight.classList.remove('hidden');
+    }
+  });
 
+  btnLeft.addEventListener('click', () => {
+    container.scrollBy({ left: -300, behavior: 'smooth' });
+  });
+
+  btnRight.addEventListener('click', () => {
+    container.scrollBy({ left: 300, behavior: 'smooth' });
+  });
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const productsGrid = document.getElementById('products-grid');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        
+        // Variables for continuous scrolling
+        let scrollInterval;
+        let isMouseOver = false;
+        const scrollSpeed = 1; // Adjust speed as needed
+        
+        // Clone products for continuous scrolling
+        function cloneForScroll() {
+            const products = Array.from(productsGrid.children);
+            products.forEach(product => {
+                const clone = product.cloneNode(true);
+                productsGrid.appendChild(clone);
+            });
+        }
+        
+        // Initialize cloning
+        cloneForScroll();
+        
+        // Continuous scroll function
+        function startScroll() {
+            if (!isMouseOver) {
+                productsGrid.scrollLeft += scrollSpeed;
+                
+                // Reset scroll position when reaching the end
+                if (productsGrid.scrollLeft >= (productsGrid.scrollWidth / 2)) {
+                    productsGrid.scrollLeft = 0;
+                }
+            }
+        }
+        
+        // Start scrolling
+        scrollInterval = setInterval(startScroll, 30);
+        
+        // Pause on hover
+        productsGrid.addEventListener('mouseenter', () => {
+            isMouseOver = true;
+        });
+        
+        productsGrid.addEventListener('mouseleave', () => {
+            isMouseOver = false;
+        });
+        
+        // Clean up on window unload
+        window.addEventListener('beforeunload', () => {
+            clearInterval(scrollInterval);
+        });
+    });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const item = header.parentElement;
+            const body = item.querySelector('.accordion-body');
+            const arrow = header.querySelector('.arrow');
+            
+            // Toggle active state
+            item.classList.toggle('active');
+            
+            // Update arrow and body
+            if (item.classList.contains('active')) {
+                body.style.maxHeight = body.scrollHeight + "px";
+                arrow.innerHTML = '&#9650;';
+            } else {
+                body.style.maxHeight = "0";
+                arrow.innerHTML = '&#9660;';
+            }
+        });
+    });
+});
+</script>
+          
 <style>
+    
     :root {
-        --primary-color: #2e86de;
-        --secondary-color: #10ac84;
+        --primary-color:  #388e3c;
+        --secondary-color: #2e86de4;
         --accent-color: #ff9f43;
         --dark-color: #222f3e;
         --light-color: #f5f6fa;
     }
     
     .product-detail-container {
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
@@ -312,24 +550,28 @@
     }
     
     .product-title {
-        font-size: 32px;
-        margin-bottom: 20px;
-        color: var(--dark-color);
-        position: relative;
-        display: inline-block;
-    }
-    
-    .product-title:after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 0;
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        border-radius: 2px;
-    }
-    
+    font-size: 2.2rem;
+    margin: 2rem auto 3rem;
+    text-align: center;
+    color: var(--primary-color);
+    position: relative;
+   
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+}
+
+.product-title:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+}
+
     .highlight-card {
         background: white;
         border-radius: 10px;
@@ -342,7 +584,7 @@
     .highlight-card h3 {
         font-size: 20px;
         margin-bottom: 15px;
-        color: var(--dark-color);
+        color: #303F9F;
         display: flex;
         align-items: center;
     }
@@ -396,14 +638,14 @@
     }
     
     .inquiry-btn {
-        background: linear-gradient(135deg, var(--primary-color), #1e90ff);
+        background: var(--primary-color);
         color: white;
     }
     
     .brochure-btn {
         background: white;
-        color: var(--dark-color);
-        border: 1px solid #ddd;
+        color: var(--primary-color);
+        border: 1px solid green;
     }
     
     .inquiry-btn:hover {
@@ -425,11 +667,13 @@
     }
     
     .section-title {
+        text-align: center;
         font-size: 28px;
         margin-bottom: 25px;
-        color: var(--dark-color);
+        color: var(--primary-color);
         position: relative;
         padding-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
     }
     
     .section-title:after {
@@ -451,7 +695,8 @@
     
     .spec-tab {
         padding: 12px 25px;
-        background: white;
+        background: var(--primary-color);
+        color: white;
         border: none;
         border-radius: 50px;
         cursor: pointer;
@@ -469,8 +714,7 @@
     }
     
     .spec-tab.active {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
+        linear-gradient(135deg, var(--primary-color), #1e90ff);
         box-shadow: 0 8px 20px rgba(16, 172, 132, 0.3);
     }
     
@@ -545,7 +789,7 @@
     .feature-card h3 {
         font-size: 20px;
         margin-bottom: 15px;
-        color: var(--dark-color);
+        color: #303F9F;
     }
     
     .feature-card p {
@@ -571,31 +815,45 @@
     
     .related-products {
         margin-top: 60px;
+        padding: 4rem 0;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      
+      .products-grid {
+        display: flex; /* Changed from grid to flex for horizontal scrolling */
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 25px;
+        padding: 20px 0;
+        scrollbar-width: none; /* Hide scrollbar for cleaner look */
     }
     
-    .products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
+    .products-grid::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome/Safari */
     }
     
     .related-product-card {
-        position: relative;
+        flex: 0 0 250px; /* Fixed width for each card */
         height: 250px;
+        position: relative;
         overflow: hidden;
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        animation: slideUp 0.2s ease forwards;
+        opacity: 0;
     }
-    
-    .related-product-image {
+      
+      .related-product-image {
         width: 100%;
         height: 100%;
         background-size: cover;
         background-position: center;
         transition: transform 0.5s ease;
-    }
-    
-    .related-product-overlay {
+      }
+      
+      .related-product-overlay {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -605,15 +863,47 @@
         padding: 20px;
         transform: translateY(100%);
         transition: transform 0.3s ease;
-    }
-    
-    .related-product-card:hover .related-product-overlay {
+      }
+      
+      .related-product-card:hover .related-product-overlay {
         transform: translateY(0);
-    }
-    
-    .related-product-card:hover .related-product-image {
+      }
+      
+      .related-product-card:hover .related-product-image {
         transform: scale(1.1);
-    }
+      }
+      
+      .related-product-title {
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .related-product-title i {
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      
+      .related-product-card:hover .related-product-title i {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      
+      /* Animations */
+      @keyframes slideUp {
+        0% {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
     
     .related-product-title {
         margin: 0;
@@ -749,6 +1039,297 @@
         .products-grid {
             grid-template-columns: 1fr;
         }
+        .unique-feature-card {
+            flex: 0 0 200px;
+        }
+        
+        .unique-feature-card img {
+            width: 170px;
+            height: 130px;
+        }
+        
+        .unique-features-slider {
+            padding: 0 30px;
+        }
+        .warranty {
+            grid-template-columns: 1fr;
+        }
+        
+        .warranty-right {
+            order: -1;
+            height: 300px;
+        }
+        
+        .warranty-right img {
+            max-height: 300px;
+        }
+    }
+    .unique-features-section {
+        padding: 1rem 0;
+        background: white;
+    }
+    
+    .unique-features-heading {
+        font-size: 28px;
+        color: var(--primary-color);
+        position: relative;
+        padding-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
+        text-align: center; 
+    }
+    
+    .unique-features-heading:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .unique-features-slider {
+        position: relative;
+        max-width: 1900px;
+        margin: 0 auto;
+        padding: 0 40px;
+    }
+    
+    .unique-features-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 80px;
+        padding: 20px 0;
+        scrollbar-width: none;
+    }
+    
+    .unique-features-container::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .unique-feature-card {
+        flex: 0 0 250px;
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+    
+    .unique-feature-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .unique-feature-card img {
+        width: 220px;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .unique-feature-card h4 {
+        color: var(--primary-color);
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .unique-feature-card p {
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    .unique-slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 2;
+    }
+    
+    .unique-slider-btn:hover {
+        background: var(--secondary-color);
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .unique-slider-btn.left {
+        left: 0;
+    }
+    
+    .unique-slider-btn.right {
+        right: 0;
+    }
+    
+    .unique-slider-btn.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .warranty-section {
+        padding: 4rem 0;
+        background: #f8f9fa;
+    }
+    .warranty {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        padding: 0 2rem;
+    }
+    .warranty-left {
+        flex: 1;
+    }
+    .warranty-right {
+        flex: 1;
+        position: relative;
+        height: 400px; /* Fixed height */
+        overflow: hidden; /* Prevent image overflow */
+    }
+    
+    .warranty-right img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        position: sticky; /* Keep image fixed while accordion expands */
+        top: 0;
+    }
+  
+    .warranty-left h2 {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .warranty-left h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+    
+    .accordion {
+        margin-top: 2rem;
+    }
+    
+    .accordion-item {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.accordion-header {
+    background: green;
+    color: white;
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+
+
+.accordion-body {
+    padding: 0 1rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: white;
+}
+
+.accordion-item.active .accordion-body {
+    padding: 1rem;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.accordion-item.active .arrow {
+    transform: rotate(180deg);
+}
+    
+    .know-more-btn {
+        margin-top: 2rem;
+        padding: 1rem 2rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .know-more-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .warranty-right img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .disclaimer-note {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-left: 4px solid var(--primary-color);
+        border-radius: 4px;
+    }
+    
+    .note-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .disclaimer-note h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.2rem;
+    }
+    
+    .disclaimer-note p {
+        color: #666;
+        line-height: 1.6;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+    
+    .disclaimer-note i {
+        color: var(--primary-color);
     }
 </style>
+
 {% endblock %}

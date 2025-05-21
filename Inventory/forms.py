@@ -104,3 +104,10 @@ class JobApplicationForm(forms.ModelForm):
             if resume.size > 5 * 1024 * 1024:  # 5MB limit
                 raise forms.ValidationError("Resume file size must be under 5MB.")
         return resume
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['name', 'company', 'email', 'phone', 'subject', 'message']
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 5}),
+        }
