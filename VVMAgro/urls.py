@@ -71,6 +71,10 @@ urlpatterns = [
 
     # JobApplication
     path("apply/<int:job_id>/", apply_for_job, name="apply_for_job"),
+    path('post/', job_post_view, name='job_post'),
+    path('applications/', job_applications_view, name='job_applications'),
+    path('applications/<int:application_id>/', application_detail_view, name='application_detail'),
+
 
 ]
 if settings.DEBUG:
