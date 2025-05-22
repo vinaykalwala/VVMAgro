@@ -1,61 +1,245 @@
 {% extends 'backendpages/base.html' %}
-    {% block content %}
-    <!DOCTYPE html>
+{% block content %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Document</title>
+  <title>Create Voucher</title>
+  <style>
+    /* Container styling */
+    .voucher-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(34, 139, 34, 0.15);
+      
+    }
+
+    /* Heading */
+    .voucher-heading {
+      text-align: center;
+      font-size: 28px;
+      color: #2e7d32;
+      margin-bottom: 30px;
+    }
+
+    /* Form fields container */
+    .voucher-form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    /* Labels */
+    .voucher-form-fields label {
+      font-weight: 600;
+      color: #2e7d32;
+      margin-bottom: 2px;
+      display: block;
+    }
+
+   /* Inputs, selects, textarea */
+.voucher-form-fields input[type="text"],
+.voucher-form-fields input[type="email"],
+.voucher-form-fields input[type="number"],
+.voucher-form-fields select,
+.voucher-form-fields textarea {
+  padding: 10px;
+  border: 1px solid #a5d6a7;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #e6ffe6;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+/* Focus states */
+.voucher-form-fields input[type="text"]:focus,
+.voucher-form-fields input[type="email"]:focus,
+.voucher-form-fields input[type="number"]:focus,
+.voucher-form-fields select:focus,
+.voucher-form-fields textarea:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+    /* Checkbox container for alignment */
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 10px 0;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .checkbox-wrapper label {
+      margin: 0;
+      font-weight: 500;
+      color: #2e7d32;
+      cursor: pointer;
+    }
+
+    /* Subheading */
+    .voucher-subheading {
+      margin-top: 40px;
+      font-size: 22px;
+      color: #388e3c;
+    }
+
+    /* Table wrapper for horizontal scroll */
+    .voucher-table-wrapper {
+      overflow-x: auto;
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    /* Table styles */
+    .voucher-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    .voucher-table th,
+    .voucher-table td {
+      border: 1px solid #c8e6c9;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .voucher-table th {
+    background-color: #e6ffe6;
+      color: #1b5e20;
+    }
+
+    /* Submit button */
+    .voucher-submit-btn {
+      margin-top: 30px;
+      padding: 14px 25px;
+      background-color: #2e7d32;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+      width: 100%;
+      max-width: 250px;
+      align-self: flex-start;
+    }
+    .voucher-submit-btn:hover {
+      background-color: #1b5e20;
+    }
+
+    /* Form container to stack all children vertically */
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    /* Make sure elements inside form take full width and are stacked */
+    .voucher-form-fields,
+    .voucher-table-wrapper,
+    .voucher-submit-btn {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .voucher-container {
+        padding: 15px;
+      }
+
+      /* Table min-width removed for mobile for better fit */
+      .voucher-table {
+        min-width: auto;
+      }
+
+      /* Submit button full width on small devices */
+      .voucher-submit-btn {
+        max-width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="main-content">
-    <h1>Create Voucher</h1>
-    <form method="post">
+  <div class="main-content">
+    <div class="voucher-container">
+      <h1 class="voucher-heading">Create Voucher</h1>
+      <form method="post">
         {% csrf_token %}
-        {{ voucher_form.as_p }}
+        <div class="voucher-form-fields">
+          {% for field in voucher_form %}
+            {% if field.field.widget.input_type == 'checkbox' %}
+              <div class="checkbox-wrapper">
+                {{ field }} 
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              </div>
+            {% else %}
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+            {% endif %}
+          {% endfor %}
+        </div>
 
-        <h2>Products to Add</h2>
-        <table border="1" cellpadding="5" cellspacing="0">
+        <h2 class="voucher-subheading">Products to Add</h2>
+        <div class="voucher-table-wrapper">
+          <table class="voucher-table">
             <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Movement Type</th>
-                    <th>Warehouse</th>
-                    <th>Quantity</th>
-                    <th>Phase {% comment %}Shown only for jobwork{% endcomment %}</th>
-                </tr>
+              <tr>
+                <th>Product</th>
+                <th>Movement Type</th>
+                <th>Warehouse</th>
+                <th>Quantity</th>
+                <th>Phase</th>
+              </tr>
             </thead>
             <tbody>
-                {% for item in products %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.movement_type }}</td>
-                    <td>{{ item.warehouse }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>
-    {% if item.movement_type == "job_work" %}
-        <select name="phase_{{ item.index }}">
-            {% for value, label in product_phase_choices %}
-                <option value="{{ value }}" {% if item.phase == value %}selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-        <input type="hidden" name="is_job_work_{{ item.index }}" value="1">
-    {% else %}
-        <input type="hidden" name="is_job_work_{{ item.index }}" value="0">
-        N/A
-    {% endif %}
-    <input type="hidden" name="product_index_{{ item.index }}" value="{{ item.index }}">
-</td>
-
-                </tr>
-                {% endfor %}
+              {% for item in products %}
+              <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.movement_type }}</td>
+                <td>{{ item.warehouse }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>
+                  {% if item.movement_type == "job_work" %}
+                    <select name="phase_{{ item.index }}">
+                      {% for value, label in product_phase_choices %}
+                        <option value="{{ value }}" {% if item.phase == value %}selected{% endif %}>{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                    <input type="hidden" name="is_job_work_{{ item.index }}" value="1">
+                  {% else %}
+                    <input type="hidden" name="is_job_work_{{ item.index }}" value="0">
+                    N/A
+                  {% endif %}
+                  <input type="hidden" name="product_index_{{ item.index }}" value="{{ item.index }}">
+                </td>
+              </tr>
+              {% endfor %}
             </tbody>
-        </table>
+          </table>
+        </div>
 
         <input type="hidden" name="product_count" value="{{ products|length }}">
-        <button type="submit">Save Voucher</button>
-    </form>
- </div>
-  {% endblock %}
+        <button type="submit" class="voucher-submit-btn">Save Voucher</button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
+{% endblock %}
