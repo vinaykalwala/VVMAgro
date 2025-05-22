@@ -1,48 +1,119 @@
+{% extends 'backendpages/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container mx-auto mt-8 p-4">
-    <h1 class="text-2xl font-bold mb-6">Job Applications</h1>
-    
-    {% if applications %}
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-300">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="py-2 px-4 border-b text-left">Applicant</th>
-                        <th class="py-2 px-4 border-b text-left">Job Title</th>
-                        <th class="py-2 px-4 border-b text-left">Email</th>
-                        <th class="py-2 px-4 border-b text-left">Phone</th>
-                        <th class="py-2 px-4 border-b text-left">Applied At</th>
-                        <th class="py-2 px-4 border-b text-left">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for application in applications %}
-                        <tr>
-                            <td class="py-2 px-4 border-b">{{ application.first_name }} {{ application.last_name }}</td>
-                            <td class="py-2 px-4 border-b">{{ application.job.title }}</td>
-                            <td class="py-2 px-4 border-b">{{ application.email }}</td>
-                            <td class="py-2 px-4 border-b">{{ application.phone }}</td>
-                            <td class="py-2 px-4 border-b">{{ application.applied_at|date:"d M Y H:i" }}</td>
-                            <td class="py-2 px-4 border-b">
-                                <a href="{{ application.resume.url }}" target="_blank" class="text-blue-600 hover:underline">View Resume</a>
-                                {% if application.cover_letter %}
-                                    <a href="{% url 'application_detail' application.id %}" class="text-blue-600 hover:underline ml-2">View Details</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <p class="text-gray-600">No applications received yet.</p>
-    {% endif %}
-    
-    <div class="mt-4">
-        <a href="{% url 'admin_dashboard' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded">
-            Back to Dashboard
-        </a>
+<style>
+.job-applications-wrapper {
+  padding: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+.job-applications-heading {
+  text-align: center;
+  color: #2e7d32;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.job-applications-table-wrapper {
+  overflow-x: auto;
+  background-color: #fff;
+  border: 1px solid #c6f6d5;
+  border-radius: 8px;
+}
+
+.job-applications-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.job-applications-table th {
+  background-color:green;
+  color: #fff;
+  padding: 10px;
+  border: 1px solid #ffffff;
+}
+
+.job-applications-table td {
+  padding: 10px;
+  border: 1px solid #d4f5e3;
+  color: #2f855a;
+}
+
+.job-applications-table tr:nth-child(even) {
+  background-color: #f0fdf4;
+}
+
+
+.link {
+  display: inline-block;
+  background-color: green;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.link:hover {
+  background-color: #10b981;
+  transform: scale(1.05);
+}
+
+.actions-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media screen and (max-width: 768px) {
+  .job-applications-table {
+    min-width: 600px;
+  }
+}
+</style>
+<div class="main-content">
+<div class="job-applications-wrapper">
+  <h1 class="job-applications-heading">Job Applications</h1>
+
+  {% if applications %}
+    <div class="job-applications-table-wrapper">
+      <table class="job-applications-table">
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Job Title</th>
+            <th>Phone</th>
+            <th>Applied At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for application in applications %}
+          <tr>
+            <td>{{ application.first_name }} {{ application.last_name }}</td>
+            <td>{{ application.job.title }}</td>
+            
+            <td>{{ application.phone }}</td>
+            <td>{{ application.applied_at|date:"d M Y H:i" }}</td>
+            <td class="actions-cell">
+              <a href="{{ application.resume.url }}" target="_blank" class="link">View Resume</a>
+              {% if application.cover_letter %}
+              <a href="{% url 'application_detail' application.id %}" class="link" style="background-color:#303F9F ;">View Details</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  {% else %}
+    <p style="text-align:center; color:#2f855a; font-size:16px;">No applications received yet.</p>
+  {% endif %}
+</div>
 </div>
 {% endblock %}
