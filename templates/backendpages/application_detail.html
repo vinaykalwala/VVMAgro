@@ -1,0 +1,30 @@
+
+{% block content %}
+<div class="container mx-auto mt-8 p-4 max-w-2xl">
+    <h1 class="text-2xl font-bold mb-6">Application Details</h1>
+    
+    <div class="bg-white shadow-md rounded p-6">
+        <h2 class="text-xl font-semibold mb-4">{{ application.first_name }} {{ application.last_name }}</h2>
+        <p><strong>Job:</strong> {{ application.job.title }}</p>
+        <p><strong>Email:</strong> {{ application.email }}</p>
+        <p><strong>Phone:</strong> {{ application.phone }}</p>
+        <p><strong>Applied At:</strong> {{ application.applied_at|date:"d M Y H:i" }}</p>
+        {% if application.portfolio_link %}
+            <p><strong>Portfolio:</strong> <a href="{{ application.portfolio_link }}" target="_blank" class="text-blue-600 hover:underline">{{ application.portfolio_link }}</a></p>
+        {% endif %}
+        <p><strong>Resume:</strong> <a href="{{ application.resume.url }}" target="_blank" class="text-blue-600 hover:underline">View Resume</a></p>
+        {% if application.cover_letter %}
+            <p><strong>Cover Letter:</strong></p>
+            <div class="border p-4 bg-gray-50 rounded">
+                {{ application.cover_letter|linebreaks }}
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="mt-4">
+        <a href="{% url 'job_applications' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded">
+            Back to Applications
+        </a>
+    </div>
+</div>
+{% endblock %}

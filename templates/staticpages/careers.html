@@ -398,6 +398,7 @@
             {% for job in jobs %}
             <div class="job-card" style="--i: {{ forloop.counter }}">
                 <h3>{{ job.title }}</h3>
+                <p>{{ job.job_type|title }}</p>
                 <p><strong>Location:</strong> {{ job.location }}</p>
                 <p>{{ job.description }}</p>
                 <a href="{% url 'apply_for_job' job.id %}" class="apply-btn">Apply Now</a>
