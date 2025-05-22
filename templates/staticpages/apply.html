@@ -4,128 +4,254 @@
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
+    /* Root variables for consistent theming */
+    :root {
+        --primary-color: #2A6A3C;
+        --secondary-color: #6ABF4B;
+        --accent-color: #E8F5E9;
+        --text-color: #1A3C34;
+        --error-color: #C62828;
+        --background-color: #F5FAF5;
+        --white: #FFFFFF;
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        --border-radius: 12px;
+    }
+
     .application-wrapper {
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        padding: 3rem 1rem;
-        background-color: #F9FFF9;
+        padding: 4rem 1rem;
         min-height: 100vh;
-        animation: fadeInUp 1s ease forwards;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(-45deg, var(--background-color), #E8F5E9, #C8E6C9, #F5FAF5);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+    }
+
+    .application-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'images/abstract-bg.png' %}") no-repeat center center/cover;
+        opacity: 0.1;
+        z-index: 0;
     }
 
     .application-form-container {
         width: 100%;
-        max-width: 750px;
-        background: #ffffff;
-        padding: 2.5rem 2rem;
-        border-radius: 16px;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        border-left: 6px solid #4CAF50;
-        animation: slideIn 1s ease-out;
+        max-width: 800px;
+        background: var(--white);
+        padding: 3rem 2.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        border-left: 8px solid var(--secondary-color);
+        animation: slideIn 0.8s ease-out;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
     }
 
+    .application-form-container::after 
+    {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 150px;
+        height: 150px;
+        background: url("{% static 'images/plant-img.png' %}") no-repeat center center/cover;
+        opacity: 0.15;
+        transform: rotate(45deg);
+        z-index: -1;
+    }
     .application-form-container h2 {
-        font-size: 2.2rem;
-        color: #2E7D32;
-        margin-bottom: 1.5rem;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
         position: relative;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .application-form-container h2 i {
+        color: var(--secondary-color);
+        font-size: 2rem;
     }
 
     .application-form-container h2::after {
         content: '';
         display: block;
-        width: 60px;
-        height: 3px;
-        background: #81C784;
-        margin-top: 0.5rem;
+        width: 80px;
+        height: 4px;
+        background: var(--secondary-color);
+        margin-top: 0.75rem;
+        border-radius: 2px;
+    }
+
+    .decorative-img {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        margin: 1.5rem auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-in;
+    }
+
+    .decorative-img-fallback {
+        width: 100%;
+        max-width: 200px;
+        height: 133px; /* Approximate 600x400 ratio */
+        background-color: var(--accent-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-color);
+        font-size: 0.9rem;
+        text-align: center;
+        border-radius: 10px;
     }
 
     form {
         display: grid;
-        gap: 1rem;
+        gap: 1.5rem;
     }
 
     .application-form-container label {
         font-weight: 600;
-        margin-bottom: 0.2rem;
+        color: var(--text-color);
+        margin-bottom: 0.4rem;
+        font-size: 1.05rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .application-form-container input,
     .application-form-container textarea,
     .application-form-container select {
-        padding: 0.7rem 1rem;
+        padding: 0.9rem 1.2rem;
         font-size: 1rem;
-        border: 1px solid #A5D6A7;
+        border: 1px solid #C8E6C9;
         border-radius: 8px;
-        background-color: #F4FDF4;
-        transition: 0.3s ease;
+        background-color: var(--accent-color);
+        transition: all 0.3s ease;
         width: 100%;
+        font-family: inherit;
     }
 
     .application-form-container input:focus,
-    .application-form-container textarea:focus {
-        border-color: #4CAF50;
+    .application-form-container textarea:focus,
+    .application-form-container select:focus {
+        border-color: var(--secondary-color);
         outline: none;
-        background-color: #ffffff;
+        background-color: var(--white);
+        box-shadow: 0 0 0 3px rgba(106, 191, 75, 0.2);
     }
 
     input[type="file"] {
         border: none;
         background-color: transparent;
+        padding: 0.5rem 0;
     }
 
     .application-form-container button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 0.8rem 1.5rem;
-        font-size: 1.1rem;
+        background: linear-gradient(90deg, var(--secondary-color), #4CAF50);
+        color: var(--white);
+        padding: 0.9rem 2rem;
+        font-size: 1.15rem;
+        font-weight: 600;
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         justify-self: start;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
+        position: relative;
+        overflow: hidden;
     }
 
     .application-form-container button:hover {
-        background-color: #2E7D32;
-        transform: translateY(-2px);
+        background: linear-gradient(90deg, #4CAF50, var(--secondary-color));
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .application-form-container button:active {
+        transform: translateY(0);
+    }
+
+    .application-form-container button.loading {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .application-form-container button .spinner {
+        display: none;
+        width: 1.2rem;
+        height: 1.2rem;
+        border: 2px solid var(--white);
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 0.5rem;
+    }
+
+    .application-form-container button.loading .spinner {
+        display: inline-block;
+    }
+
+    .application-form-container button.loading .button-text {
+        visibility: hidden;
     }
 
     .errorlist {
-        color: #D32F2F;
-        font-size: 0.9rem;
-        margin-top: -0.3rem;
+        color: var(--error-color);
+        font-size: 0.95rem;
+        margin-top: -0.2rem;
         margin-bottom: 0.5rem;
+        background: #FFEBEE;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border-left: 4px solid var(--error-color);
     }
 
     .messages {
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         padding: 0;
     }
 
     .messages li {
         list-style: none;
-        padding: 1rem;
-        background: #E8F5E9;
-        border-left: 5px solid #4CAF50;
-        border-radius: 6px;
-        margin-bottom: 0.8rem;
+        padding: 1rem 1.5rem;
+        background: var(--accent-color);
+        border-left: 5px solid var(--secondary-color);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+        font-size: 1rem;
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    /* Animations */
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
 
     @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeInUp {
         from {
             opacity: 0;
             transform: translateY(50px);
@@ -136,34 +262,358 @@
         }
     }
 
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
+        .application-wrapper {
+            padding: 3rem 1rem;
+        }
+
         .application-form-container {
-            padding: 2rem 1.5rem;
+            padding: 2.5rem 2rem;
         }
 
         .application-form-container h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
+        }
+
+        .decorative-img, .decorative-img-fallback {
+            max-width: 150px;
         }
     }
 
     @media (max-width: 480px) {
         .application-wrapper {
-            padding: 2rem 1rem;
+            padding: 2rem 0.8rem;
         }
 
         .application-form-container {
-            padding: 1.5rem 1.2rem;
+            padding: 2rem 1.5rem;
+        }
+
+        .application-form-container h2 mates {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 4rem 1rem;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(-45deg, var(--background-color), #E8F5E9, #C8E6C9, #F5FAF5);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+    }
+
+    .application-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'images/abstract-bg.png' %}") no-repeat center center/cover;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    .application-form-container {
+        width: 100%;
+        max-width: 800px;
+        background: var(--white);
+        padding: 3rem 2.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        border-left: 8px solid var(--secondary-color);
+        animation: slideIn 0.8s ease-out;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    .application-form-container::after {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 150px;
+        height: 150px;
+        background: url("{% static 'images/plant-img.png' %}") no-repeat center center/cover;
+        opacity: 0.15;
+        transform: rotate(45deg);
+        z-index: -1;
+    }
+
+    .application-form-container h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        position: relative;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .application-form-container h2 i {
+        color: var(--secondary-color);
+        font-size: 2rem;
+    }
+
+    .application-form-container h2::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: var(--secondary-color);
+        margin-top: 0.75rem;
+        border-radius: 2px;
+    }
+
+    .decorative-img {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        margin: 1.5rem auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-in;
+    }
+
+    .decorative-img-fallback {
+        width: 100%;
+        max-width: 200px;
+        height: 133px; /* Approximate 600x400 ratio */
+        background-color: var(--accent-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-color);
+        font-size: 0.9rem;
+        text-align: center;
+        border-radius: 10px;
+    }
+
+    form {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .application-form-container label {
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 0.4rem;
+        font-size: 1.05rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .application-form-container input,
+    .application-form-container textarea,
+    .application-form-container select {
+        padding: 0.9rem 1.2rem;
+        font-size: 1rem;
+        border: 1px solid #C8E6C9;
+        border-radius: 8px;
+        background-color: var(--accent-color);
+        transition: all 0.3s ease;
+        width: 100%;
+        font-family: inherit;
+    }
+
+    .application-form-container input:focus,
+    .application-form-container textarea:focus,
+    .application-form-container select:focus {
+        border-color: var(--secondary-color);
+        outline: none;
+        background-color: var(--white);
+        box-shadow: 0 0 0 3px rgba(106, 191, 75, 0.2);
+    }
+
+    input[type="file"] {
+        border: none;
+        background-color: transparent;
+        padding: 0.5rem 0;
+    }
+
+    .application-form-container button {
+        background: linear-gradient(90deg, var(--secondary-color), #4CAF50);
+        color: var(--white);
+        padding: 0.9rem 2rem;
+        font-size: 1.15rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-self: start;
+        margin-top: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .application-form-container button:hover {
+        background: linear-gradient(90deg, #4CAF50, var(--secondary-color));
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .application-form-container button:active {
+        transform: translateY(0);
+    }
+
+    .application-form-container button.loading {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .application-form-container button .spinner {
+        display: none;
+        width: 1.2rem;
+        height: 1.2rem;
+        border: 2px solid var(--white);
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 0.5rem;
+    }
+
+    .application-form-container button.loading .spinner {
+        display: inline-block;
+    }
+
+    .application-form-container button.loading .button-text {
+        visibility: hidden;
+    }
+
+    .errorlist {
+        color: var(--error-color);
+        font-size: 0.95rem;
+        margin-top: -0.2rem;
+        margin-bottom: 0.5rem;
+        background: #FFEBEE;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border-left: 4px solid var(--error-color);
+    }
+
+    .messages {
+        margin-bottom: 1.5rem;
+        padding: 0;
+    }
+
+    .messages li {
+        list-style: none;
+        padding: 1rem 1.5rem;
+        background: var(--accent-color);
+        border-left: 5px solid var(--secondary-color);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+        font-size: 1rem;
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    /* Animations */
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .application-wrapper {
+            padding: 3rem 1rem;
+        }
+
+        .application-form-container {
+            padding: 2.5rem 2rem;
         }
 
         .application-form-container h2 {
-            font-size: 1.6rem;
+            font-size: 2rem;
+        }
+
+        .decorative-img, .decorative-img-fallback {
+            max-width: 150px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .application-wrapper {
+            padding: 2rem 0.8rem;
+        }
+
+        .application-form-container {
+            padding: 2rem 1.5rem;
+        }
+
+        .application-form-container h2 {
+            font-size: 1.7rem;
+        }
+
+        .application-form-container button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .decorative-img, .decorative-img-fallback {
+            max-width: 120px;
         }
     }
 </style>
 
 <div class="application-wrapper">
     <div class="application-form-container">
-        <h2>Apply for {{ job.title }}</h2>
+        <h2><i class="fas fa-briefcase"></i> Apply for {{ job.title }}</h2>
+        <img src="{% static 'images/career-img.png' %}" alt="Career Illustration" class="decorative-img" onerror="this.classList.add('decorative-img-fallback'); this.src=''; this.innerHTML='Image Not Available';">
 
         {% if messages %}
             <ul class="messages">
@@ -173,11 +623,25 @@
             </ul>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="application-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit"><i class="fas fa-paper-plane"></i> Submit Application</button>
+            <button type="submit" id="submit-btn">
+                <span class="spinner"></span>
+                <span class="button-text"><i class="fas fa-paper-plane"></i> Submit Application</span>
+            </button>
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('application-form').addEventListener('submit', function(e) {
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.classList.add('loading');
+        // Simulate form submission delay (remove in production, replace with actual submission logic)
+        setTimeout(() => {
+            submitBtn.classList.remove('loading');
+        }, 2000);
+    });
+</script>
 {% endblock %}
