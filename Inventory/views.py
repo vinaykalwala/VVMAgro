@@ -12,20 +12,20 @@ def aboutus(request):
 def products(request):
     return render(request,'staticpages/products.html')
 
-def tractor(request):
-    return render(request, 'staticpages/tractor.html')
+def front_dozer_tractor(request):
+    return render(request, 'staticpages/front_dozer_tractor.html')
 
 def hydraulicboomlift(request):
     return render(request, 'staticpages/hydraulicboomlift.html')
 
-def rice_filtering(request):
-    return render(request, 'staticpages/rice_filtering.html')
+def hole_digger(request):
+    return render(request, 'staticpages/hole_digger.html')
     
 def frontendloader(request):
     return render(request, 'staticpages/frontendloader.html')
 
-def crop_harvester(request):
-    return render(request, 'staticpages/crop_harvester.html')
+def lift_tractor(request):
+    return render(request, 'staticpages/lift_tractor.html')
 
 
 
@@ -41,8 +41,7 @@ def tractorproducts(request):
 def pesticideprayer(request):
     return render(request,'staticpages/pesticidesprayer.html')    
 
-def ricefiltering(request):
-    return render(request,'staticpages/ricefiltering.html')        
+    
 
 
 from django.shortcuts import render, redirect
