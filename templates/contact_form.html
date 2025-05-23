@@ -31,12 +31,12 @@
     transform: scale(1.1);
 }
 
-/* Green transparent overlay */
+/* Dark blue transparent overlay */
 .vvm-contact-hero::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(0, 128, 0, 0.4), rgba(0, 100, 0, 0.7));
+    background: linear-gradient(135deg, rgba(48, 63, 159, 0.4), rgba(48, 63, 159, 0.7));
     z-index: 2;
 }
 
@@ -78,14 +78,14 @@
     border-radius: 16px;
     padding: 30px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid green;
+    border: 1px solid #303F9F;
 }
 
 .vvm-form-card h2 {
     font-size: 1.6rem;
     font-weight: bold;
     margin-bottom: 10px;
-    color: green;
+    color: #303F9F;
 }
 
 .vvm-form-card p {
@@ -100,11 +100,11 @@
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    background-color: #e6ffe6;
+    background-color: #e6e9ff; /* Light blue background for form fields */
 }
 
 .vvm-form-card button {
-    background-color: green;
+    background-color: #303F9F;
     color: #fff;
     border: none;
     padding: 12px 20px;
@@ -120,7 +120,6 @@
     gap: 20px;
 }
 
-
 .vvm-contact-box {
     background: #fff;
     border-radius: 16px;
@@ -131,12 +130,12 @@
 
 .vvm-contact-box i {
     font-size: 30px;
-    color: green;
+    color: #303F9F;
     margin-bottom: 10px;
 }
 
 .vvm-contact-box a {
-    color: green;
+    color: #303F9F;
     text-decoration: none;
 }
 
@@ -145,10 +144,11 @@
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     height: 270px;
-    border: 1px solid green;
+    border: 1px solid #303F9F;
     background-color: #fff;
-    padding:10px;
+    padding: 10px;
 }
+
 .vvm-map-cardy {
     border-radius: 16px;
     overflow: hidden;
@@ -189,18 +189,21 @@
 }
 
 .vvm-form-card button:hover {
-    background-color: #065f06;
+    background-color: #1e2a78; /* Darker shade of #303F9F for hover */
 }
+
 @media (max-width: 768px) {
     .vvm-contact-boxes-grid {
         grid-template-columns: 1fr; /* Stack boxes vertically on small screens */
     }
 }
+
 @media (max-width: 768px) {
     .vvm-contact-container {
         padding: 0 15px; /* Less padding on mobile */
     }
 }
+
 .form-success-message {
     background-color: #d4edda;
     color: #155724;
@@ -221,11 +224,12 @@
         padding: 12px 15px;
     }
 }
+
 .vvm-form-card label {
-    color: green;           
-    display: block;     
-    margin-bottom: 6px;     
-    font-weight: 600;      
+    color: #303F9F;
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
     font-size: 1rem;
 }
 </style>
@@ -238,10 +242,9 @@
 
     {% if success %}
     <div class="form-success-message">
-    <i class="fas fa-check-circle" style="margin-right: 8px;"></i> 
-    Your contact has been successfully submitted!
-</div>
-
+        <i class="fas fa-check-circle" style="margin-right: 8px;"></i> 
+        Your contact has been successfully submitted!
+    </div>
     {% endif %}
 
     <div class="vvm-contact-container">
@@ -258,35 +261,41 @@
                 <div class="vvm-contact-box">
                     <i class="fas fa-phone-alt"></i>
                     <p><strong>Call Us</strong></p>
-                    <p>+91-123-456-7890</p>
+                    <p>+91-86868 65834</p>
                 </div>
 
                 <div class="vvm-contact-box">
                     <i class="fas fa-comment-dots"></i>
                     <p><strong>Support</strong></p>
                     <p><a href="mailto:support@vvmagro.com">support@vvmagro.com</a></p>
+                    <p>24/7 Available</p>
+                    <p>Timings: 10:30 AM – 6:30 PM</p>
                 </div>
 
                 <div class="vvm-contact-box">
                     <i class="fas fa-map-marker-alt"></i>
                     <p><strong>Location</strong></p>
-                    <p>Doolapally, Hyderabad, Telangana</p>
+                    <p>5, #5-4-187, 4, Mahatma Gandhi Rd, Karbala Maidan, Rani Gunj, Secunderabad, Telangana 500003</p>
                 </div>
             </div>
 
             <!-- Map -->
-            <!-- Map -->
-<div class="vvm-map-card">
-    <iframe src="https://www.google.com/maps/embed?pb=..."
-        width="100%" height="100%" allowfullscreen="" loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"></iframe>
-</div>
+            <div class="vvm-map-card">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2899.588750824861!2d78.4879681!3d17.4290755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9b4a5ca48c8b%3A0xb0f4e0f74fc5d0d4!2sVVM%20Agro%20Industries!5e1!3m2!1sen!2sin!4v1747893557149!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
 
-<!-- Banner Image below map -->
-<div class="vvm-map-cardy">
-    <img src="{% static 'contactusbanner.png' %}" alt="Contact Us Banner">
-</div>
-
+            <!-- Banner Image below map -->
+            <div class="vvm-map-cardy">
+                <img src="{% static 'contactusbanner.png' %}" alt="Contact Us Banner">
+            </div>
         </div>
 
         <!-- Right: Form -->

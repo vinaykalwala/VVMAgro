@@ -4,96 +4,98 @@
 
 <style>
   .contact-wrapper {
-    border-radius: 12px;
-    margin: 1rem auto;
+    padding: 20px 0;
+    font-family: Arial, sans-serif;
     max-width: 100%;
   }
 
   .contact-header {
-    color: #2e7d32;
     text-align: center;
-    margin-bottom: 1.5rem;
+    color: #2e7d32;
     font-size: 2rem;
-  }
-
-  .contact-create-btn {
-    display: inline-block;
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 16px;
-    text-decoration: none;
-    border-radius: 6px;
-    margin-bottom: 1.5rem;
-    transition: background-color 0.3s ease;
-  }
-
-  .contact-create-btn:hover {
-    background-color: #388e3c;
+    margin-bottom: 10px;
   }
 
   .contact-table-container {
     overflow-x: auto;
+    background-color: #ffffff;
+    border: 1px solid #c6f6d5;
+    border-radius: 10px;
+    padding: 15px;
   }
 
   .contact-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #ffffff;
-    min-width: 800px;
-  }
-
-  .contact-table th,
-  .contact-table td {
-      border: 1px solid green;
-    padding: 6px;
-    text-align: left;
-    color: #2e7d32;
+    min-width: 900px;
+    font-size: 14px;
   }
 
   .contact-table th {
-    background-color: #e6ffe6;
-color: #006400;  }
-
-  .contact-table tbody tr:nth-child(even) {
-    background-color: #f1f8e9;
+    background-color:green;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ffffff;
   }
 
-  
+  .contact-table td {
+    padding: 10px;
+    border: 1px solid #d4f5e3;
+    color: #2f855a;
+    vertical-align: top;
+    word-break: break-word;
+  }
+
+  .contact-table tr:nth-child(even) {
+    background-color: #f0fdf4;
+  }
+
+  .contact-table tr:hover {
+    background-color: #e6ffed;
+  }
+
+  .no-contacts {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 20px;
+  }
 
   @media screen and (max-width: 768px) {
     .contact-wrapper {
-      padding: 1rem;
+      padding: 20px 10px;
     }
 
     .contact-header {
       font-size: 1.5rem;
     }
 
-    .contact-create-btn {
-      padding: 8px 14px;
-      font-size: 0.9rem;
+    .contact-table {
+      min-width: 700px;
     }
   }
 </style>
-<div class="main-content">
-<div class="contact-wrapper">
-  <h1 class="contact-header">Contact List</h1>
 
-  <div class="contact-table-container">
-    <table class="contact-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Company</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Subject</th>
-          <th>Message</th>
-          <th>Created At</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for contact in contacts %}
+<div class="main-content">
+  <div class="contact-wrapper">
+    <h1 class="contact-header">Contact List</h1>
+
+    <div class="contact-table-container">
+      <table class="contact-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for contact in contacts %}
           <tr>
             <td>{{ contact.name }}</td>
             <td>{{ contact.company }}</td>
@@ -101,14 +103,16 @@ color: #006400;  }
             <td>{{ contact.phone }}</td>
             <td>{{ contact.subject }}</td>
             <td>{{ contact.message }}</td>
-            <td>{{ contact.created_at }}</td>
+            <td>{{ contact.created_at|date:"d M Y H:i" }}</td>
           </tr>
-        {% empty %}
-          <tr><td colspan="7">No contacts found.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="no-contacts">No contacts found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 </div>
 {% endblock %}

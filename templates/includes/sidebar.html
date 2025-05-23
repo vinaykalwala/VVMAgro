@@ -125,16 +125,21 @@
   {% if request.user.is_staff %}
     <h2>Admin Dashboard</h2>
     <ul>
-      <li>
+      <!-- <li>
         <a href="{% url 'product_exchange' %}">
           <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
         </a>
-      </li>
-      <li>
-        <a href="{% url 'contact_list' %}">
-         <i class="fas fa-envelope"></i> 
- Conatct List <i class="fas fa-chevron-right"></i>
+      </li> -->
+       <!-- <li>
+        <a href="{% url 'party_list' %}">
+          <i class="fas fa-ticket-alt"></i> Party List <i class="fas fa-chevron-right"></i>
         </a>
+      </li> -->
+      <li>
+        <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Conatct List <i class="fas fa-chevron-right"></i></a>
+      </li>
+        <li>
+        <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i>Job Applications <i class="fas fa-chevron-right"></i></a>
       </li>
       <li>
         <a href="{% url 'signup' %}">
@@ -149,6 +154,14 @@
       <li>
         <a href="{% url 'product_exchange' %}">
           <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
+        </a>
+      </li>
+       <li>
+        <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Conatct List <i class="fas fa-chevron-right"></i>
+        </a>
+      </li>
+       <li>
+        <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i>Job Applications <i class="fas fa-chevron-right"></i>
         </a>
       </li>
     </ul>

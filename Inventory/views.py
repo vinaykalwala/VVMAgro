@@ -12,20 +12,20 @@ def aboutus(request):
 def products(request):
     return render(request,'staticpages/products.html')
 
-def tractor(request):
-    return render(request, 'staticpages/tractor.html')
+def front_dozer_tractor(request):
+    return render(request, 'staticpages/front_dozer_tractor.html')
 
 def hydraulicboomlift(request):
     return render(request, 'staticpages/hydraulicboomlift.html')
 
-def rice_filtering(request):
-    return render(request, 'staticpages/rice_filtering.html')
+def hole_digger(request):
+    return render(request, 'staticpages/hole_digger.html')
     
 def frontendloader(request):
     return render(request, 'staticpages/frontendloader.html')
 
-def crop_harvester(request):
-    return render(request, 'staticpages/crop_harvester.html')
+def lift_tractor(request):
+    return render(request, 'staticpages/lift_tractor.html')
 
 
 
@@ -41,8 +41,7 @@ def tractorproducts(request):
 def pesticideprayer(request):
     return render(request,'staticpages/pesticidesprayer.html')    
 
-def ricefiltering(request):
-    return render(request,'staticpages/ricefiltering.html')        
+    
 
 
 from django.shortcuts import render, redirect
@@ -537,7 +536,7 @@ def apply_for_job(request, job_id):
     return render(request, "staticpages/apply.html", {"form": form, "job": job})
 
 def careers(request):
-    jobs = Job.objects.all()
+    jobs = Job.objects.all().order_by('-created_at')
     return render(request, "staticpages/careers.html", {"jobs": jobs})
 def contact_create_view(request):
     success = False  # Flag to show success message
@@ -556,3 +555,42 @@ def contact_create_view(request):
 def contact_list_view(request):
     contacts = Contact.objects.all().order_by('-created_at')
     return render(request, 'contact_list.html', {'contacts': contacts})
+
+from django.contrib.auth.decorators import login_required
+from .forms import JobForm
+from .models import JobApplication
+
+@login_required
+def job_post_view(request):
+    if not (request.user.role == 'admin' or request.user.is_superuser):
+        messages.error(request, "Only admins can post jobs.")
+        return redirect('user_dashboard')
+    
+    if request.method == 'POST':
+        form = JobForm(request.POST)
+        if form.is_valid():
+            job = form.save()
+            messages.success(request, f"Job '{job.title}' posted successfully!")
+            return redirect('admin_dashboard')
+    else:
+        form = JobForm()
+    
+    return render(request, 'backendpages/job_post.html', {'form': form})
+
+@login_required
+def job_applications_view(request):
+    if not (request.user.role == 'admin' or request.user.is_superuser):
+        messages.error(request, "Only admins can view applications.")
+        return redirect('user_dashboard')
+    
+    applications = JobApplication.objects.all().order_by('-applied_at')
+    return render(request, 'backendpages/job_applications.html', {'applications': applications})
+
+@login_required
+def application_detail_view(request, application_id):
+    if not (request.user.role == 'admin' or request.user.is_superuser):
+        messages.error(request, "Only admins can view application details.")
+        return redirect('user_dashboard')
+    
+    application = get_object_or_404(JobApplication, id=application_id)
+    return render(request, 'backendpages/application_detail.html', {'application': application})

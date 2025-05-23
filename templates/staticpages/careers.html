@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     body {
-        color: #1B5E20;
+        color: black;
         overflow-x: hidden;
     }
 
@@ -75,12 +75,12 @@
     }
 
     .card-left {
-        border-left: 8px solid #4CAF50;
+        border-left: 8px solid #303F9F;
     }
 
     .card-right {
-        border-right: 8px solid #2E7D32;
-        background: linear-gradient(145deg, #2E7D32, #4CAF50);
+        border-right: 8px solid #303F9F;
+        background: linear-gradient(145deg, #303F9F, #404fb7);
         color: #FFFFFF;
         overflow-y: auto;
     }
@@ -96,12 +96,12 @@
     }
 
     .card-right::-webkit-scrollbar-thumb {
-        background: #4CAF50;
+        background: #303F9F;
         border-radius: 10px;
     }
 
     .card-right::-webkit-scrollbar-thumb:hover {
-        background: #2E7D32;
+        background: #303F9F;
     }
 
     .card-left h2, .card-right h2 {
@@ -114,8 +114,8 @@
     }
 
     .card-left h2 {
-        color: #2E7D32;
-        border-right-color: #2E7D32;
+        color: #303F9F;
+        border-right-color: #303F9F;
     }
 
     .card-right h2 {
@@ -148,11 +148,11 @@
     }
 
     .card-left ul li::before, .card-right ul li::before {
-        content: '🌿';
+        content: "\2023";
         position: absolute;
         left: 0;
         font-size: 1.3rem;
-        color: #4CAF50;
+        color: #303F9F;
     }
 
     /* Job Grid in Card Right */
@@ -180,20 +180,20 @@
 
     .job-card h3 {
         font-size: 1.5rem;
-        color: #2E7D32;
+        color: #303F9F;
         margin-bottom: 0.8rem;
         font-weight: 600;
     }
 
     .job-card p {
         font-size: 1rem;
-        color: #1B5E20;
+        color: #303F9F;
         margin-bottom: 1rem;
     }
 
     .job-card .apply-btn {
         display: inline-block;
-        background: #4CAF50;
+        background: #303F9F;
         color: #FFFFFF;
         padding: 0.6rem 1.2rem;
         border-radius: 8px;
@@ -204,7 +204,7 @@
     }
 
     .job-card .apply-btn:hover {
-        background: #2E7D32;
+        background: #303F9F;
         transform: translateY(-3px);
     }
 
@@ -215,7 +215,7 @@
         padding: 3rem 5rem;
         margin: 2rem 0;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        border-top: 8px solid #4CAF50;
+        border-top: 8px solid #303F9F;
         opacity: 0;
         animation: scaleIn 1s ease-out forwards;
         margin-left: 23px;
@@ -225,17 +225,17 @@
     .card-section h2 {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #2E7D32;
+        color: #303F9F;
         margin-bottom: 1.5rem;
         overflow: hidden;
         white-space: nowrap;
-        border-right: 3px solid #2E7D32;
+        border-right: 3px solid #303F9F;
         animation: typewriter 2s steps(20) forwards, blink 0.7s infinite;
     }
 
     .card-section p {
         font-size: 1.2rem;
-        color: #1B5E20;
+        color: #1a2881;
         margin-bottom: 1.5rem;
         opacity: 0;
         animation: fadeIn 1s ease-in 2s forwards;
@@ -257,11 +257,11 @@
     }
 
     .card-section ul li::before {
-        content: '🌿';
+        content: "\2023";
         position: absolute;
         left: 0;
         font-size: 1.3rem;
-        color: #4CAF50;
+        color: #303F9F;
     }
 
     /* Animations */
@@ -398,6 +398,7 @@
             {% for job in jobs %}
             <div class="job-card" style="--i: {{ forloop.counter }}">
                 <h3>{{ job.title }}</h3>
+                <p>{{ job.job_type|title }}</p>
                 <p><strong>Location:</strong> {{ job.location }}</p>
                 <p>{{ job.description }}</p>
                 <a href="{% url 'apply_for_job' job.id %}" class="apply-btn">Apply Now</a>

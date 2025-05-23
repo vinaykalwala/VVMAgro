@@ -11,24 +11,24 @@ urlpatterns = [
     path('',home, name='home'),
     path('aboutus/',aboutus, name='aboutus'),
     path('products/',products, name='products'),
-    path('tractor/', tractor, name='tractor'),
+    path('front-dozer-tractor/', front_dozer_tractor, name='front_dozer_tractor'),
     path('products/hydraulicboomlift/', hydraulicboomlift, name='hydraulicboomlift'),
     path('frontendloader/', frontendloader, name='frontendloader'),
-    path('crop-harvester/', crop_harvester, name='crop_harvester'),
-    path('rice-filtering/', rice_filtering, name='rice_filtering'),
+    path('lift-tractor/', lift_tractor, name='lift_tractor'),
+    path('hole-digger/', hole_digger, name='hole_digger'),
 
     path('branchesanddistributors',branchesanddistributors, name='branchesanddistributors'),
     path('careers/',careers, name='careers'),
     path('tractorfarming/',tractorproducts, name='tractorproducts'),
     path('pesticidesprayer/',pesticideprayer,name='pesticidesprayer'),
-    path('ricefiltering/',ricefiltering,name='ricefiltering'),
+  
     path('branchesanddistributors/',branchesanddistributors, name='branchesanddistributors'),
     path('careers/',careers, name='careers'),
     path('contacts/', contact_list_view, name='contact_list'),
     path('contacts/new/', contact_create_view, name='contact_create'),
     path('tractorfarming/',tractorproducts, name='tractorproducts'),
     path('pesticidesprayer/',pesticideprayer,name='pesticidesprayer'),
-    path('ricefiltering/',ricefiltering,name='ricefiltering'),
+
     path('signup/', signup_view, name='signup'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
@@ -71,6 +71,10 @@ urlpatterns = [
 
     # JobApplication
     path("apply/<int:job_id>/", apply_for_job, name="apply_for_job"),
+    path('post/', job_post_view, name='job_post'),
+    path('applications/', job_applications_view, name='job_applications'),
+    path('applications/<int:application_id>/', application_detail_view, name='application_detail'),
+
 
 ]
 if settings.DEBUG:
