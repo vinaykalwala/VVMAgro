@@ -5,548 +5,629 @@
 <style>
   
    
-    /* Hero Section */
-    .hero {
-        height: 60vh;
-        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "images/agriculture-bg.jpg" %}') center/cover no-repeat;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: #FFFFFF;
-        position: relative;
-        overflow: hidden;
-    }
+    .hero-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 0; /* Prevent spacing below */
+    padding-bottom: 0;
+}
 
-    .hero-content {
-        max-width: 1200px;
-        padding: 2rem;
-        animation: fadeIn 1.5s ease-in-out;
-    }
+.hero-banner {
+    width: 100%;
+    height: 60vh;
+    object-fit: cover;
+    display: block;
+    margin-bottom: -1px; /* Removes thin white line/gap if any */
+}
 
-    .hero h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        line-height: 1.2;
-        margin-bottom: 1rem;
-        text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
-    }
+.v-shape-divider {
+    position: relative;
+    width: 100%;
+    height: 40px; /* reduced height */
+    line-height: 0;
+}
 
-    .hero p {
-        font-size: 1.5rem;
-        color: #D4E4D2;
-        font-weight: 300;
-        margin-bottom: 2rem;
-    }
+.v-shape-divider svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
 
-    /* Container */
-    .container {
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 4rem 2rem;
-        background: linear-gradient(180deg, #F8FAF5, #E8F0E5);
-    }
+.about-us {
+  padding: 60px 20px;
+  background-color: #f9f9f9;
+}
 
-    /* Section Styles */
-    .section {
-        background: #FFFFFF;
-        border-radius: 20px;
-        padding: 3rem;
-        margin: 0 1rem 4rem 1rem;
-        position: relative;
-        opacity: 0;
-        transform: scale(0.95);
-        transition: opacity 1s ease, transform 1s ease;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-        border: 1px solid #E0E8E0;
-    }
+.about-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
 
-    .section.visible {
-        opacity: 1;
-        transform: scale(1);
-    }
+.about-image {
+  flex: 1 1 35%; /* reduced width */
+}
 
-    .section h2 {
-        font-size: 2.2rem;
-        color: #2E7D32;
-        margin-bottom: 2rem;
-        position: relative;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
+.about-image img {
+  width: 100%;
+  height: auto;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
 
-    .section h2::before {
-        content: '🌿';
-        font-size: 2.5rem;
-    }
+.about-image img:hover {
+  transform: scale(1.03);
+}
 
-    .section h2::after {
-        content: '';
-        flex-grow: 1;
-        height: 3px;
-        background: linear-gradient(to right, #6BBF47, transparent);
-    }
+.about-text {
+  flex: 1 1 60%;
+}
 
-    .section p, .section ul {
-        font-size: 1.2rem;
-        color: #2D3E40;
-        line-height: 1.9;
-    }
+.about-text h5 {
+  color: #388E3C;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
 
-    .section ul {
-        list-style: none;
-        margin-top: 1.5rem;
-    }
+.about-text h2 {
+  color: #222;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
 
-    .section ul li {
-        padding: 0.8rem 0;
-        position: relative;
-        padding-left: 2.5rem;
-        transition: background 0.3s ease;
-        border-radius: 8px;
-    }
+.about-text p {
+  color: #555;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
 
-    .section ul li:hover {
-        background: #F0F5F0;
-    }
+.about-button-container {
+    text-align: center;
+  margin-top: 20px;
+}
 
-    .section ul li::before {
-        content: '🌱';
-        position: absolute;
-        left: 0;
-        color: #6BBF47;
-        font-size: 1.5rem;
-    }
+.reach-us-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #303F9F;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
 
-    /* Section Images */
-    .section-image {
-        width: 100%;
-        height: 350px;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 16px;
-        margin: 2rem 0;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        transition: transform 0.5s ease;
-    }
+.reach-us-btn:hover {
+  background-color: #303F9F;
+}
 
-    .section-image:hover {
-        transform: translateY(-5px);
-    }
+@media (max-width: 768px) {
+  .about-container {
+    flex-direction: column;
+    text-align: center;
+  }
 
-    /* Products Grid */
-    .products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 2.5rem;
-        margin-top: 2.5rem;
-    }
+  .about-text,
+  .about-image {
+    flex: 1 1 100%;
+  }
+}
 
-    .product-card {
-        background: #F9FCF9;
-        border-radius: 16px;
-        padding: 2rem;
-        text-align: center;
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        border: 1px solid #E5ECE5;
-        position: relative;
-        overflow: hidden;
-    }
 
-    .product-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background: #6BBF47;
-        transition: height 0.4s ease;
-    }
+.core-values {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #fdfdfd;
+}
 
-    .product-card:hover::before {
-        height: 100%;
-        opacity: 0.1;
-    }
+.section-subtitle {
+  color: #388e3c;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
 
-    .product-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    }
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #388e3c;
+}
 
-    .product-card h3 {
-        font-size: 1.7rem;
-        color: #2D3E40;
-        margin-bottom: 0.8rem;
-        font-weight: 500;
-    }
+.section-description {
+  max-width: 800px;
+  margin: 0 auto 40px;
+  color: #333;
+  font-size: 1rem;
+}
 
-    .product-card p {
-        font-size: 1rem;
-        color: #2D3E40;
-        line-height: 1.7;
-    }
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+}
 
-    .product-card img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 12px;
-        margin-bottom: 1.5rem;
-        transition: transform 0.4s ease;
-    }
+.value-item {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
 
-    .product-card img:hover {
-        transform: scale(1.03);
-    }
+.value-item:hover {
+  transform: translateY(-5px);
+}
 
-    /* Timeline */
-    .timeline {
-        position: relative;
-        margin: 3rem 0;
-        padding: 0 1rem;
-    }
+.value-item img {
+  width: 60px;
+  margin-bottom: 15px;
+}
 
-    .timeline-item {
-        background: #F9FCF9;
-        border-radius: 16px;
-        padding: 2rem;
-        margin: 2rem 0;
-        position: relative;
-        opacity: 0;
-        transform: translateX(-30px);
-        transition: opacity 1s ease, transform 1s ease;
-        border-left: 4px solid #6BBF47;
-    }
+.value-item h4 {
+  color: #388e3c;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
 
-    .timeline-item.visible {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.value-item p {
+  color: #555;
+  font-size: 0.95rem;
+}
 
-    .timeline-content h3 {
-        font-size: 1.8rem;
-        color: #2D3E40;
-        margin-bottom: 0.8rem;
-        font-weight: 500;
-    }
+.who-we-are {
+  padding: 60px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
 
-    .timeline-content p {
-        font-size: 1.1rem;
-        color: #2D3E40;
-        line-height: 1.7;
-    }
+.who-container {
+  max-width: 1400px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 30px;
+}
 
-    /* Animations */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+.who-text {
+  flex: 1;
+  min-width: 300px;
+}
 
-    /* Scroll Animation Script */
-    .scroll-script {
-        display: none;
-    }
+.who-text h5 {
+  color: #388e3c;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
 
-    /* Responsive Design */
-    @media (max-width: 1200px) {
-        .hero h1 {
-            font-size: 4rem;
-        }
+.who-text h2 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  color: black;
+}
 
-        .hero p {
-            font-size: 1.3rem;
-        }
+.who-text p {
+  color: #555;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
 
-        .section {
-            padding: 2.5rem;
-            margin: 0 0.8rem 3rem 0.8rem;
-        }
+.who-button-container {
+  text-align: center;
+  margin-top: 1.5rem;
+}
 
-        .section h2 {
-            font-size: 2.5rem;
-        }
+.reach-us-btn {
+  background-color: #388e3c;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+}
 
-        .section-image {
-            height: 300px;
-        }
+.reach-us-btn:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
 
-        .products-grid {
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-    }
 
-    @media (max-width: 768px) {
-        .hero {
-            height: 80vh;
-        }
+.who-image {
+  flex: 1;
+  min-width: 280px;
+  overflow: hidden;
+  border-radius: 6px;
+  height: 300px; /* ✅ Reduced height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-        .hero h1 {
-            font-size: 3rem;
-        }
+.who-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  border-radius: 6px;
+}
 
-        .hero p {
-            font-size: 1.2rem;
-        }
+/* ✅ Zoom-in on hover */
+.who-image:hover img {
+  transform: scale(1.1);
+}
 
-        .container {
-            padding: 3rem 1.5rem;
-        }
 
-        .section {
-            padding: 2rem;
-            margin: 0 0.5rem 2rem 0.5rem;
-        }
+/* Responsive */
+@media (max-width: 768px) {
+  .who-container {
+    flex-direction: column;
+  }
 
-        .section h2 {
-            font-size: 2.2rem;
-        }
+  .who-text, .who-image {
+    text-align: center;
+  }
 
-        .section-image {
-            height: 250px;
-        }
+  .who-text h2 {
+    font-size: 1.8rem;
+  }
+}
 
-        .products-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
+.our-vision {
+  padding: 60px 20px;
+  background-color: #f9f9f9;
+}
 
-        .product-card img {
-            height: 180px;
-        }
+.vision-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
 
-        .timeline {
-            padding: 0 0.5rem;
-        }
-    }
+.vision-image {
+  flex: 1 1 35%; /* reduced width */
+}
 
-    @media (max-width: 480px) {
-        .hero {
-            height: 70vh;
-        }
+.vision-image img {
+  width: 100%;
+  height: auto;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
 
-        .hero h1 {
-            font-size: 2.5rem;
-        }
+.vision-image img:hover {
+  transform: scale(1.03);
+}
 
-        .hero p {
-            font-size: 1rem;
-        }
+.vision-text {
+  flex: 1 1 60%;
+}
 
-        .container {
-            padding: 2rem 1rem;
-        }
+.vision-text h5 {
+  color: #388E3C;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
 
-        .section {
-            padding: 1.5rem;
-            margin: 0 0.3rem 1.5rem 0.3rem;
-        }
+.vision-text h2 {
+  color: #222;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
 
-        .section h2 {
-            font-size: 2rem;
-        }
+.vision-text p {
+  color: #555;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
 
-        .section h2::before {
-            font-size: 2rem;
-        }
+.vision-button-container {
+    text-align: center;
+  margin-top: 20px;
+}
 
-        .section p, .section ul {
-            font-size: 1rem;
-        }
+.reach-us-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #303F9F;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
 
-        .section-image {
-            height: 200px;
-        }
+.reach-us-btn:hover {
+  background-color: #2e7d32;
+}
 
-        .product-card img {
-            height: 150px;
-        }
+@media (max-width: 768px) {
+  .vision-container {
+    flex-direction: column;
+    text-align: center;
+  }
 
-        .timeline-item {
-            padding: 1.5rem;
-        }
+  .vision-text,
+  .vision-image {
+    flex: 1 1 100%;
+  }
+}
 
-        .timeline-content h3 {
-            font-size: 1.5rem;
-        }
 
-        .timeline-content p {
-            font-size: 1rem;
-        }
-    }
+.Explore-our-products {
+  padding: 60px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.products-heading {
+  font-size: 2.2rem;
+  color: #388e3c;
+  margin-bottom: 40px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  background-color: #fff;
+}
+
+.product-card:hover {
+  transform: scale(1.03);
+}
+
+.product-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.product-overlay {
+  padding: 15px 10px;
+  background-color: #388e3c;
+  color: #fff;
+}
+
+.product-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  text-decoration: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-image {
+    height: 180px;
+  }
+
+  .products-heading {
+    font-size: 1.8rem;
+  }
+
+  .product-title {
+    font-size: 1rem;
+  }
+}
+
+
+
+
 </style>
 
-<section class="hero">
-    <div class="hero-content">
-        <h1>ABOUT VVM AGRO INDUSTRIES</h1>
-        <p>Pioneering Agricultural Machinery and Tractors Since 2016</p>
+{% load static %}
+
+<div class="hero-container">
+    <img class="hero-banner" src="{% static 'images/vvmagroaboutusbanner2.avif' %}" alt="About VVM Agro">
+
+    <!-- V-Shaped Divider -->
+    <div class="v-shape-divider">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polygon fill="#303F9F" points="0,0 50,60 100,0" />
+        </svg>
     </div>
+</div>
+
+
+
+<section class="about-us">
+  <div class="about-container">
+    <div class="about-image">
+      <img src="{% static 'images/about-us.avif' %}" alt="About VVM Agro">
+    </div>
+    <div class="about-text">
+      <h5>About Us</h5>
+      <h2>About VVM Agro</h2>
+      <p>
+        VVM Agro Services is a pioneer in providing cutting-edge agricultural solutions to farmers across Telangana and Karnataka. Established in 2004, our mission is to enhance farming efficiency with trusted, quality-driven products and services.
+      </p>
+      <p>
+        We supply a diverse range of agricultural machinery, irrigation equipment, organic fertilizers, and crop protection solutions tailored to regional farming needs. Our services are backed by expert guidance, timely support, and farmer-centric innovation.
+      </p>
+      <p>
+        What sets us apart is our commitment to environmental responsibility, innovation, and customer satisfaction. With a widespread network, we ensure fast delivery and consistent support for every farmer.
+      </p>
+      <p>
+        Our core belief is in empowering the agricultural community by making technology accessible, affordable, and effective. Whether it’s small-scale farmers or large agribusinesses, VVM Agro is the reliable partner for all agri-needs.
+      </p>
+      <div class="about-button-container">
+        <a href="#contact" class="reach-us-btn">Reach Us</a>
+      </div>
+      
+    </div>
+  </div>
 </section>
 
-<div class="container">
-    <div class="section">
-        <h2>Our Journey</h2>
-        <img src="{% static 'images/tractor-field.jpg' %}" alt="Tractor in field" class="section-image">
-        <p>Founded on 27-Jun-2016, VVM Agro Industries is a Micro enterprise (2023-24) dedicated to transforming agriculture and electrical contracting through innovative equipment. Our journey began in Hyderabad, Telangana, and expanded to Hayathanagar, Ranga Reddy District, Telangana, with additional operations in Mancherial, Telangana.</p>
-        <p>Under our V VMotors division, we manufacture high-performance tractors ranging from 33 HP to 90 HP and serve as an authorized state distributor for Indofarm Tractor spare parts across Telangana & Andhra Pradesh. Our innovative Hole Lifter, designed for electrical contractors, digs holes up to 6 feet and lifts poles (8m, 9.1m, 11m), significantly reducing manpower and costs.</p>
-        <p>We also specialize in:</p>
-        <ul>
-            <li style="--i: 1;">Wood working machines for precision processing.</li>
-            <li style="--i: 2;">Tractor attachments for efficient agricultural tasks.</li>
-            <li style="--i: 3;">Waste recycling machines for sustainable horticulture.</li>
-            <li style="--i: 4;">Forestry tools for advanced operations.</li>
-        </ul>
-        <p>With tie-ups with banks and finance companies, we ensure accessible solutions for our customers, backed by excellent after-sales service.</p>
-    </div>
+<section class="core-values">
+  <h3 class="section-subtitle">Explore The Core Values</h3>
+  <h2 class="section-title">Our Core Values</h2>
+  <p class="section-description">
+    At VVM Agro Services, our values define how we operate and grow. Since our inception, we've followed principles that support agricultural excellence and long-term customer trust.
+  </p>
 
-    <div class="section">
-        <h2>Our Vision</h2>
-        <img src="{% static 'images/Sustainable farming.jpg' %}" alt="Sustainable farming" class="section-image">
-        <p>At VVM Agro Industries, our vision is to lead the global agricultural and electrical equipment industry by offering high multi-featured, fuel-efficient solutions at optimum cost. We aim to deliver world-class performance, backed by exceptional after-sales services, empowering farmers and contractors with innovative tools that enhance productivity and sustainability.</p>
-        <p>We strive to:</p>
-        <ul>
-            <li style="--i: 1;">Pioneer sustainable technologies that reduce environmental impact.</li>
-            <li style="--i: 2;">Expand our reach to support agricultural communities worldwide.</li>
-            <li style="--i: 3;">Foster innovation through continuous research and development.</li>
-            <li style="--i: 4;">Build lasting partnerships with customers, prioritizing their success.</li>
-        </ul>
+  <div class="values-grid">
+    <div class="value-item">
+      <img src="{% static 'images/integrityicon.png' %}" alt="Integrity Icon">
+      <h4>Integrity and Trust</h4>
+      <p>We uphold strong ethical values and transparency in all our agricultural dealings and partnerships.</p>
     </div>
-
-    <div class="section">
-        <h2>Our Management</h2>
-        <img src="{% static 'images/our-management.jpg' %}" alt="Our Management" class="section-image">
-        <p>Our leadership is driven by V. Sudharshan, the Proprietor and CEO of VVM Agro Industries:</p>
-        <ul>
-            <li style="--i: 1;">Served as an Electrical Contractor for 10 years (1997–2006), specializing in HVDS, RGGVY, and APDRP works.</li>
-            <li style="--i: 2;">Operated an electrical trading business, Venkatamani Sai Power Lines, in Ranigunj, Secunderabad, with a fabrication unit for LT/HT overhead lines (2006–2011).</li>
-            <li style="--i: 3;">Entered the automobile and agricultural machinery business, introducing innovative products like the Hole Lifter to support electrical contractors.</li>
-        </ul>
+    <div class="value-item">
+      <img src="{% static 'images/innovativeicon.png' %}" alt="Innovation Icon">
+      <h4>Innovative Solutions</h4>
+      <p>We embrace modern farming methods and technologies to serve farmers with cutting-edge solutions.</p>
     </div>
+    <div class="value-item">
+      <img src="{% static 'images/customerapproachicon.png' %}" alt="Customer Care Icon">
+      <h4>Farmer-Centric Approach</h4>
+      <p>Our services are built around the needs of farmers. We aim to make farming easier, productive, and profitable.</p>
+    </div>
+    <div class="value-item">
+      <img src="{% static 'images/qualityicon.png' %}" alt="Quality Icon">
+      <h4>Unmatched Quality</h4>
+      <p>From equipment to support, everything we offer meets high standards to ensure durability and performance.</p>
+    </div>
+  </div>
+</section>
 
-    <div class="section">
-    <h2>Products & Services</h2>
-    <p>Explore our advanced range of tractors and equipment designed to boost productivity in agriculture, forestry, and utility contracting:</p>
-    <div class="products-grid">
-        <div class="product-card">
-            <img src="{% static 'images/img1.jpeg' %}" alt="Front Dozer Tractor">
-            <h3>Front Dozer Tractor</h3>
-            <p>Robust tractor equipped with a front dozer blade, ideal for land clearing, leveling, and agricultural earthmoving.</p>
-        </div>
-        <div class="product-card">
-            <img src="{% static 'images/img2.jpeg' %}" alt="Hydraulic Boom Lift Tractor">
-            <h3>Hydraulic Boom Lift Tractor</h3>
-            <p>Specialized tractor for electrical contractors, featuring hydraulic arms for pole erection and deep digging up to 6 ft.</p>
-        </div>
-        <div class="product-card">
-            <img src="{% static 'images/img3.jpeg' %}" alt="Frontend Load Tractor">
-            <h3>Frontend Load Tractor</h3>
-            <p>Versatile tractor with a front loader for lifting, shifting, and loading materials in farms and construction sites.</p>
-        </div>
-        <div class="product-card">
-            <img src="{% static 'images/img4.jpeg' %}" alt="Heavy Duty Hydraulic Lift Tractor">
-            <h3>Heavy Duty Hydraulic Lift Tractor</h3>
-            <p>Powerful tractor designed for heavy lifting and handling large-scale agricultural operations with ease.</p>
-        </div>
-        <div class="product-card">
-            <img src="{% static 'images/img5.jpeg' %}" alt="Hydraulic Post Hole Digger">
-            <h3>Hydraulic Post Hole Digger</h3>
-            <p>Efficient tractor-mounted equipment for quickly digging deep, uniform holes for fencing and plantation tasks.</p>
+<section class="who-we-are">
+  <div class="who-container">
+    <div class="who-text">
+      <h5>Explore Who We Are</h5>
+      <h2>Who We Are</h2>
+      <p>
+        VVM Agro Services is a trusted and leading agri-solutions provider headquartered in Hyderabad, established in 2004. Our company has been dedicated to delivering high-quality products across Karnataka and Telangana with a focus on innovation, commitment, and customer satisfaction.
+      </p>
+      <p>
+        We specialize in supplying agricultural machinery, irrigation equipment, and organic solutions. Every product reflects our promise of reliability, affordability, and quality.
+      </p>
+      <p>
+        With a growing presence and expert team, VVM Agro continues to support farmers and agricultural professionals with dependable equipment and sustainable solutions that withstand the test of time.
+      </p>
+      <div class="who-button-container">
+        <a href="#contact" class="reach-us-btn">Reach Us</a>
         </div>
     </div>
-</div>
+    <div class="who-image">
+      <img src="{% static 'images/who-we-are.webp' %}" alt="Who We Are">
+    </div>
+  </div>
+</section>
 
-    <div class="section">
-        <h2>Organization Details</h2>
-        <img src="{% static 'images/hyderabad-office.jpg' %}" alt="Hyderabad office" class="section-image">
-        <ul>
-            <li style="--i: 1;"><strong>Name:</strong> VVM Agro Industries (V VMotors)</li>
-            <li style="--i: 2;"><strong>CEO:</strong> Vuppala Sudharshan</li>
-            <li style="--i: 3;"><strong>Type:</strong> Micro (2023-24, 2022-23, 2021-22)</li>
-            <li style="--i: 4;"><strong>Structure:</strong> Partnership</li>
-            <li style="--i: 5;"><strong>Incorporation:</strong> 27-Jun-2016</li>
-            <li style="--i: 6;"><strong>Activity:</strong> Manufacturing</li>
-            <li style="--i: 7;"><strong>Social Category:</strong> OBC</li>
-            <li style="--i: 8;"><strong>Commencement:</strong> 01-Dec-2020</li>
-            <li style="--i: 9;"><strong>Locations:</strong> 1104&1105, Opp Petrol Pump, Doolapally, 02, M G Road, Hyderabad, Telangana, 500055; Hayathanagar, Ranga Reddy District, Telangana</li>
-            <li style="--i: 10;"><strong>Branches:</strong> Hyderabad, Mancherial (Telangana); Hayathanagar (Telangana)</li>
-            <li style="--i: 11;"><strong>Turnover:</strong> 1.5 - 5 Cr</li>
-            <li style="--i: 12;"><strong>Employees:</strong> Up to 10 People</li>
-            <li style="--i: 13;"><strong>GST:</strong> 36AANFV9684N1ZW (Registered: 01-Jul-2017)</li>
-        </ul>
+<section class="our-vision">
+  <div class="vision-container">
+    <div class="vision-image">
+      <img src="{% static 'images/our-vision.avif' %}" alt="Our Vision">
+    </div>
+    <div class="vision-text">
+      <h5>Discover Our Vision</h5>
+      <h2>Our Vision</h2>
+      <p>
+        At VVM Agro Services, our vision is to revolutionize agriculture by integrating innovative technology with sustainable practices. We aim to empower farmers and agricultural professionals across India with cutting-edge solutions that boost productivity and protect the environment.
+      </p>
+      <p>
+        We envision a future where farming is more efficient, eco-friendly, and profitable — creating a positive impact on rural communities and food security nationwide.
+      </p>
+      <p>
+        Through continuous research and dedication, VVM Agro strives to be the trusted partner in advancing agricultural progress and nurturing the land for generations to come.
+      </p>
+      <p>
+        Our approach emphasizes not only productivity but also sustainability. By introducing eco-friendly equipment and promoting organic practices, we help reduce the environmental impact of modern farming methods.
+      </p>
+      <p>
+        We are committed to educating and supporting farmers by providing technical training, field demonstrations, and after-sales service, ensuring they make the most of our products and solutions.
+      </p>
+      <p>
+        VVM Agro envisions a thriving agricultural ecosystem where innovation, sustainability, and community development go hand in hand — transforming farming into a resilient, future-ready sector.
+      </p>
+      <div class="vision-button-container">
+        <a href="#contact" class="reach-us-btn">Reach Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="Explore-our-products">
+  <h2 class="products-heading">Explore Our Products</h2>
+  <div class="products-grid">
+
+    <div class="product-card">
+      <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}')"></div>
+      <div class="product-overlay">
+        <h3 class="product-title">Front Dozer Tractor</h3>
+      </div>
     </div>
 
-    <div class="section">
-        <h2>Our Milestones</h2>
-        <img src="{% static 'images/timeline-history.jpg' %}" alt="Timeline history" class="section-image">
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>1997</h3>
-                    <p>V. Sudharshan began working as an Electrical Contractor.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>2006</h3>
-                    <p>Established Venkatamani Sai Power Lines, an electrical trading and fabrication business.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>2016</h3>
-                    <p>VVM Agro Industries founded on 27-Jun-2016.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>2017</h3>
-                    <p>Began manufacturing wood working, waste recycling machines, and Hole Lifter.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>2020</h3>
-                    <p>Commenced production on 01-Dec-2020 and expanded into tractor manufacturing.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>2023</h3>
-                    <p>Classified as Micro enterprise for 2023-24.</p>
-                </div>
-            </div>
-        </div>
+    <div class="product-card">
+      <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}')"></div>
+      <div class="product-overlay">
+        <h3 class="product-title">Boom Lift Tractor</h3>
+      </div>
     </div>
 
-    <div class="section">
-        <h2>Industry Standards</h2>
-        <img src="{% static 'images/industry-standards.jpg' %}" alt="Industry standards" class="section-image">
-        <p><strong>Classification:</strong> Manufacture of lifting and handling equipment (NIC: Machinery and equipment n.e.c.).</p>
-        <ul>
-            <li style="--i: 1;"><strong>HSN 84322910:</strong> Rotary hoes</li>
-            <li style="--i: 2;"><strong>HSN 84328020:</strong> Rotary tiller</li>
-            <li style="--i: 3;"><strong>HSN 84328090:</strong> Other machinery</li>
-            <li style="--i: 4;"><strong>HSN 84329010:</strong> Agricultural machinery parts</li>
-            <li style="--i: 5;"><strong>HSN 84329090:</strong> Other parts</li>
-        </ul>
+    <div class="product-card">
+      <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}')"></div>
+      <div class="product-overlay">
+        <h3 class="product-title">Front End Load Tractor</h3>
+      </div>
     </div>
-</div>
 
-<script class="scroll-script">
-    const sections = document.querySelectorAll('.section, .timeline-item');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.2 });
+    <div class="product-card">
+      <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}')"></div>
+      <div class="product-overlay">
+        <h3 class="product-title">Hydraulic Lift Tractor</h3>
+      </div>
+    </div>
 
-    sections.forEach(section => observer.observe(section));
-</script>
+    <div class="product-card">
+      <div class="product-image" style="background-image: url('{% static "images/img6.png" %}')"></div>
+      <div class="product-overlay">
+        <h3 class="product-title">Post Hole Digger</h3>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
 {% endblock %}
