@@ -8,133 +8,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VVM Agro - Premium Agriculture Machinery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Reset and Base Styles */
+        /* Modern CSS Variables */
+        :root {
+            --primary: #3F5187;
+            --primary-light: #5D6EC7;
+            --primary-dark: #2A3A6B;
+            --secondary: #FFC947;
+            --dark: #1A1E2E;
+            --light: #F8FAFF;
+            --gray: #8E9BB5;
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f9f9f9;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.7;
             overflow-x: hidden;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{% static "images/04.png" %}');
-            background-size: cover;
-            background-position: center;
-            height: 83vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.5) 100%);
-            animation: pulse 8s infinite alternate;
-        }
-
-        .hero-content {
-            width: 100%;
             padding: 0 20px;
-            transform: translateY(20px);
-            opacity: 0;
-            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+
+        section {
+            padding: 80px 0;
             position: relative;
-            z-index: 2;
         }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            animation: textGlow 3s infinite alternate;
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.2;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 30px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        img {
+            max-width: 100%;
+            height: auto;
         }
 
+        /* Buttons */
         .btn {
-            display: inline-block;
-            background: #4CAF50;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
             color: white;
-            padding: 12px 30px;
+            padding: 16px 36px;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
             border: none;
             cursor: pointer;
             font-size: 1rem;
             position: relative;
             overflow: hidden;
-        }
-
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
+            box-shadow: var(--shadow);
+            z-index: 1;
         }
 
         .btn:hover {
-            background: #3e8e41;
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow-hover);
+            background: var(--primary-dark);
         }
 
-        .btn:hover::after {
-            left: 100%;
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
         }
 
-        /* Features Section */
-        .features {
-            padding: 3px 0;
-            background-color: white;
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
             position: relative;
         }
 
-      
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
         .section-title h2 {
-            font-size: 2.5rem;
-            color: #2c3e50;
+            font-size: 2.8rem;
+            color: var(--dark);
             margin-bottom: 15px;
             position: relative;
             display: inline-block;
@@ -143,19 +118,148 @@
         .section-title h2::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
             width: 80px;
-            height: 3px;
-            background: #4CAF50;
-            border-radius: 3px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
         }
 
         .section-title p {
-            color: #7f8c8d;
+            color: var(--gray);
             max-width: 700px;
             margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Hero Section - Fully Responsive Banner */
+        .hero {
+            height: 80vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            isolation: isolate;
+        }
+
+        .hero::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('{% static "images/04.png" %}') no-repeat center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: cover;
+    background-position: center;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards 0.3s;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+
+        .hero .btn {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards 0.7s;
+        }
+
+        /* Floating Shapes Animation */
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: float 15s infinite linear;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: white;
+            top: 60%;
+            left: 70%;
+            animation-delay: 3s;
+            animation-duration: 20s;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--primary-light);
+            top: 30%;
+            left: 80%;
+            animation-delay: 6s;
+            animation-duration: 25s;
+        }
+
+        /* Features Section - Animated Cards */
+        .features {
+            background-color: white;
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, white);
+            z-index: 1;
         }
 
         .features-grid {
@@ -165,17 +269,17 @@
         }
 
         .feature-card {
-            background: #f9f9f9;
-            border-radius: 10px;
-            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            padding: 50px 30px;
             text-align: center;
-            transition: all 0.5s ease;
-            opacity: 0;
-            transform: translateY(20px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
             position: relative;
-            z-index: 2;
             overflow: hidden;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(30px);
         }
 
         .feature-card::before {
@@ -184,355 +288,281 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: #4CAF50;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s ease;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
         }
 
         .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            opacity: 1;
         }
 
         .feature-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 3rem;
-            color: #4CAF50;
-            margin-bottom: 20px;
-            display: inline-block;
-            transition: transform 0.3s ease;
+            color: var(--primary);
+            background: rgba(63, 81, 135, 0.1);
+            border-radius: 50%;
+            transition: var(--transition);
         }
 
         .feature-card:hover .feature-icon {
-            transform: rotate(10deg) scale(1.1);
+            transform: translateY(-10px) scale(1.1);
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow);
         }
 
         .feature-card h3 {
             font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #2c3e50;
-            transition: color 0.3s ease;
+            margin-bottom: 20px;
+            color: var(--dark);
+            transition: var(--transition);
         }
 
         .feature-card:hover h3 {
-            color: #4CAF50;
+            color: white;
         }
 
-        /* Products Section */
+        .feature-card p {
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Products Section - Modern Showcase */
         .products {
-            padding: 2px 0 80px;
-            background-color: #f5f7fa;
+            background-color: var(--light);
             position: relative;
         }
 
-      
+        .products::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, white, var(--light));
+            z-index: 1;
+        }
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            position: relative;
-            z-index: 2;
         }
 
         .product-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.5s ease;
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
             position: relative;
-        }
-
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(76, 175, 80, 0.1), transparent);
             opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .product-card:hover::before {
-            opacity: 1;
+            transform: translateY(30px);
         }
 
         .product-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 2;
+            box-shadow: 0 4px 15px rgba(255, 201, 71, 0.3);
         }
 
         .product-image {
-            height: 200px;
-            background-color: #eee;
+            height: 250px;
             background-size: cover;
             background-position: center;
             position: relative;
-            transition: all 0.5s ease;
+            transition: var(--transition);
         }
 
         .product-card:hover .product-image {
             transform: scale(1.05);
         }
 
-        .product-image::before {
+        .product-image::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
             bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image::after {
+            opacity: 1;
         }
 
         .product-info {
-            padding: 25px;
+            padding: 30px;
             position: relative;
             z-index: 2;
             background: white;
         }
 
         .product-info h3 {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            color: #2c3e50;
-            transition: color 0.3s ease;
-        }
-
-        .product-card:hover .product-info h3 {
-            color: #4CAF50;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
         }
 
         .product-info p {
-            color: #7f8c8d;
-            margin-bottom: 20px;
+            color: var(--gray);
+            margin-bottom: 25px;
         }
 
         .product-info .btn {
             width: 100%;
-            text-align: center;
-            padding: 12px;
-            font-size: 0.9rem;
-            background: transparent;
-            color: #4CAF50;
-            border: 2px solid #4CAF50;
-            transition: all 0.3s ease;
         }
 
-        .product-info .btn:hover {
-            background: #4CAF50;
+        /* Stats Section - Animated Numbers */
+        .stats {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             color: white;
-            transform: none;
-        }
-                /* Technology Section */
-        .technology {
-            padding: 2px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            padding: 100px 0;
             position: relative;
             overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('{% static "images/pattern.png" %}') center/cover repeat;
+            opacity: 0.05;
+            z-index: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        /* Technology Showcase Section */
+        .technology {
+            background-color: white;
+            padding: 100px 0;
         }
 
         .tech-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            position: relative;
-            z-index: 2;
         }
 
         .tech-card {
-            background: white;
-            border-radius: 15px;
-            padding: 40px 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: all 0.5s ease;
-            position: relative;
-            overflow: hidden;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
             opacity: 0;
             transform: translateY(30px);
         }
 
         .tech-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-hover);
         }
 
         .tech-icon {
-            position: relative;
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto 25px;
-        }
-
-        .icon-circle {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+            background: rgba(63, 81, 135, 0.1);
             border-radius: 50%;
-            background: rgba(76, 175, 80, 0.1);
-            animation: pulse 3s infinite ease-in-out;
+            transition: var(--transition);
         }
 
-        .tech-icon i {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.5rem;
-            z-index: 2;
+        .tech-card:hover .tech-icon {
+            background: var(--primary);
+            color: white;
+            transform: rotate(15deg) scale(1.1);
         }
 
         .tech-card h3 {
-            font-size: 1.4rem;
-            text-align: center;
+            font-size: 1.5rem;
             margin-bottom: 15px;
-            color: #2c3e50;
+            color: var(--dark);
         }
 
         .tech-card p {
-            text-align: center;
-            color: #7f8c8d;
-            margin-bottom: 20px;
-        }
-
-        .tech-wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.8s ease;
-        }
-
-        .tech-card:hover .tech-wave {
-            transform: scaleX(1);
-        }
-
-        /* Success Stories Section */
-        .success-stories {
-            padding: 2px 0;
-            background-color: white;
-        }
-
-        .story-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .story-card {
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: all 0.5s ease;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .story-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .story-image {
-            height: 250px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            transition: all 0.8s ease;
-        }
-
-        .story-card:hover .story-image {
-            transform: scale(1.05);
-        }
-
-        .story-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            color: white;
-        }
-
-        .story-overlay h3 {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
-        }
-
-        .story-overlay p {
-            font-weight: bold;
-            color: #4CAF50;
-        }
-
-        .story-content {
-            padding: 25px;
-            background: white;
-        }
-
-        .story-content p {
-            font-style: italic;
-            margin-bottom: 15px;
-            color: #555;
-        }
-
-        .story-link {
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .story-link:hover {
-            color: #3e8e41;
-            transform: translateX(5px);
-        }
-
-        /* Floating Elements */
-        .floating {
-            position: absolute;
-            background: rgba(76, 175, 80, 0.1);
-            border-radius: 50%;
-            filter: blur(40px);
-            z-index: 1;
-        }
-
-        .floating-1 {
-            width: 300px;
-            height: 300px;
-            top: -150px;
-            right: -150px;
-            animation: float 15s infinite ease-in-out;
-        }
-
-        .floating-2 {
-            width: 200px;
-            height: 200px;
-            bottom: -100px;
-            left: -100px;
-            animation: float 12s infinite ease-in-out reverse;
+            color: var(--gray);
         }
 
         /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -541,77 +571,182 @@
         }
 
         @keyframes float {
-            0%, 100% {
+            0% {
                 transform: translateY(0) rotate(0deg);
             }
             50% {
                 transform: translateY(-20px) rotate(5deg);
             }
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
             100% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes textGlow {
-            0% {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            }
-            100% {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+                transform: translateY(0) rotate(0deg);
             }
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
+    .hero {
+        padding: 60px 15px;
+    }
+
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 60px 10px;
+        min-height: 90vh;
+    }
+
+    .hero h1 {
+        font-size: 2.3rem;
+    }
+
+    .hero p {
+        font-size: 1.05rem;
+    }
+
+    .hero .btn {
+        padding: 12px 24px;
+    }
+}
+
+@media (max-width: 425px) {
+    .hero {
+        padding: 40px 10px;
+        min-height: 80vh;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+    }
+
+    .hero .btn {
+        font-size: 0.85rem;
+        padding: 10px 20px;
+    }
+}
+
+        @media (max-width: 1200px) {
             .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
+                font-size: 3.8rem;
             }
             
             .section-title h2 {
-                font-size: 2rem;
-            }
-            
-            .features::before, .products::before {
-                height: 50px;
+                font-size: 2.5rem;
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 992px) {
+            section {
+                padding: 80px 0;
+            }
+            
+            .hero {
+                min-height: 700px;
+            }
+            
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            
+            .stats {
+                padding: 80px 0;
+            }
+            
+            .stat-number {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+            
+            .hero {
+                min-height: 600px;
+                height: auto;
+                padding: 120px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .btn {
+                padding: 14px 28px;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-card, .product-card, .tech-card {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .hero {
+                min-height: 500px;
+            }
+            
             .hero h1 {
                 font-size: 2rem;
             }
             
-            .btn {
-                padding: 10px 20px;
+            .section-title h2 {
+                font-size: 1.6rem;
             }
             
-            .feature-card, .product-card {
-                padding: 20px;
+            .stat-number {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
+    <!-- Hero Section with Floating Shapes -->
     <section class="hero">
-        <div class="floating floating-1"></div>
-        <div class="floating floating-2"></div>
-        <div class="hero-content">
-            <h1>Premium Agriculture Machinery</h1>
-            <p>VVM Agro provides high-quality, durable farming equipment to boost your agricultural productivity and efficiency.</p>
-            <a href="#products" class="btn">Explore Products</a>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Premium Agriculture Machinery Solutions</h1>
+                <p>VVM Agro delivers high-performance farming equipment engineered for maximum productivity and durability in any condition.</p>
+                <a href="#products" class="btn">Explore Our Products</a>
+            </div>
         </div>
     </section>
 
@@ -620,23 +755,23 @@
         <div class="container">
             <div class="section-title">
                 <h2>Why Choose VVM Agro?</h2>
-                <p>We are committed to delivering top-notch agricultural machinery that meets the highest standards of quality and performance.</p>
+                <p>Our commitment to excellence sets us apart in the agricultural machinery industry</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🚜</div>
-                    <h3>Durable Equipment</h3>
-                    <p>Our machinery is built to last, with high-quality materials and robust construction for long-term use in tough farming conditions.</p>
+                    <h3>Military-Grade Durability</h3>
+                    <p>Constructed with reinforced steel and weather-resistant coatings to withstand extreme farming conditions.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚙️</div>
-                    <h3>Advanced Technology</h3>
-                    <p>Incorporating the latest agricultural technology to improve efficiency, reduce labor, and increase yields.</p>
+                    <div class="feature-icon">⚡</div>
+                    <h3>Cutting-Edge Performance</h3>
+                    <p>Precision engineering delivers 30% more power with 20% less fuel consumption than industry standards.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔧</div>
-                    <h3>Expert Support</h3>
-                    <p>Comprehensive after-sales service with trained technicians and readily available spare parts.</p>
+                    <h3>24/7 Global Support</h3>
+                    <p>Worldwide service network with certified technicians and same-day parts delivery guarantee.</p>
                 </div>
             </div>
         </div>
@@ -646,173 +781,112 @@
     <section class="products" id="products">
         <div class="container">
             <div class="section-title">
-                <h2>Our Premium Products</h2>
-                <p>Explore our range of high-performance agricultural machinery designed for modern farming needs.</p>
+                <h2>Our Premium Machinery</h2>
+                <p>Engineered for excellence in modern agricultural operations</p>
             </div>
             <div class="products-grid">
                 <div class="product-card">
-                    <div class="product-image" style="background-image: url('{% static "images/dozer-tractor.jpg" %}');"></div>
+                    <div class="product-badge">BEST SELLER</div>
+                    <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}');"></div>
                     <div class="product-info">
-                        <h3>Front Dozer Tractor</h3>
-                        <p>Powerful dozer attachment for land clearing and earthmoving with precision control and heavy-duty blades.</p>
-                        <a href="#contact" class="btn">Inquire Now</a>
+                        <h3>Heavy-Duty Dozer Tractor</h3>
+                        <p>Industrial-grade dozer with reinforced blades for land clearing and earthmoving operations.</p>
+                        <a href="#contact" class="btn btn-outline">View Specifications</a>
                     </div>
                 </div>
                 <div class="product-card">
-                    <div class="product-image" style="background-image: url('{% static "images/boom-lift.jpg" %}');"></div>
+                    <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}');"></div>
                     <div class="product-info">
-                        <h3>Hydraulic Boom Lift Tractor</h3>
-                        <p>Versatile lifting solution with extendable reach for orchard work, construction, and maintenance tasks.</p>
-                        <a href="#contact" class="btn">Inquire Now</a>
+                        <h3>Hydraulic Boom Lift System</h3>
+                        <p>Extendable reach up to 15 meters with precision controls for orchard and maintenance work.</p>
+                        <a href="#contact" class="btn btn-outline">View Specifications</a>
                     </div>
                 </div>
                 <div class="product-card">
-                    <div class="product-image" style="background-image: url('{% static "images/loader-tractor.jpg" %}');"></div>
+                    <div class="product-badge">NEW MODEL</div>
+                    <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}');"></div>
                     <div class="product-info">
-                        <h3>Front end Load Tractor</h3>
-                        <p>High-capacity loader for material handling with quick-attach buckets for various applications.</p>
-                        <a href="#contact" class="btn">Inquire Now</a>
+                        <h3>High-Capacity Front Loader</h3>
+                        <p>Quick-attach system with 3-ton capacity for efficient material handling.</p>
+                        <a href="#contact" class="btn btn-outline">View Specifications</a>
                     </div>
                 </div>
                 <div class="product-card">
-                    <div class="product-image" style="background-image: url('{% static "images/hydraulic-lift.jpg" %}');"></div>
+                    <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}');"></div>
                     <div class="product-info">
-                        <h3>Heavy-Duty Hydraulic Lift Tractor</h3>
-                        <p>Industrial-strength lifting system designed for heavy loads with smooth hydraulic operation.</p>
-                        <a href="#contact" class="btn">Inquire Now</a>
+                        <h3>Industrial Hydraulic Lift</h3>
+                        <p>5-ton lifting capacity with smooth hydraulic operation for heavy-duty applications.</p>
+                        <a href="#contact" class="btn btn-outline">View Specifications</a>
                     </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('{% static "images/hole-digger.jpg" %}');"></div>
-                    <div class="product-info">
-                        <h3>Hydraulic Post Hole Digger</h3>
-                        <p>Efficient digging attachment for fence posts, tree planting, and construction with various auger sizes.</p>
-                        <a href="#contact" class="btn">Inquire Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-        <!-- Technology Showcase Section -->
-    <section class="technology">
-        <div class="container">
-            <div class="section-title">
-                <h2>Innovative Technologies</h2>
-                <p>Discover the cutting-edge technologies that power our agricultural machinery</p>
-            </div>
-            
-            <div class="tech-grid">
-                <div class="tech-card">
-                    <div class="tech-icon">
-                        <div class="icon-circle"></div>
-                        <i class="icon">💧</i>
-                    </div>
-                    <h3>Smart Hydraulics</h3>
-                    <p>Precision-controlled hydraulic systems that respond instantly to operator input while conserving energy.</p>
-                    <div class="tech-wave"></div>
-                </div>
-                
-                <div class="tech-card">
-                    <div class="tech-icon">
-                        <div class="icon-circle"></div>
-                        <i class="icon">📱</i>
-                    </div>
-                    <h3>IoT Connectivity</h3>
-                    <p>Real-time monitoring and diagnostics through mobile apps for predictive maintenance.</p>
-                    <div class="tech-wave"></div>
-                </div>
-                
-                <div class="tech-card">
-                    <div class="tech-icon">
-                        <div class="icon-circle"></div>
-                        <i class="icon">🔋</i>
-                    </div>
-                    <h3>Eco-Friendly Power</h3>
-                    <p>Hybrid and efficient diesel engines that reduce emissions without compromising performance.</p>
-                    <div class="tech-wave"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Client Success Section -->
-    <section class="success-stories">
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="20">0</div>
+                    <div class="stat-label">Years of Excellence</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="7500">0</div>
+                    <div class="stat-label">Machines Deployed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="99">0</div>
+                    <div class="stat-label">Client Satisfaction</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Global Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Showcase Section -->
+    <section class="technology">
         <div class="container">
             <div class="section-title">
-                <h2>Client Success Stories</h2>
-                <p>See how our machinery has transformed farms across the region</p>
+                <h2>Advanced Technology</h2>
+                <p>Innovative solutions powering our agricultural machinery</p>
             </div>
-            
-            <div class="story-cards">
-                <div class="story-card">
-                    <div class="story-image" style="background-image: url('{% static "images/farm-success-1.jpg" %}');">
-                        <div class="story-overlay">
-                            <h3>Green Valley Farms</h3>
-                            <p>+45% Productivity</p>
-                        </div>
-                    </div>
-                    <div class="story-content">
-                        <p>"After switching to VVM Agro's front loaders, we've increased our daily output by 45% while reducing fuel consumption by 18%."</p>
-                        <a href="#" class="story-link">Read Full Case Study →</a>
-                    </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">⚙️</div>
+                    <h3>Smart Hydraulic Systems</h3>
+                    <p>Precision-controlled hydraulics that automatically adjust pressure and flow for optimal performance.</p>
                 </div>
-                
-                <div class="story-card">
-                    <div class="story-image" style="background-image: url('{% static "images/farm-success-2.jpg" %}');">
-                        <div class="story-overlay">
-                            <h3>Golden Harvest Co-op</h3>
-                            <p>60% Time Saved</p>
-                        </div>
-                    </div>
-                    <div class="story-content">
-                        <p>"The hydraulic boom lift has reduced our orchard maintenance time by 60%, allowing us to focus on expansion."</p>
-                        <a href="#" class="story-link">Read Full Case Study →</a>
-                    </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📱</div>
+                    <h3>Remote Monitoring</h3>
+                    <p>Real-time equipment diagnostics and performance tracking through our mobile app.</p>
                 </div>
-                
-                <div class="story-card">
-                    <div class="story-image" style="background-image: url('{% static "images/farm-success-3.jpg" %}');">
-                        <div class="story-overlay">
-                            <h3>Riverbend Plantations</h3>
-                            <p>30% Cost Reduction</p>
-                        </div>
-                    </div>
-                    <div class="story-content">
-                        <p>"VVM's dozer attachments helped us prepare land 30% faster while cutting equipment maintenance costs by 30%."</p>
-                        <a href="#" class="story-link">Read Full Case Study →</a>
-                    </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🔋</div>
+                    <h3>Eco-Friendly Design</h3>
+                    <p>Reduced emissions and fuel consumption without compromising power or performance.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <script>
-        // Enhanced Animation on scroll
+        // Modern JavaScript with GSAP-like animations
         document.addEventListener('DOMContentLoaded', function() {
-            // Initial animations
-            const heroContent = document.querySelector('.hero-content');
-            heroContent.style.animation = 'fadeInUp 1s ease forwards 0.5s';
-            
-            // Animate section titles
-            const sectionTitles = document.querySelectorAll('.section-title');
-            sectionTitles.forEach((title, index) => {
-                setTimeout(() => {
-                    title.style.opacity = '1';
-                    title.style.transform = 'translateY(0)';
-                    title.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                }, index * 300);
-            });
-            
-            // Scroll animations with Intersection Observer for better performance
-            const animateOnScroll = (elements, className) => {
+            // Animate elements on scroll
+            const animateOnScroll = (elements, stagger = 0.1) => {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach((entry, index) => {
                         if (entry.isIntersecting) {
                             setTimeout(() => {
                                 entry.target.style.opacity = '1';
-                                entry.target.style.transform = className.includes('product') ? 
-                                    'translateY(0) scale(1)' : 'translateY(0)';
-                            }, index * 150);
+                                entry.target.style.transform = 'translateY(0)';
+                                entry.target.style.transition = `opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * stagger}s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * stagger}s`;
+                            }, 100);
                             observer.unobserve(entry.target);
                         }
                     });
@@ -821,13 +895,17 @@
                 elements.forEach(element => observer.observe(element));
             };
             
-            // Animate features when scrolled to
+            // Animate feature cards
             const featureCards = document.querySelectorAll('.feature-card');
-            animateOnScroll(featureCards, 'feature-card');
+            animateOnScroll(featureCards, 0.15);
             
-            // Animate products when scrolled to
+            // Animate product cards
             const productCards = document.querySelectorAll('.product-card');
-            animateOnScroll(productCards, 'product-card');
+            animateOnScroll(productCards, 0.15);
+            
+            // Animate tech cards
+            const techCards = document.querySelectorAll('.tech-card');
+            animateOnScroll(techCards, 0.15);
             
             // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -843,35 +921,41 @@
                 });
             });
             
-            // Floating elements animation
-            const floatElements = document.querySelectorAll('.floating');
-            floatElements.forEach((el, index) => {
-                el.style.animationDelay = `${index * 2}s`;
-            });
+            // Animate stats counting
+            const statNumbers = document.querySelectorAll('.stat-number[data-count]');
+            const statsSection = document.querySelector('.stats');
             
-            // Hover effect for product cards
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        statNumbers.forEach(stat => {
+                            const target = +stat.getAttribute('data-count');
+                            const duration = 2000;
+                            const start = 0;
+                            const increment = target / (duration / 16);
+                            
+                            let current = start;
+                            const timer = setInterval(() => {
+                                current += increment;
+                                if (current >= target) {
+                                    clearInterval(timer);
+                                    current = target;
+                                }
+                                stat.textContent = Math.floor(current);
+                            }, 16);
+                        });
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+            
+            // Parallax effect for product images
             productCards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    const image = card.querySelector('.product-image');
-                    image.style.transform = 'scale(1.05)';
-                });
-                
-                card.addEventListener('mouseleave', () => {
-                    const image = card.querySelector('.product-image');
-                    image.style.transform = 'scale(1)';
-                });
-            });
-                        // Animate technology cards
-            const techCards = document.querySelectorAll('.tech-card');
-            animateOnScroll(techCards, 'tech-card');
-            
-            // Animate success stories
-            const storyCards = document.querySelectorAll('.story-card');
-            animateOnScroll(storyCards, 'story-card');
-            
-            // Parallax effect for story images
-            storyCards.forEach(card => {
-                const image = card.querySelector('.story-image');
+                const image = card.querySelector('.product-image');
                 
                 card.addEventListener('mousemove', (e) => {
                     const x = e.clientX - card.getBoundingClientRect().left;
@@ -887,6 +971,12 @@
                 card.addEventListener('mouseleave', () => {
                     image.style.transform = 'scale(1.05)';
                 });
+            });
+            
+            // Floating shapes animation
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach((shape, index) => {
+                shape.style.animationDelay = `${index * 3}s`;
             });
         });
     </script>
