@@ -6,10 +6,10 @@
 <style>
     /* Root variables for consistent theming */
     :root {
-        --primary-color: #2A6A3C;
-        --secondary-color: #6ABF4B;
+        --primary-color: #303F9F;
+        --secondary-color: #4e5bb0;
         --accent-color: #E8F5E9;
-        --text-color: #1A3C34;
+        --text-color: #333;
         --error-color: #C62828;
         --background-color: #F5FAF5;
         --white: #FFFFFF;
@@ -154,7 +154,7 @@
         border-color: var(--secondary-color);
         outline: none;
         background-color: var(--white);
-        box-shadow: 0 0 0 3px rgba(106, 191, 75, 0.2);
+        box-shadow: 0 0 0 3px rgb(191, 193, 218,0.2);
     }
 
     input[type="file"] {
@@ -164,7 +164,7 @@
     }
 
     .application-form-container button {
-        background: linear-gradient(90deg, var(--secondary-color), #4CAF50);
+        background: linear-gradient(90deg, var(--secondary-color), #4e5baf);
         color: var(--white);
         padding: 0.9rem 2rem;
         font-size: 1.15rem;
@@ -183,7 +183,7 @@
     }
 
     .application-form-container button:hover {
-        background: linear-gradient(90deg, #4CAF50, var(--secondary-color));
+        background: linear-gradient(90deg, #303F9F, var(--secondary-color));
         transform: translateY(-3px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
