@@ -13,16 +13,16 @@
     }
     
     .products-hero {
-        height: 80vh;
+        height: 60vh;
         min-height: 400px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url('{% static "images/product-banner (2).png" %}');
+        background: url('{% static "images/product-banner1.png" %}');
         background-size: cover;
         background-position: center;
-        color: white;
+        color: #3F5187;
         text-align: center;
         margin-bottom: 2rem;
         animation: heroFadeIn 1.5s ease-out;
@@ -44,7 +44,7 @@
         padding: 2rem;
         z-index: 2;
         border-radius: 20px;
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(55px);
         opacity: 0;
         transform: translateY(30px);
         animation: contentFadeIn 1s ease-out forwards;
@@ -494,7 +494,7 @@
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="tractor">Tractors</button>
             <button class="filter-btn" data-filter="attachment">Attachments</button>
-            <button class="filter-btn" data-filter="specialty">Specialty Equipment</button>
+           
         </div>
     </div>
 

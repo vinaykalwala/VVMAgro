@@ -127,43 +127,59 @@
         }
 
         /* Hero Section */
-       .hero {
-    height: 70vh;
-    min-height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    color: #3F5187;
-    isolation: isolate;
-    text-align: center;
-    padding: 20px;
-    background: url('{% static "images/vvm.webp" %}') no-repeat center center;
-    background-size: cover;
-}
-.hero-content-blur {
-    background-color: rgba(255, 255, 255, 0.3); /* light translucent background */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* for Safari */
-    border-radius: 20px;
-    padding: 40px 30px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    width: 100%;
-    margin: 0 auto;
-    z-index: 2;
-}
-
-
+        .hero {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            overflow: hidden;
+            color: #3F5187;
+            isolation: isolate;
+            text-align: center;
+            background: url('{% static "images/vvm.webp" %}') no-repeat center center;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--light);
+            box-sizing: border-box;
+        }
+        
         .hero-content {
+            width: 100%;
+            max-width: 1400px;
+            padding: 20px;
+            margin: 0 auto;
             position: relative;
             z-index: 3;
-            width: 100%;
-            padding: 0 20px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-        .hero-content-blur {
+        .typewriter {
+            overflow: hidden;
+            border-right: 3px solid var(--primary);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 0.15em;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
+        }
+
+        {% comment %} .hero-content-blur {
     background-color: rgba(255, 255, 255, 0.1); /* subtle white overlay */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px); /* for Safari */
@@ -172,24 +188,24 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     max-width: 900px;
     margin: 0 auto;
-}
+} {% endcomment %}
 
 
         .hero h1 {
             font-size: clamp(1rem, 5vw, 2rem);
-            margin-bottom: 25px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s ease forwards 0.3s;
+            margin-bottom: 300px;
             text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             line-height: 1.2;
+            display: inline-block;
+            max-width: 100%;
         }
+        
 
         .hero p {
             font-size: clamp(1.1rem, 2vw, 1.2rem);
             max-width: 700px;
             margin: 0 auto 40px;
-            opacity: 0;
+            opacity: 1;
             transform: translateY(30px);
             animation: fadeInUp 1s ease forwards 0.5s;
             line-height: 1.6;
@@ -201,53 +217,7 @@
             animation: fadeInUp 1s ease forwards 0.7s;
         }
 
-        /* Floating Shapes Animation */
-        .floating-shapes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
 
-        .shape {
-            position: absolute;
-            opacity: 0.1;
-            border-radius: 50%;
-            filter: blur(40px);
-            animation: float 15s infinite linear;
-        }
-
-        .shape-1 {
-            width: 300px;
-            height: 300px;
-            background: var(--secondary);
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .shape-2 {
-            width: 400px;
-            height: 400px;
-            background: white;
-            top: 60%;
-            left: 70%;
-            animation-delay: 3s;
-            animation-duration: 20s;
-        }
-
-        .shape-3 {
-            width: 200px;
-            height: 200px;
-            background: var(--primary-light);
-            top: 30%;
-            left: 80%;
-            animation-delay: 6s;
-            animation-duration: 25s;
-        }
 
         /* Features Section */
         .features {
@@ -262,7 +232,7 @@
             left: 0;
             width: 100%;
             height: 100px;
-            background: linear-gradient(to bottom, transparent, white);
+            {% comment %} background: linear-gradient(to bottom, transparent, white); {% endcomment %}
             z-index: 1;
         }
 
@@ -376,6 +346,7 @@
             position: relative;
             opacity: 0;
             transform: translateY(30px);
+            
         }
 
         .product-card:hover {
@@ -489,6 +460,7 @@
 
         .product-info .btn {
             width: 100%;
+            
         }
 
         /* Stats Section */
@@ -751,15 +723,109 @@
         }
 
         /* Responsive Design */
+        @media (min-width: 1204px) and (max-width: 1400px) {
+            .container {
+                max-width: 1150px;
+            }
+            
+            .hero {
+                min-height: 60vh;
+                background-size: 100% auto;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem;
+                margin-bottom: 200px;
+            }
+            
+            .hero-content {
+                margin-top: 30px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(4, 280px);
+                gap: 15px;
+            }
+            
+            .feature-card {
+                padding: 40px 25px;
+            }
+            
+            .tech-card {
+                padding: 35px;
+            }
+        }
+        @media (min-width: 820px) and (max-width: 1180px) {
+            section {
+                padding: 60px 0;
+            }
+            .hero {
+                min-height: 43vh;
+                height: auto;
+                padding: 40px 20px;
+                background-size: 100% auto;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+        
+            .hero-content {
+                margin-top: 20px;
+            }
+        
+            .hero h1 {
+                margin-bottom: 10px;
+            }
+            
+            .stats {
+                padding: 80px 0;
+            }
+            
+            .cta {
+                padding: 80px 0;
+            }
+        }
+        @media (min-width: 800px) and (max-width: 1280px) {
+            .hero {
+                min-height: 43vh;
+                height: auto;
+                padding: 40px 20px;
+                background-size: 100% auto;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+        
+            .hero-content {
+                margin-top: 20px;
+            }
+        
+            .hero h1 {
+                font-size: 20px;
+                margin-bottom: 10px;
+            }
+        }
         @media (max-width: 768px) {
             section {
                 padding: 60px 0;
             }
-            
             .hero {
+                min-height: 45vh;
                 height: auto;
-                min-height: 80vh;
-                padding: 100px 0;
+                padding: 40px 20px;
+                background-size: 100% auto;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+            .hero h1 {
+                font-size: 18px;
+                margin-bottom: 250px;
+            }
+        
+            .hero-content {
+                margin-top: 20px;
+            }
+        
+            .hero h1 {
+                margin-bottom: 10px;
             }
             
             .stats {
@@ -777,7 +843,12 @@
             }
             
             .hero {
-                min-height: 70vh;
+                background-size: 100% auto;
+                padding: 40px 20px;
+            }
+            .hero h1 {
+                font-size: 13px;
+                margin-bottom: 200px;
             }
             
             .stats-grid {
@@ -798,26 +869,106 @@
                 max-width: 300px;
             }
         }
+        @media (max-width: 480px) {
+            .hero {
+                background-size: 100% auto;
+                min-height: 220px;
+                padding: 10px 15px;
+            }
+            .hero h1 {
+                font-size: 8px;
+                margin-bottom: 16px;
+            }
+            
+            .hero p {
+                font-size: 0.9rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.4rem;
+            }
+            
+            .section-title p {
+                font-size: 0.85rem;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .feature-card p {
+                font-size: 0.85rem;
+            }
+            
+            .product-title {
+                font-size: 1.1rem;
+            }
+            
+            .product-info h3 {
+                font-size: 1.2rem;
+            }
+            
+            .product-info p {
+                font-size: 0.85rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .stat-label {
+                font-size: 0.85rem;
+            }
+            
+            .tech-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .tech-card p {
+                font-size: 0.85rem;
+            }
+            
+            .testimonial-content {
+                font-size: 0.9rem;
+            }
+            
+            .author-name {
+                font-size: 1rem;
+            }
+            
+            .author-title {
+                font-size: 0.8rem;
+            }
+            
+            .cta h2 {
+                font-size: 1.4rem;
+            }
+            
+            .cta p {
+                font-size: 0.9rem;
+            }
+            
+        }
+        
+        
     </style>
 </head>
 <body>
     <!-- Hero Section -->
     <section class="hero">
-        <div class="floating-shapes">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
+        
         <div class="container">
-             <div class="hero-content-blur">
+           <h1 class="typewriter">Revolutionizing Agriculture with Premium Machinery</h1>
+
+             {% comment %} <div class="hero-content-blur">
     <div class="hero-content">
       <h1>Revolutionizing Agriculture with Premium Machinery</h1>
-      {% comment %} <p>VVM Agro delivers high-performance farming equipment engineered for maximum productivity and durability in any condition. Experience the future of farming today.</p>
+      <p>VVM Agro delivers high-performance farming equipment engineered for maximum productivity and durability in any condition. Experience the future of farming today.</p>
       <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
         <a href="#products" class="btn">Explore Products</a>
-        <a href="#contact" class="btn btn-outline">Contact Us</a> {% endcomment %}
+        <a href="#contact" class="btn btn-outline">Contact Us</a>
       </div>
-    </div>
+    </div> {% endcomment %}
   </div>
         </div>
     </section>
@@ -869,7 +1020,8 @@
                         </div>
                         <div class="product-info">
                             <h3>Front Dozer Tractor</h3>
-                            <p>Powerful front dozer attachment for efficient earth moving</p>
+                         <p>Powerful front dozer attachment for efficient earth moving. Ideal for land leveling and site clearing with superior precision.</p>
+
                             <a href="{% url 'front_dozer_tractor' %}" class="btn">Learn More</a>
                         </div>
                     </a>
@@ -887,7 +1039,8 @@
                         </div>
                         <div class="product-info">
                             <h3>Boom Lift Tractor</h3>
-                            <p>Versatile hydraulic boom lift for elevated operations</p>
+                            <p>Versatile hydraulic boom lift for elevated tasks. Perfect for orchards, maintenance, and high-reach operations.</p>
+
                             <a href="{% url 'hydraulicboomlift' %}" class="btn">Learn More</a>
                         </div>
                     </a>
@@ -905,7 +1058,8 @@
                         </div>
                         <div class="product-info">
                             <h3>Front End Load Tractor</h3>
-                            <p>Heavy-duty front loader for material handling</p>
+                            <p>Heavy-duty front loader for seamless materials. Designed for productivity on farms.</p>
+
                             <a href="{% url 'frontendloader' %}" class="btn">Learn More</a>
                         </div>
                     </a>
@@ -923,7 +1077,8 @@
                         </div>
                         <div class="product-info">
                             <h3>Heavy-Duty Hydraulic Lift Tractor</h3>
-                            <p>Advanced hydraulic system for efficient lifting operations</p>
+                            <p>Advanced hydraulic system for lifting large loads. Built to handle intensive field reliably.</p>
+
                             <a href="{% url 'lift_tractor' %}" class="btn">Learn More</a>
                         </div>
                     </a>
@@ -942,7 +1097,7 @@
                         </div>
                         <div class="product-info">
                             <h3>Post Hole Digger</h3>
-                            <p>Precision digging equipment for efficient post installation</p>
+                            <p>Precision digging equipment for post installation. Suitable for fencing, plantations, and deep soil boring tasks.</p>
                             <a href="{% url 'hole_digger' %}" class="btn">Learn More</a>
                         </div>
                     </a>
