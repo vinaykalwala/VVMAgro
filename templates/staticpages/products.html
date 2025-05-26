@@ -1,42 +1,34 @@
 {% extends 'staticpages/base.html' %}
 {% load static %}
- {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <title>Document</title>
-    <style>
-        :root {
-            --primary: #388e3c; /* Darker green */
-            --secondary: #689f38; 
-            --accent: #ffa000; /* Amber */
-            --light: #f5f5f5;
-            --dark: #263238;
-            --text: #424242;
+{% block content %}
 
-        }
-        
-      .products-hero {
-        height: 80vh;
+<style>
+    :root {
+        --primary: #3F5187; /* Darker green */
+        --secondary: #689f38; 
+        --accent: #ffa000; /* Amber */
+        --light: #f5f5f5;
+        --dark: #263238;
+        --text: #424242;
+    }
+    
+    .products-hero {
+        height: 60vh;
         min-height: 400px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url('{% static "images/5.png" %}');
+        background: url('{% static "images/product-banner1.png" %}');
         background-size: cover;
         background-position: center;
-        color: white;
+        color: #3F5187;
         text-align: center;
         margin-bottom: 2rem;
         animation: heroFadeIn 1.5s ease-out;
         overflow: hidden;
     }
     
-
     .products-hero::before {
         content: '';
         position: absolute;
@@ -44,7 +36,6 @@
         left: -100%;
         width: 100%;
         height: 100%;
-
         animation: shine 3s infinite;
     }
 
@@ -52,9 +43,8 @@
         max-width: 800px;
         padding: 2rem;
         z-index: 2;
-        
         border-radius: 20px;
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(55px);
         opacity: 0;
         transform: translateY(30px);
         animation: contentFadeIn 1s ease-out forwards;
@@ -81,65 +71,94 @@
     }
 
     @keyframes heroFadeIn {
-        from {
-            opacity: 0;
-            transform: scale(1.1);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
+        from { opacity: 0; transform: scale(1.1); }
+        to { opacity: 1; transform: scale(1); }
     }
 
     @keyframes contentFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes shine {
-        0% {
-            left: -100%;
-        }
-        20% {
-            left: 100%;
-        }
-        100% {
-            left: 100%;
-        }
+        0% { left: -100%; }
+        20% { left: 100%; }
+        100% { left: 100%; }
     }
+
     .section-title {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: var(--primary);
-            font-size: 2.5rem;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        .section-subtitle {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 4rem;
-            color: var(--text);
-            font-size: 1.1rem;
-        }
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary);
+        font-size: 2.5rem;
+        font-weight: 700;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .section-subtitle {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 4rem;
+        color: var(--text);
+        font-size: 1.1rem;
+    }
+
+    /* Product Filters */
+    .product-filters {
+        max-width: 1200px;
+        margin: 0 auto 3rem;
+        padding: 0 1rem;
+    }
+
+    .search-bar {
+        position: relative;
+        max-width: 500px;
+        margin: 0 auto 1.5rem;
+    }
+
+    .search-bar input {
+        width: 100%;
+        padding: 12px 20px;
+        padding-left: 45px;
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        font-size: 1rem;
+    }
+
+    .search-bar i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+    }
+
+    .filter-options {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .filter-btn {
+        padding: 8px 16px;
+        border: 1px solid var(--primary);
+        background: transparent;
+        color: var(--primary);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+        background: var(--primary);
+        color: white;
+    }
 
     .products-section {
         padding: 4rem 5%;
@@ -165,86 +184,132 @@
     }
   
     .product-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.5s ease;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.5s ease;
     }
   
-      .product-card:hover .product-image {
-          transform: scale(1.1);
-      }
+    .product-card:hover .product-image {
+        transform: scale(1.1);
+    }
   
-      .product-overlay {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          padding: 2rem;
-          background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-          color: white;
-          transform: translateY(0);
-          transition: transform 0.3s ease;
-      }
+    .product-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 2rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        color: white;
+        transform: translateY(0);
+        transition: transform 0.3s ease;
+    }
+
+    /* Product Category Badge */
+    .product-category {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255,255,255,0.9);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
   
-      .product-title {
-    position: relative;
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    padding: 0.8rem 1.2rem; /* Increased padding */
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 0.5rem;
-    z-index: 1;
-    min-width: 0; /* Allows flex item to shrink below content size */
-}
+    .product-title {
+        position: relative;
+        font-size: clamp(1.2rem, 2vw, 1.8rem);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1.2rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        z-index: 1;
+        min-width: 0;
+    }
 
-/* For the text element inside product-title */
-.product-title span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-shrink: 1;
-    min-width: 0; /* Needed for ellipsis to work in flex container */
-}
+    .product-title span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 1;
+        min-width: 0;
+    }
 
-.product-title::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(6px);
-    background: linear-gradient(135deg, rgba(144, 238, 144, 0.3), rgba(0, 128, 0, 0.2));
-    z-index: -1;
-    border-radius: 0.5rem;
-    pointer-events: none;
-}
-
-
+    .product-title::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(6px);
+        background: linear-gradient(135deg, rgba(144, 238, 144, 0.3), rgba(0, 128, 0, 0.2));
+        z-index: -1;
+        border-radius: 0.5rem;
+        pointer-events: none;
+    }
   
-      .product-card:hover .product-title i {
-          opacity: 1;
-          transform: translateX(0);
-      }
+    .product-card:hover .product-title i {
+        opacity: 1;
+        transform: translateX(0);
+    }
 
-      @media (min-width:768px){
-           .product-title span{ white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex-shrink: 1;
-            min-width: 0;
-           }
-      }
-      .farming-benefits {
+    /* Specifications Highlights */
+    .specs-highlights {
+        padding: 4rem 1rem;
+        background: #f9fafc;
+    }
+
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .spec-item {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .spec-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .spec-item i {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .spec-item h3 {
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+
+    .spec-item p {
+        color: var(--text);
+        font-size: 0.95rem;
+    }
+
+    .farming-benefits {
         background: #f4fbe5;
         padding: 5rem 5%;
         text-align: center;
@@ -304,15 +369,72 @@
     .benefit-item:hover {
         transform: translateY(-5px) scale(1.02);
         box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        background-color: green;
+        background-color: #5D6EC7;
         color: white;
     }
     
     .benefit-item:hover i {
         transform: rotate(10deg) scale(1.2);
     }
-  
-      @media (max-width: 1200px) {
+
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: linear-gradient(135deg, var(--primary), #5D6EC7);
+        color: white;
+    }
+
+    .cta-section h2 {
+        margin-bottom: 1rem;
+        font-size: 2.2rem;
+    }
+
+    .cta-section p {
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .cta-btn {
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .phone-btn {
+        background: white;
+        color: var(--primary);
+    }
+
+    .email-btn {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .phone-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .email-btn:hover {
+        background: rgba(255,255,255,0.1);
+    }
+
+    @media (max-width: 1200px) {
         .products-grid {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -327,6 +449,17 @@
         .product-overlay {
             padding: 1.5rem;
         }
+
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .cta-btn {
+            width: 100%;
+            max-width: 250px;
+            justify-content: center;
+        }
     }
 
     @media (max-width: 576px) {
@@ -335,123 +468,211 @@
         }
         
         .product-card {
-            padding-bottom: 66.67%; /* Adjust aspect ratio for mobile */
+            padding-bottom: 66.67%;
         }
         
         .product-overlay {
             padding: 1rem;
         }
     }
-  </style>
- 
-    
-</head>
+</style>
 
-<body>
-  <section class="products-hero">
+<section class="products-hero">
     <div class="hero-content">
-        <h1>Our Agricultural Products</h1>
-        <p>Discover our range of advanced farming equipment and machinery designed to enhance your agricultural productivity</p>
+        <h1>Our Products</h1>
+        <p>Explore our comprehensive selection of robust heavy machinery, including Front Dozer Tractors, Boom Lift Tractors, Front End Load Tractors, Heavy-Duty Hydraulic Lift Tractors, and Post Hole Diggers. Designed for peak performance and durability, our equipment is built to tackle your toughest construction and excavation projects with efficiency and precision.</p>
     </div>
 </section>
-   
 
-  <section class="products-section">
-    <div class="products-grid">
-      <div class="product-card">
-        <a href="{% url 'front_dozer_tractor' %}">
-            <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}')"></div>
-            <div class="product-overlay">
-                <h3 class="product-title">
-                   <span> Front Dozer Tractor</span>
-                    <i class="fas fa-arrow-right"></i>
-                </h3>
-            </div>
-        </a>
-    </div>
-
-        <div class="product-card">
-          <a href="{% url 'hydraulicboomlift' %}">
-              <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}')"></div>
-              <div class="product-overlay">
-                  <span class="product-title">
-                      <span> Boom Lift Tractor</span>
-                      <i class="fas fa-arrow-right"></i>
-                  </h3>
-              </div>
-          </a>
-      </div>
-
-      <div class="product-card">
-        <a href="{% url 'frontendloader' %}">
-            <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}')"></div>
-            <div class="product-overlay">
-                <h3 class="product-title">
-                   <span> Front end Load Tractor</span>
-                    <i class="fas fa-arrow-right"></i>
-                </h3>
-            </div>
-        </a>
-    </div>
-
-    <div class="product-card">
-      <a href="{% url 'lift_tractor' %}">
-          <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}')"></div>
-          <div class="product-overlay">
-              <h3 class="product-title">
-                 <span> Heavy-Duty Hydraulic Lift Tractor</span>
-                  <i class="fas fa-arrow-right"></i>
-              </h3>
-          </div>
-      </a>
-  </div>
-
-  <div class="product-card">
-    <a href="{% url 'hole_digger' %}">
-        <div class="product-image" style="background-image: url('{% static "images/img6.png" %}')"></div>
-        <div class="product-overlay">
-            <h3 class="product-title">
-                <span> Post Hole Digger</span>
-                <i class="fas fa-arrow-right"></i>
-            </h3>
+<section class="products-section">
+    <div class="product-filters">
+        <div class="search-bar">
+            <input type="text" placeholder="Search products..." id="productSearch">
+            <i class="fas fa-search"></i>
         </div>
-    </a>
-</div>
+        <div class="filter-options">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="tractor">Tractors</button>
+            <button class="filter-btn" data-filter="attachment">Attachments</button>
+           
+        </div>
+    </div>
+
+    <div class="products-grid">
+        <div class="product-card" data-category="tractor">
+            <a href="{% url 'front_dozer_tractor' %}">
+                <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}')"></div>
+                <div class="product-overlay">
+                    <span class="product-category">Tractor</span>
+                    <h3 class="product-title">
+                        <span>Front Dozer Tractor</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card" data-category="tractor">
+            <a href="{% url 'hydraulicboomlift' %}">
+                <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}')"></div>
+                <div class="product-overlay">
+                    <span class="product-category">Tractor</span>
+                    <h3 class="product-title">
+                        <span>Boom Lift Tractor</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card" data-category="tractor">
+            <a href="{% url 'frontendloader' %}">
+                <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}')"></div>
+                <div class="product-overlay">
+                    <span class="product-category">Tractor</span>
+                    <h3 class="product-title">
+                        <span>Front end Load Tractor</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card" data-category="tractor">
+            <a href="{% url 'lift_tractor' %}">
+                <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}')"></div>
+                <div class="product-overlay">
+                    <span class="product-category">Tractor</span>
+                    <h3 class="product-title">
+                        <span>Heavy-Duty Hydraulic Lift Tractor</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card" data-category="attachment">
+            <a href="{% url 'hole_digger' %}">
+                <div class="product-image" style="background-image: url('{% static "images/img6.png" %}')"></div>
+                <div class="product-overlay">
+                    <span class="product-category">Attachment</span>
+                    <h3 class="product-title">
+                        <span>Post Hole Digger</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </h3>
+                </div>
+            </a>
+        </div>
+    </div>
 </section>
+
+<section class="specs-highlights">
+    <div class="container">
+        <h2 class="section-title">Key Specifications Across Our Product Line</h2>
+        <div class="specs-grid">
+            <div class="spec-item">
+                <i class="fas fa-horse-head"></i>
+                <h3>Power Range</h3>
+                <p>45-120 HP options available</p>
+            </div>
+            <div class="spec-item">
+                <i class="fas fa-weight-hanging"></i>
+                <h3>Lift Capacity</h3>
+                <p>Up to 5,000 kg across models</p>
+            </div>
+            <div class="spec-item">
+                <i class="fas fa-cogs"></i>
+                <h3>Hydraulic System</h3>
+                <p>Advanced pressure-compensated systems</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="farming-benefits" data-animate>
     <div class="benefits-header">
-      <h2 class="section-title">Why Choose Our Agricultural Solutions?</h2>
-      <p class="section-subtitle">More than just machines — we deliver innovation, efficiency, and sustainability to your fields.</p>
+        <h2 class="section-title">Why Choose Our Agricultural Solutions?</h2>
+        <p class="section-subtitle">More than just machines — we deliver innovation, efficiency, and sustainability to your fields.</p>
     </div>
   
     <ul class="benefits-list">
-      <li class="benefit-item"><i class="fas fa-check-circle"></i> Improve crop yield through smart technology integration</li>
-      <li class="benefit-item"><i class="fas fa-check-circle"></i> Reduce operational costs with energy-efficient machinery</li>
-      <li class="benefit-item"><i class="fas fa-check-circle"></i> Access ongoing support, maintenance, and expert training</li>
-      <li class="benefit-item"><i class="fas fa-check-circle"></i> Minimize water usage with intelligent irrigation systems</li>
-      <li class="benefit-item"><i class="fas fa-check-circle"></i> Support sustainability with eco-conscious equipment</li>
+        <li class="benefit-item"><i class="fas fa-check-circle"></i> Improve crop yield through smart technology integration</li>
+        <li class="benefit-item"><i class="fas fa-check-circle"></i> Reduce operational costs with energy-efficient machinery</li>
+        <li class="benefit-item"><i class="fas fa-check-circle"></i> Access ongoing support, maintenance, and expert training</li>
+        <li class="benefit-item"><i class="fas fa-check-circle"></i> Minimize water usage with intelligent irrigation systems</li>
+        <li class="benefit-item"><i class="fas fa-check-circle"></i> Support sustainability with eco-conscious equipment</li>
     </ul>
-  </section>
+</section>
 
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Transform Your Farming Operations?</h2>
+        <p>Contact our experts to find the perfect equipment for your needs</p>
+        <div class="cta-buttons">
+           
+            <a href="mailto:info@vvmagro.com" class="cta-btn email-btn">
+                <i class="fas fa-envelope"></i> Email Us
+            </a>
+        </div>
+    </div>
+</section>
 
-  <script>
+<script>
     // Simple scroll-based animation trigger
     const animSection = document.querySelector('.farming-benefits');
     const animObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animSection.classList.add('animate');
-          animObserver.unobserve(animSection);
-        }
-      });
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animSection.classList.add('animate');
+                animObserver.unobserve(animSection);
+            }
+        });
     }, { threshold: 0.4 });
   
     if (animSection) animObserver.observe(animSection);
-  </script>
-  
-  
 
-    {% endblock %}
+    // Product filtering functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter products
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const productCards = document.querySelectorAll('.product-card');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const filterValue = button.dataset.filter;
+                
+                // Filter products
+                productCards.forEach(card => {
+                    if (filterValue === 'all' || card.dataset.category === filterValue) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Simple search functionality
+        const searchInput = document.getElementById('productSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                
+                productCards.forEach(card => {
+                    const title = card.querySelector('.product-title span').textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+    });
+</script>
 
-</body>
-</html>
+{% endblock %}
