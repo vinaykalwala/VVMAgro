@@ -4,12 +4,13 @@
 
 <style>
   :root {
-    --green-main: #2e7d32;
-    --green-light: #e8f5e9;
-    --green-dark: #1b5e20;
-    --bg-light: #f9fff8;
-    --text-dark: #333;
-  }
+  --green-main: #3F5187; /* new main blue */
+  --green-light: #e8ecf7; /* light version of #3F5187 */
+  --green-dark: #2c3a61;  /* darker version of #3F5187 */
+  --bg-light: #f5f8ff;    /* light background complementing the new color */
+  --text-dark: #222;      /* keeping readable contrast */
+}
+
 
   .application-wrapper {
     max-width: 1200px;
@@ -123,7 +124,7 @@
   }
 
   .resume-button {
-    background: linear-gradient(135deg, #43a047, #2e7d32);
+    background: linear-gradient(135deg, #4f66a3, #3F5187);
     color: white;
     font-weight: bold;
     text-decoration: none;
@@ -135,14 +136,14 @@
   }
 
   .resume-button:hover {
-    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    background: linear-gradient(135deg, #4f66a3, #3F5187);
     transform: scale(1.05);
   }
 
   .cover-letter-box {
     background-color: #e6ffe6;
     padding: 20px 25px;
-    border-left: 5px solid #66bb6a;
+    border-left: 5px solid #6982ce;
     border-radius: 10px;
     color: #444;
     line-height: 1.7;
