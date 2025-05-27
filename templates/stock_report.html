@@ -1,0 +1,54 @@
+<form method="get" action=".">
+    <input type="text" name="q" placeholder="Search Product Name" value="{{ query }}">
+
+    <select name="warehouse">
+        <option value="">All Warehouses</option>
+        {% for warehouse in warehouses %}
+            <option value="{{ warehouse.id }}" {% if warehouse.id|stringformat:"s" == selected_warehouse %}selected{% endif %}>{{ warehouse.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="phase">
+        <option value="">All Phases</option>
+        <option value="phase_1" {% if selected_phase == 'phase_1' %}selected{% endif %}>Phase 1</option>
+        <option value="phase_2" {% if selected_phase == 'phase_2' %}selected{% endif %}>Phase 2</option>
+        <option value="phase_3" {% if selected_phase == 'phase_3' %}selected{% endif %}>Phase 3</option>
+    </select>
+
+    <select name="type_of_supply">
+        <option value="">All Types</option>
+        <option value="goods" {% if selected_type == 'goods' %}selected{% endif %}>Goods</option>
+        <option value="raw_material" {% if selected_type == 'raw_material' %}selected{% endif %}>Raw Material</option>
+    </select>
+
+    <button type="submit">Search</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Stock</th>
+            <th>Warehouse</th>
+            <th>Location</th>
+            <th>Phase</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in stock_data %}
+        <tr>
+            <td>{{ item.product_id }}</td>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.type_of_supply }}</td>
+            <td>{{ item.stock_quantity }}</td>
+            <td>{{ item.warehouse_name }}</td>
+            <td>{{ item.warehouse_location }}</td>
+            <td>{{ item.phase }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">No products found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

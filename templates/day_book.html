@@ -1,0 +1,45 @@
+<h2>Day Book</h2>
+
+<form method="get">
+  <label>Date: <input type="date" name="date"></label>
+  <label>Start Date: <input type="date" name="start_date"></label>
+  <label>End Date: <input type="date" name="end_date"></label>
+  <label>Voucher Type:
+    <select name="voucher_type">
+      <option value="">All</option>
+      <option value="Buyer_Voucher">Buyer</option>
+      <option value="Seller_Voucher">Seller</option>
+      <option value="Job_Work_Voucher">Job Work</option>
+      <option value="Quotation">Quotation</option>
+      <option value="Delivery_Challan">Delivery Challan</option>
+    </select>
+  </label>
+  <button type="submit">Filter</button>
+</form>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Sl.No</th>
+      <th>Buying/Selling</th>
+      <th>Type of Voucher</th>
+      <th>Voucher Number</th>
+      <th>Amount</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in vouchers %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>
+        {% if v.voucher_type == "Buyer_Voucher" %}Buying{% elif v.voucher_type == "Seller_Voucher" %}Selling{% else %}Others{% endif %}
+      </td>
+      <td>{{ v.get_voucher_type_display }}</td>
+      <td><a href="{% url 'voucher_detail' voucher_id=v.id %}">{{ v.voucher_number }}</a></td>
+      <td>{{ v.grand_total }}</td>
+      <td>{{ v.created_at|date:"Y-m-d H:i" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
