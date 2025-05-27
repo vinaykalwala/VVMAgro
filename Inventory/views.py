@@ -69,10 +69,12 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 # Redirect based on role
-                if user.role == 'admin' or user.is_superuser:
+                if user.is_superuser:
                     return redirect('admin_dashboard')
-                else:
+                elif user.role == 'user':
                     return redirect('user_dashboard')
+                else:
+                    return redirect('manager_dashboard')
         else:
             # Invalid login
             return render(request, 'backendpages/login.html', {'form': form, 'error': 'Invalid credentials'})
@@ -93,6 +95,10 @@ def admin_dashboard(request):
 @login_required
 def user_dashboard(request):
     return render(request, 'backendpages/user_dashboard.html',{'user_profile': request.user})
+
+@login_required
+def manager_dashboard(request):
+    return render(request, 'backendpages/manager_dashboard.html',{'user_profile': request.user})
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import formset_factory
@@ -594,3 +600,106 @@ def application_detail_view(request, application_id):
     
     application = get_object_or_404(JobApplication, id=application_id)
     return render(request, 'backendpages/application_detail.html', {'application': application})
+
+
+from django.db.models import Q
+
+def stock_report_view(request):
+    query = request.GET.get('q', '')
+    warehouse_id = request.GET.get('warehouse', '')
+    phase = request.GET.get('phase', '')
+    supply_type = request.GET.get('type_of_supply', '')
+
+    products = Product.objects.select_related('warehouse').all()
+
+    if query:
+        products = products.filter(name__icontains=query)
+
+    if warehouse_id:
+        products = products.filter(warehouse_id=warehouse_id)
+
+    if phase:
+        products = products.filter(phase=phase)
+
+    if supply_type:
+        products = products.filter(type_of_supply=supply_type)
+
+    stock_data = []
+
+    for product in products:
+        stock_data.append({
+            "product_id": product.id,
+            "product_name": product.name,
+            "type_of_supply": product.get_type_of_supply_display(),
+            "stock_quantity": product.stock_quantity,
+            "warehouse_name": product.warehouse.name if product.warehouse else "No Warehouse Assigned",
+            "warehouse_location": product.warehouse.location if product.warehouse and hasattr(product.warehouse, 'location') else "Location Not Available",
+            "phase": product.get_phase_display() if product.type_of_supply == 'goods' else "N/A"
+        })
+
+    warehouses = Warehouse.objects.all()
+
+    return render(request, 'stock_report.html', {
+        'stock_data': stock_data,
+        'warehouses': warehouses,
+        'query': query,
+        'selected_warehouse': warehouse_id,
+        'selected_phase': phase,
+        'selected_type': supply_type,
+    })
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Voucher
+from datetime import datetime, timedelta
+from django.db.models import Q
+from django.utils.timezone import make_aware
+
+def day_book_view(request):
+    vouchers = Voucher.objects.all().order_by('-created_at')
+
+    # Get filter parameters from GET request
+    date = request.GET.get('date')
+    week = request.GET.get('week')  # Format: YYYY-Www (e.g., 2025-W21)
+    month = request.GET.get('month')  # Format: YYYY-MM
+    year = request.GET.get('year')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    voucher_type = request.GET.get('voucher_type')
+
+    # Apply filters
+    if date:
+        date_obj = datetime.strptime(date, '%Y-%m-%d')
+        vouchers = vouchers.filter(created_at__date=date_obj)
+
+    if week:
+        year_str, week_str = week.split('-W')
+        year, week = int(year_str), int(week_str)
+        start_of_week = datetime.strptime(f'{year}-W{week}-1', "%Y-W%W-%w")
+        end_of_week = start_of_week + timedelta(days=6)
+        vouchers = vouchers.filter(created_at__date__range=[start_of_week.date(), end_of_week.date()])
+
+    if month:
+        year, month = map(int, month.split('-'))
+        start_of_month = datetime(year, month, 1)
+        if month == 12:
+            end_of_month = datetime(year + 1, 1, 1) - timedelta(days=1)
+        else:
+            end_of_month = datetime(year, month + 1, 1) - timedelta(days=1)
+        vouchers = vouchers.filter(created_at__date__range=[start_of_month.date(), end_of_month.date()])
+
+    if year:
+        vouchers = vouchers.filter(created_at__year=year)
+
+    if start_date and end_date:
+        start = make_aware(datetime.strptime(start_date, '%Y-%m-%d'))
+        end = make_aware(datetime.strptime(end_date, '%Y-%m-%d')) + timedelta(days=1)
+        vouchers = vouchers.filter(created_at__range=[start, end])
+
+    if voucher_type:
+        vouchers = vouchers.filter(voucher_type=voucher_type)
+
+    context = {
+        'vouchers': vouchers,
+    }
+    return render(request, 'day_book.html', context)

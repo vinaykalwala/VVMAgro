@@ -34,6 +34,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('admin_dashboard/', admin_dashboard, name='admin_dashboard'),
     path('user_dashboard/', user_dashboard, name='user_dashboard'),
+    path('manager_dashboard/', manager_dashboard, name='manager_dashboard'),
     path('product-exchange/', product_exchange_view, name='product_exchange'),
     path('voucher/create/', voucher_create_view, name='voucher_create'),
     path('vouchers/', voucher_list_view, name='voucher_list'),
@@ -74,6 +75,9 @@ urlpatterns = [
     path('post/', job_post_view, name='job_post'),
     path('applications/', job_applications_view, name='job_applications'),
     path('applications/<int:application_id>/', application_detail_view, name='application_detail'),
+
+    path('stock-report/', stock_report_view, name='stock_report'),
+    path('day-book/', day_book_view, name='day_book'),
 
 
 ]
