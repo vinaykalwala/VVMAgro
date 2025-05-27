@@ -34,6 +34,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('admin_dashboard/', admin_dashboard, name='admin_dashboard'),
     path('user_dashboard/', user_dashboard, name='user_dashboard'),
+    path('manager_dashboard/', manager_dashboard, name='manager_dashboard'),
     path('product-exchange/', product_exchange_view, name='product_exchange'),
     path('voucher/create/', voucher_create_view, name='voucher_create'),
     path('vouchers/', voucher_list_view, name='voucher_list'),

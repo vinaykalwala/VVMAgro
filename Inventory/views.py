@@ -69,10 +69,12 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 # Redirect based on role
-                if user.role == 'admin' or user.is_superuser:
+                if user.is_superuser:
                     return redirect('admin_dashboard')
-                else:
+                elif user.role == 'user':
                     return redirect('user_dashboard')
+                else:
+                    return redirect('manager_dashboard')
         else:
             # Invalid login
             return render(request, 'backendpages/login.html', {'form': form, 'error': 'Invalid credentials'})
@@ -93,6 +95,10 @@ def admin_dashboard(request):
 @login_required
 def user_dashboard(request):
     return render(request, 'backendpages/user_dashboard.html',{'user_profile': request.user})
+
+@login_required
+def manager_dashboard(request):
+    return render(request, 'backendpages/manager_dashboard.html',{'user_profile': request.user})
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import formset_factory
