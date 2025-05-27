@@ -75,6 +75,9 @@ urlpatterns = [
     path('applications/', job_applications_view, name='job_applications'),
     path('applications/<int:application_id>/', application_detail_view, name='application_detail'),
 
+    path('stock-report/', stock_report_view, name='stock_report'),
+    path('day-book/', day_book_view, name='day_book'),
+
 
 ]
 if settings.DEBUG:
