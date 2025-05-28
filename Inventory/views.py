@@ -533,7 +533,7 @@ def apply_for_job(request, job_id):
             application.job = job
             application.save()
             messages.success(request, "Your application has been submitted successfully!")
-            return redirect("careers")  
+            return redirect("apply_for_job", job_id=job.id)  
         else:
             messages.error(request, "There was an error with your application. Please check the form.")
     else:
@@ -568,16 +568,16 @@ from .models import JobApplication
 
 @login_required
 def job_post_view(request):
-    if not (request.user.role == 'admin' or request.user.is_superuser):
+    if not (request.user.role == 'manager' or request.user.role == 'user' or request.user.is_superuser):
         messages.error(request, "Only admins can post jobs.")
-        return redirect('user_dashboard')
+        return redirect('home')
     
     if request.method == 'POST':
         form = JobForm(request.POST)
         if form.is_valid():
             job = form.save()
             messages.success(request, f"Job '{job.title}' posted successfully!")
-            return redirect('admin_dashboard')
+            return redirect('job_applications')
     else:
         form = JobForm()
     
