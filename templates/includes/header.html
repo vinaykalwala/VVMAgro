@@ -70,7 +70,7 @@
     }
 
     .logout-button:hover {
-      background-color:rgb(191, 193, 218);
+      background-color: rgb(191, 193, 218);
       color: #fff;
       transform: scale(1.07);
       box-shadow: 0 0 18px 8px rgb(191, 193, 218);
@@ -106,11 +106,25 @@
       transition: 0.3s;
     }
 
-    /* Added logout-container class for flex ordering */
     .logout-container {
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+
+    /* Style for dashboard link to match nav-links */
+    .dashboard-link {
+      text-decoration: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .dashboard-link:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     @media (max-width: 900px) {
@@ -139,20 +153,9 @@
         order: 1;
       }
 
-      /* Apply order to logout container to position it between logo and hamburger */
       .logout-container {
         order: 2;
       }
-
-      
-      form {
-        order: 2;
-        flex-grow: 1;
-        display: flex;
-        justify-content: center;
-        margin-left: 0;
-      }
-     
 
       .logout-button {
         animation: glow 1.5s ease-in-out infinite alternate;
@@ -174,58 +177,60 @@
 <body>
   <nav class="navbar">
     <div class="logo">
-<img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 30px;">
+      <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 30px;">
     </div>
 
     {% if request.user.is_authenticated %}
-    {% if request.path == '/dashboard/' %}
-    <div style="color: white; font-weight: 600;">Hello, {{ request.user.username }}</div>
-    <form method="POST" action="{% url 'logout' %}">
-      {% csrf_token %}
-      <button type="submit" class="logout-button">Logout</button>
-    </form>
+      {% if request.path == '/dashboard/' %}
+        <div style="color: white; font-weight: 600;">Hello, {{ request.user.username }}</div>
+        <div class="logout-container">
+          <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Logout</button>
+          </form>
+        </div>
+      {% else %}
+        <div class="hamburger" onclick="toggleMenu()">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <ul class="nav-links" id="menu">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'aboutus' %}">About Us</a></li>
+          <li><a href="{% url 'products' %}">Products</a></li>
+          <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
+          <li><a href="{% url 'careers' %}">Careers</a></li>
+          <li><a href="{% url 'contact_create' %}">Contact Us</a></li>
+        </ul>
+        <div class="logout-container">
+          <a href="{% url 'user_dashboard' %}" class="dashboard-link">Back to Dashboard</a>
+          <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Logout</button>
+          </form>
+        </div>
+      {% endif %}
     {% else %}
-    <!-- Show nav links only on other pages -->
-    <div class="hamburger" onclick="toggleMenu()">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <ul class="nav-links" id="menu">
-      <li><a href="{% url 'home' %}">Home</a></li>
-      <li><a href="{% url 'aboutus' %}">About Us</a></li>
-      <li><a href="{% url 'products' %}">Products</a></li>
-      <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
-      <li><a href="{% url 'careers' %}">Careers</a></li>
-      <li><a href="{% url 'contact_create' %}">Contact Us</a></li>
-      
-    </ul>
-    <div class="logout-container">
-      <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="logout-button">Logout</button>
-      </form>
-    </div>
-    {% endif %}
-    {% else %}
-    <!-- Not logged in -->
-    <div class="hamburger" onclick="toggleMenu()">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <ul class="nav-links" id="menu">
-      <li><a href="{% url 'home' %}">Home</a></li>
-      <li><a href="{% url 'aboutus' %}">About Us</a></li>
-      <li><a href="{% url 'products' %}">Products</a></li>
-      <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
-      <li><a href="{% url 'careers' %}">Careers</a></li>
-      <li><a href="{% url 'contact_create' %}">Contact Us</a></li>
-    </ul>
-    <form method="POST" action="{% url 'login' %}" style="margin-left: 10px;">
-      {% csrf_token %}
-      <button type="submit" class="logout-button">Login</button>
-    </form>
+      <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="nav-links" id="menu">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'aboutus' %}">About Us</a></li>
+        <li><a href="{% url 'products' %}">Products</a></li>
+        <li><a href="{% url 'branchesanddistributors' %}">Branches & Distributors</a></li>
+        <li><a href="{% url 'careers' %}">Careers</a></li>
+        <li><a href="{% url 'contact_create' %}">Contact Us</a></li>
+      </ul>
+      <div class="logout-container">
+        <form method="POST" action="{% url 'login' %}" style="margin-left: 10px;">
+          {% csrf_token %}
+          <button type="submit" class="logout-button">Login</button>
+        </form>
+      </div>
     {% endif %}
   </nav>
   <script>
@@ -234,7 +239,5 @@
       menu.classList.toggle("open");
     }
   </script>
-
 </body>
-
 </html>
