@@ -585,7 +585,7 @@ def job_post_view(request):
 
 @login_required
 def job_applications_view(request):
-    if not (request.user.role == 'admin' or request.user.is_superuser):
+    if not (request.user.role == 'manager' or request.user.role == 'user' or request.user.is_superuser):
         messages.error(request, "Only admins can view applications.")
         return redirect('user_dashboard')
     
@@ -594,7 +594,7 @@ def job_applications_view(request):
 
 @login_required
 def application_detail_view(request, application_id):
-    if not (request.user.role == 'admin' or request.user.is_superuser):
+    if not (request.user.role == 'manager' or request.user.role == 'user' or request.user.is_superuser):
         messages.error(request, "Only admins can view application details.")
         return redirect('user_dashboard')
     
