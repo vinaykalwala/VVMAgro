@@ -54,7 +54,7 @@
 
         h1, h2, h3 {
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 2.2;
         }
 
         img {
@@ -67,14 +67,19 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+<<<<<<< HEAD
+            background: var(--light);
+            color: var(--primary);
+=======
             background: var(--secondary);
             color: white;
+>>>>>>> e035316cec4544cc0493bad8eec6c505fae1c17e
             padding: 16px 36px;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 600;
             transition: var(--transition);
-            border: 2px solid var(--secondary);
+            border: 2px solid var(--primary);
             cursor: pointer;
             font-size: 1rem;
             position: relative;
@@ -86,9 +91,10 @@
         .btn:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
-            background: var(--light);
-            color: var(--dark);
+            background: transparent;
+            color: var(--light);
             border-color: var(--primary);
+            border: 2px solid var(--light);
         }
 
         .btn-outline {
@@ -110,9 +116,9 @@
         }
 
         .section-title h2 {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-size: clamp(1.8rem, 4vw, 1.2rem);
             color: var(--primary);
-            margin-bottom: 15px;
+            margin-bottom: 7px;
             position: relative;
             display: inline-block;
         }
@@ -127,11 +133,57 @@
         }
 
         /* Hero Section */
-        .hero {
+            .hero {
+        min-height: 75vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "images/ba.jpeg" %}') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #FFFFFF;
+        position: relative;
+    }
+
+  .hero-content {
+    max-width: 1200px;
+    padding: 2rem;
+}
+
+.hero h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.3s;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: #F0F4F0;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.6s;
+}
+    @keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    
+        {% comment %} .hero {
             width: 100vw;
             margin-left: calc(-50vw + 50%);
             margin-right: calc(-50vw + 50%);
-            min-height: 70vh;
+            min-height: 65vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -141,11 +193,26 @@
             color: #3F5187;
             isolation: isolate;
             text-align: center;
-            background: url('{% static "images/vvm.webp" %}') no-repeat center center;
+            background: url('{% static "hyderabad-office.jpg" %}') no-repeat center center;
             background-size: cover;
             background-position: center;
             background-color: var(--light);
+            image-rendering: -webkit-optimize-contrast; /* For Chrome/Safari */
+            image-rendering: crisp-edges; /* For Firefox */
+            -ms-interpolation-mode: nearest-neighbor;
+            filter: contrast(1.1) brightness(1.05); 
             box-sizing: border-box;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: brightness(1.1) contrast(1.1);
+            z-index: 1;
         }
         
         .hero-content {
@@ -177,21 +244,12 @@
         @keyframes blink-caret {
             from, to { border-color: transparent }
             50% { border-color: var(--primary) }
-        }
+        } {% endcomment %}
 
-        {% comment %} .hero-content-blur {
-    background-color: rgba(255, 255, 255, 0.1); /* subtle white overlay */
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px); /* for Safari */
-    padding: 40px 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    margin: 0 auto;
-} {% endcomment %}
+       
 
 
-        .hero h1 {
+        {% comment %} .hero h1 {
             font-size: clamp(1rem, 5vw, 2rem);
             margin-bottom: 300px;
             text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -215,7 +273,7 @@
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 1s ease forwards 0.7s;
-        }
+        } {% endcomment %}
 
 
 
@@ -223,6 +281,7 @@
         .features {
             background-color: white;
             position: relative;
+            
         }
 
         .features::before {
@@ -240,6 +299,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
+            
         }
 
         .feature-card {
@@ -254,6 +314,7 @@
             z-index: 1;
             opacity: 0;
             transform: translateY(30px);
+            border: 1px solid #3F5187;
         }
 
         .feature-card::before {
@@ -297,7 +358,7 @@
         .feature-card h3 {
             font-size: 1.5rem;
             margin-bottom: 20px;
-            color: var(--dark);
+            color: var(--primary);
             transition: var(--transition);
         }
 
@@ -318,16 +379,16 @@
         .products {
             background-color: var(--light);
             position: relative;
+            overflow: hidden;
+            padding: 40px 0;
         }
 
-       
-
         .products-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 345px);
+            display: flex;
             gap: 20px;
-            overflow-x: auto;
-            padding: 10px;
+            padding: 10px 0;
+            width: max-content;
+            animation: scroll 30s linear infinite;
         }
 
         @media (max-width: 1200px) {
@@ -337,6 +398,10 @@
             }
         }
 
+        .products-grid::-webkit-scrollbar {
+            display: none;
+        }
+        
         .product-card {
             background: white;
             border-radius: 20px;
@@ -344,9 +409,21 @@
             box-shadow: var(--shadow);
             transition: var(--transition);
             position: relative;
-            opacity: 0;
-            transform: translateY(30px);
-            
+            min-width: 330px;
+            flex: 0 0 auto;
+        }
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-300px * 5 - 2rem * 5));  /* Adjust based on card width and gap */
+            }
+        }
+        
+        /* Pause animation on hover */
+        .products-grid:hover {
+            animation-play-state: paused;
         }
 
         .product-card:hover {
@@ -358,8 +435,8 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background: var(--secondary);
-            color: var(--dark);
+            background: var(--primary);
+            color: var(--light);
             padding: 6px 18px;
             border-radius: 50px;
             font-weight: 700;
@@ -376,54 +453,61 @@
             transition: var(--transition);
         }
         
-.product-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-    color: white;
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.product-card:hover .product-overlay {
-    opacity: 1;
-}
-
-.product-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
-    color: white;
-    margin: 0;
-}
-
-.product-title i {
-    transform: translateX(-10px);
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.product-card:hover .product-title i {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.product-card a {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-   
-    position: relative;
-}
-
         .product-card:hover .product-image {
             transform: scale(1.05);
         }
-
+        
+        {% comment %} .product-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 50%);
+            opacity: 0;
+            transition: var(--transition);
+        } {% endcomment %}
+        
+        .product-card:hover .product-image::after {
+            opacity: 1;
+        }
+        .product-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+            color: white;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .product-card:hover .product-overlay {
+            opacity: 1;
+        }
+        
+        .product-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            color: white;
+            margin: 0;
+            border-bottom: none !important; /* This removes any border below the title */
+            padding-bottom: 0 !important; /* Removes any padding that might be creating space */
+            text-decoration: none !important; /* Removes any underline */
+        }
+        
+        /* If the line is coming from the overlay gradient */
+        .product-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            /* Change to this if you want to keep some overlay but remove the line effect */
+            /* background: rgba(0,0,0,0.5); */
+        }
+        
+        /* If the line is coming from the product-image pseudo-element */
         .product-image::after {
             content: '';
             position: absolute;
@@ -431,16 +515,27 @@
             left: 0;
             width: 100%;
             height: 100%;
+            /* Remove or modify this gradient if it's causing the line */
             background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
             opacity: 0;
             transition: var(--transition);
         }
-
-        .product-card:hover .product-image::after {
+        
+        .product-title i {
+            transform: translateX(-10px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .product-card:hover .product-title i {
+            transform: translateX(0);
             opacity: 1;
         }
+        
+        
+        
 
-        .product-info {
+        {% comment %} .product-info {
             padding: 30px;
             position: relative;
             z-index: 2;
@@ -461,7 +556,7 @@
         .product-info .btn {
             width: 100%;
             
-        }
+        } {% endcomment %}
 
         /* Stats Section */
         .stats {
@@ -583,7 +678,7 @@
         /* Testimonials Section */
         .testimonials {
             background-color: var(--light);
-            padding: 80px 0;
+            padding: 18px 0;
         }
 
         .testimonials-grid {
@@ -598,6 +693,7 @@
             padding: 40px;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            border: 1px solid #3F5187;
         }
 
         .testimonial-card:hover {
@@ -675,7 +771,7 @@
         }
 
         .cta h2 {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-size: clamp(1.8rem, 4vw, 1.2rem);
             margin-bottom: 20px;
             position: relative;
             z-index: 2;
@@ -835,6 +931,12 @@
             .cta {
                 padding: 80px 0;
             }
+            .products-grid {
+                gap: 15px;
+            }
+            .product-card {
+                min-width: 280px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -959,6 +1061,7 @@
         
         <div class="container">
            <h1 class="typewriter">Revolutionizing Agriculture with Premium Machinery</h1>
+              <p>VVM Agro delivers high-performance farming equipment engineered for maximum productivity and durability in any condition. Experience the future of farming today. </p>
 
              {% comment %} <div class="hero-content-blur">
     <div class="hero-content">
@@ -1001,111 +1104,143 @@
     </section>
 
     <!-- Products Section -->
-    <section class="products" id="products">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Premium Machinery</h2>
-                <p>Engineered for excellence in modern agricultural operations</p>
+<section class="products" id="products">
+    <div class="container">
+      <div class="section-title">
+        <h2>Our Premium Machinery</h2>
+        <p>Engineered for excellence in modern agricultural operations</p>
+      </div>
+      <div class="products-grid">
+        
+        <!-- Product 1 -->
+        <div class="product-card">
+            <div class="product-badge">Featured</div>
+            <a href="{% url 'front_dozer_tractor' %}">
+              <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}')">
+                <div class="product-overlay">
+                  <h3 class="product-title">Front Dozer Tractor</h3>
+                </div>
+              </div>
+            </a>
+          </div>
+          
+  
+        <!-- Product 2 -->
+        <div class="product-card">
+          <div class="product-badge">Popular</div>
+          <a href="{% url 'hydraulicboomlift' %}">
+            <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Boom Lift Tractor</h3>
+              </div>
             </div>
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="product-badge">Featured</div>
-                    <a href="{% url 'front_dozer_tractor' %}">
-                        <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}')">
-                            <div class="product-overlay">
-                                <h3 class="product-title">
-                               
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Front Dozer Tractor</h3>
-                         <p>Powerful front dozer attachment for efficient earth moving. Ideal for land leveling and site clearing with superior precision.</p>
-
-                            <a href="{% url 'front_dozer_tractor' %}" class="btn">Learn More</a>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-badge">Popular</div>
-                    <a href="{% url 'hydraulicboomlift' %}">
-                        <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}')">
-                            <div class="product-overlay">
-                                <h3 class="product-title">
-                                  
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Boom Lift Tractor</h3>
-                            <p>Versatile hydraulic boom lift for elevated tasks. Perfect for orchards, maintenance, and high-reach operations.</p>
-
-                            <a href="{% url 'hydraulicboomlift' %}" class="btn">Learn More</a>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-badge">Best Seller</div>
-                    <a href="{% url 'frontendloader' %}">
-                        <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}')">
-                            <div class="product-overlay">
-                                <h3 class="product-title">
-                                   
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Front End Load Tractor</h3>
-                            <p>Heavy-duty front loader for seamless material movement. Designed for maximum control and productivity on farms.</p>
-
-                            <a href="{% url 'frontendloader' %}" class="btn">Learn More</a>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-badge">New</div>
-                    <a href="{% url 'lift_tractor' %}">
-                        <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}')">
-                            <div class="product-overlay">
-                                <h3 class="product-title">
-                                   
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Heavy-Duty Hydraulic Lift Tractor</h3>
-                            <p>Advanced hydraulic system for lifting large loads. Built to handle intensive field reliably.</p>
-
-                            <a href="{% url 'lift_tractor' %}" class="btn">Learn More</a>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-badge">New</div>
-                    <a href="{% url 'hole_digger' %}">
-                        <div class="product-image" style="background-image: url('{% static "images/img6.png" %}')">
-                            <div class="product-overlay">
-                                <h3 class="product-title">
-                                 
-                                    
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Post Hole Digger</h3>
-                            <p>Precision digging equipment for post installation. Suitable for fencing, plantations, and deep soil boring tasks.</p>
-                            <a href="{% url 'hole_digger' %}" class="btn">Learn More</a>
-                        </div>
-                    </a>
-                </div>
-            </div>
+          </a>
         </div>
-    </section>
-
+  
+        <!-- Product 3 -->
+        <div class="product-card">
+          <div class="product-badge">Best Seller</div>
+          <a href="{% url 'frontendloader' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Front End Load Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 4 -->
+        <div class="product-card">
+          <div class="product-badge">New</div>
+          <a href="{% url 'lift_tractor' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Hydraulic Lift Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 5 -->
+        <div class="product-card">
+          <div class="product-badge">Popular</div>
+          <a href="{% url 'hole_digger' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img6.png" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Post Hole Digger</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- DUPLICATES START -->
+  
+        <!-- Product 6 (Duplicate of Product 1) -->
+        <div class="product-card">
+          <div class="product-badge">Featured</div>
+          <a href="{% url 'front_dozer_tractor' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Front Dozer Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 7 -->
+        <div class="product-card">
+          <div class="product-badge">Popular</div>
+          <a href="{% url 'hydraulicboomlift' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Boom Lift Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 8 -->
+        <div class="product-card">
+          <div class="product-badge">Best Seller</div>
+          <a href="{% url 'frontendloader' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Front End Load Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 9 -->
+        <div class="product-card">
+          <div class="product-badge">New</div>
+          <a href="{% url 'lift_tractor' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Hydraulic Lift Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 10 -->
+        <div class="product-card">
+          <div class="product-badge">Popular</div>
+          <a href="{% url 'hole_digger' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img6.png" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Post Hole Digger</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- DUPLICATES END -->
+  
+      </div>
+    </div>
+  </section>
+  
     <!-- Stats Section -->
     <section class="stats">
         <div class="container">
@@ -1189,6 +1324,50 @@
             </div>
         </div>
     </section>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Clone all product cards and append them to create seamless loop
+        const productsGrid = document.querySelector('.products-grid');
+        const productCards = document.querySelectorAll('.product-card');
+        
+        // Only clone if we have products
+        if (productCards.length > 0) {
+            // Clone all cards and append them
+            const clonedCards = Array.from(productCards).map(card => card.cloneNode(true));
+            clonedCards.forEach(card => {
+                productsGrid.appendChild(card);
+            });
+
+            // Adjust animation duration based on number of cards
+            const style = document.createElement('style');
+            const totalCards = productCards.length * 2; // original + cloned
+            const animationDuration = totalCards * 3; // 3 seconds per card
+            
+            style.textContent = `
+                .products-grid {
+                    animation: scroll ${animationDuration}s linear infinite;
+                }
+                @keyframes scroll {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Pause animation when user interacts with a product
+        const cards = document.querySelectorAll('.product-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                productsGrid.style.animationPlayState = 'paused';
+            });
+            card.addEventListener('mouseleave', () => {
+                productsGrid.style.animationPlayState = 'running';
+            });
+        });
+    });
+</script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
