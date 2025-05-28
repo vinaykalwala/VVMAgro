@@ -204,7 +204,19 @@
           <li><a href="{% url 'contact_create' %}">Contact Us</a></li>
         </ul>
         <div class="logout-container">
-          <a href="{% url 'user_dashboard' %}" class="dashboard-link">Back to Dashboard</a>
+          {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+              <a href="{% url 'admin_dashboard' %}" class="dashboard-link">Back to Dashboard</a>
+            {% elif user.groups.all %}
+              {% for group in user.groups.all %}
+                {% if group.name == 'Managers' %}
+                  <a href="{% url 'manager_dashboard' %}" class="dashboard-link">Back to Dashboard</a>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <a href="{% url 'user_dashboard' %}" class="dashboard-link">Back to Dashboard</a>
+            {% endif %}
+          {% endif %}
           <form method="POST" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit" class="logout-button">Logout</button>
