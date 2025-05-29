@@ -7,7 +7,7 @@
     /* Root variables for consistent theming */
     :root {
         --primary-color: #3F5187;
-        --secondary-color:rgb(81, 75, 191);
+        --secondary-color: rgb(81, 75, 191);
         --accent-color: #E8F5E9;
         --text-color: #1A3C34;
         --error-color: #C62828;
@@ -65,11 +65,12 @@
         right: -50px;
         width: 150px;
         height: 150px;
-        background: url("{% static "branches-bg.jpg" %}") no-repeat center center/cover;
+        background: url("{% static 'images/branches-bg.jpg' %}") no-repeat center center/cover;
         opacity: 0.15;
         transform: rotate(45deg);
         z-index: -1;
     }
+
     .application-form-container h2 {
         font-size: 2.5rem;
         font-weight: 700;
@@ -141,9 +142,9 @@
     .application-form-container select {
         padding: 0.9rem 1.2rem;
         font-size: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.75);;
+        border: 1px solid rgba(255, 255, 255, 0.75);
         border-radius: 8px;
-        background-color: rgba(170, 183, 255, 0.96);;
+        background-color: rgba(170, 183, 255, 0.96);
         transition: all 0.3s ease;
         width: 100%;
         font-family: inherit;
@@ -324,7 +325,7 @@
     <div class="application-form-container">
         <h2><i class="fas fa-briefcase"></i> Apply for {{ job.title }}</h2>
         <img src="{% static 'images/career-img.png' %}" alt="Career Illustration" class="decorative-img" onerror="this.classList.add('decorative-img-fallback'); this.src=''; this.innerHTML='Image Not Available';">
-
+    
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -348,10 +349,6 @@
     document.getElementById('application-form').addEventListener('submit', function(e) {
         const submitBtn = document.getElementById('submit-btn');
         submitBtn.classList.add('loading');
-        // Simulate form submission delay (remove in production, replace with actual submission logic)
-        setTimeout(() => {
-            submitBtn.classList.remove('loading');
-        }, 2000);
     });
 </script>
 {% endblock %}

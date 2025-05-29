@@ -21,13 +21,22 @@
     overflow-y: auto;
     transition: transform 0.3s ease-in-out;
     transform: translateX(0);
-  }
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(0);
+}
+
+/* Chrome, Safari and Opera */
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
   .sidebar h2 {
     padding: 20px 10px 10px 10px;
     color:  #3F5187;
     font-size: 20px;
     font-weight: 700;
-    background-color:rgb(191, 193, 218);
+    background-color:rgb(229, 231, 251);
     border-bottom: 1px solid  #3F5187;
     text-align: center;
   }
@@ -123,49 +132,91 @@
   <button id="closeSidebarBtn" aria-label="Close sidebar">Close ✕</button>
 
   {% if request.user.is_staff %}
-    <h2>Admin Dashboard</h2>
-    <ul>
-      <!-- <li>
-        <a href="{% url 'product_exchange' %}">
-          <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
-        </a>
-      </li> -->
-       <!-- <li>
-        <a href="{% url 'party_list' %}">
-          <i class="fas fa-ticket-alt"></i> Party List <i class="fas fa-chevron-right"></i>
-        </a>
-      </li> -->
-      <li>
-        <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Conatct List <i class="fas fa-chevron-right"></i></a>
-      </li>
-        <li>
-        <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i>Job Applications <i class="fas fa-chevron-right"></i></a>
-      </li>
-      <li>
-        <a href="{% url 'signup' %}">
-          <i class="fas fa-user-plus"></i> Signup <i class="fas fa-chevron-right"></i>
-        </a>
-      </li>
-    </ul>
+  <h2>Admin Dashboard</h2>
+  <ul>
+    <!-- <li>
+      <a href="{% url 'product_exchange' %}">
+        <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+   <li>
+  <a href="{% url 'party_list' %}">
+    <i class="fas fa-users"></i> Party List <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+<li>
+  <a href="{% url 'productgroup_list' %}">
+    <i class="fas fa-layer-group"></i> Product Group <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+<li>
+  <a href="{% url 'warehouse_list' %}">
+    <i class="fas fa-warehouse"></i> Warehouse List <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+<li>
+  <a href="{% url 'product_list' %}">
+    <i class="fas fa-box-open"></i> Product List <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+<li>
+  <a href="{% url 'partygroup_list' %}">
+    <i class="fas fa-object-group"></i> Party Group <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+<li>
+  <a href="{% url 'stock_report' %}">
+    <i class="fas fa-chart-bar"></i> Stock Report <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+<li>
+  <a href="{% url 'day_book' %}">
+    <i class="fas fa-book"></i> Day Book <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+ -->
 
-  {% else %}
-    <h2>User Dashboard</h2>
-    <ul>
-      <li>
-        <a href="{% url 'product_exchange' %}">
-          <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
-        </a>
-      </li>
-       <li>
-        <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Conatct List <i class="fas fa-chevron-right"></i>
-        </a>
-      </li>
-       <li>
-        <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i>Job Applications <i class="fas fa-chevron-right"></i>
-        </a>
-      </li>
-    </ul>
-  {% endif %}
+    <li>
+      <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Contact List <i class="fas fa-chevron-right"></i></a>
+    </li>
+    <li>
+      <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i> Job Applications <i class="fas fa-chevron-right"></i></a>
+    </li>
+    <!-- Signup only for staff/admins -->
+    <li>
+      <a href="{% url 'signup' %}">
+        <i class="fas fa-user-plus"></i> Signup <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+  </ul>
+
+{% elif request.user.role == 'manager' %}
+  <h2>Manager Dashboard</h2>
+  <ul>
+   <li>
+      <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Contact List <i class="fas fa-chevron-right"></i></a>
+    </li>
+     <li>
+      <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i> Job Applications <i class="fas fa-chevron-right"></i></a>
+    </li>
+    <!-- Signup is excluded here -->
+  </ul>
+
+{% else %}
+  <h2>User Dashboard</h2>
+  <ul>
+   
+    
+    <li>
+      <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Contact List <i class="fas fa-chevron-right"></i></a>
+    </li>
+     <li>
+      <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i> Job Applications <i class="fas fa-chevron-right"></i></a>
+    </li>
+    <!-- Signup is excluded here too -->
+  </ul>
+{% endif %}
+
 </aside>
 
 

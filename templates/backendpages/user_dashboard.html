@@ -8,29 +8,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Document</title>
   <style>
-  .green-dashboard-wrapper {
+ .green-dashboard-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 60px 15px;
   min-height: 100vh;
-  background: url("{% static 'tractorbg.png' %}") no-repeat center center;
+  background: url("{% static 'images/vvm1.webp' %}") no-repeat center center;
   background-size: cover;
+  z-index: 1; /* Ensure content is above the overlay */
 }
 
-/* New overlay for blur & transparency */
 .green-dashboard-wrapper::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: inherit; /* use same bg image */
-  filter: blur(10px);
-  opacity: 0.5;
-  z-index: 0;
+  background: linear-gradient(rgba(63, 81, 135, 0.6), rgba(63, 81, 135, 0.6)), 
+              url("{% static 'images/vvm1.webp' %}") no-repeat center center;
   background-size: cover;
   background-position: center center;
+  filter: blur(1px);
+  z-index: 0;
 }
+
 
 .green-dashboard-card {
   position: relative; /* above overlay */
@@ -47,7 +48,7 @@ background-color: rgba(255, 255, 255, 0.75); /* white with 75% opacity */
   padding: 40px 30px;
   text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: green;
+  color: #3F5187;
   backdrop-filter: none; /* remove blur */
   -webkit-backdrop-filter: none;
 }
@@ -58,8 +59,8 @@ background-color: rgba(255, 255, 255, 0.75); /* white with 75% opacity */
   margin: 0 auto 30px auto;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid #7ebf43;
-  box-shadow: 0 5px 15px rgba(126, 191, 67, 0.6);
+  border: 4px solid #3F5187;
+  box-shadow: 0 5px 15px rgb(191, 193, 218);
   transition: transform 0.3s ease;
   cursor: pointer;
 }
@@ -73,7 +74,7 @@ background-color: rgba(255, 255, 255, 0.75); /* white with 75% opacity */
 
 .green-profile-image:hover {
   transform: scale(1.1);
-  box-shadow: 0 8px 25px rgba(126, 191, 67, 0.9);
+  box-shadow: 0 8px 25px rgb(191, 193, 218);
 }
 
 .green-dashboard-title {
@@ -86,7 +87,7 @@ background-color: rgba(255, 255, 255, 0.75); /* white with 75% opacity */
 .green-dashboard-info {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #3b5a1a;
+  color: #333;
   font-weight: 500;
   margin-bottom: 0;
   padding: 0 10px;

@@ -33,13 +33,13 @@
             box-sizing: border-box;
         }
 
-        body {
+        {% comment %} body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--light);
             color: var(--dark);
             line-height: 1.7;
             overflow-x: hidden;
-        }
+        } {% endcomment %}
 
         .container {
             max-width: 1400px;
@@ -71,6 +71,9 @@
             color: var(--primary);
             background: var(--secondary);
             color: white;
+            background: var(--light);
+            background: var(--light);
+            color: var(--primary);
             padding: 16px 36px;
             text-decoration: none;
             border-radius: 50px;
@@ -132,7 +135,7 @@
         /* Hero Section */
             .hero {
         min-height: 75vh;
-        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "images/ba.jpeg" %}') center/cover no-repeat;
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{% static "images/home.png" %}') center/cover no-repeat;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -381,11 +384,23 @@
         }
 
         .products-grid {
-            display: flex;
-            gap: 20px;
-            padding: 10px 0;
-            width: max-content;
-            animation: scroll 30s linear infinite;
+             display: flex;
+             overflow-x: auto;
+             scroll-behavior: Smooth;
+             gap: 25px;
+             padding: 20px 0;
+             scrollbar-width: none; /* Hide scrollbar for cleaner look */
+        }
+        .products-grid::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+        .product-card {
+            flex: 0 0 330px;
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         @media (max-width: 1200px) {
@@ -395,7 +410,7 @@
             }
         }
 
-        .products-grid::-webkit-scrollbar {
+        {% comment %} .products-grid::-webkit-scrollbar {
             display: none;
         }
         
@@ -408,7 +423,7 @@
             position: relative;
             min-width: 330px;
             flex: 0 0 auto;
-        }
+        } {% endcomment %}
         @keyframes scroll {
             0% {
                 transform: translateX(0);
@@ -749,7 +764,7 @@
         .cta {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             color: white;
-            padding: 100px 0;
+            padding: 35px 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -1058,7 +1073,7 @@
         
         <div class="container">
            <h1 class="typewriter">Revolutionizing Agriculture with Premium Machinery</h1>
-              <p>VVM Agro delivers high-performance farming equipment engineered for maximum productivity and durability in any condition. Experience the future of farming today. </p>
+              <p>VVM Agro delivers high-performance farming equipment engineered for maximum productivity and durability in any condition.</p>
 
              {% comment %} <div class="hero-content-blur">
     <div class="hero-content">
@@ -1101,7 +1116,7 @@
     </section>
 
     <!-- Products Section -->
-<section class="products" id="products">
+{% comment %} <section class="products" id="products">
     <div class="container">
       <div class="section-title">
         <h2>Our Premium Machinery</h2>
@@ -1236,6 +1251,77 @@
   
       </div>
     </div>
+  </section> {% endcomment %}
+  <section class="products" id="products">
+    <div class="container">
+      <div class="section-title">
+        <h2>Our Premium Machinery</h2>
+        <p>Engineered for excellence in modern agricultural operations</p>
+      </div>
+      <div class="products-grid" id="products-grid">
+        
+        <!-- Product 1 -->
+        <div class="product-card">
+            <div class="product-badge">Featured</div>
+            <a href="{% url 'front_dozer_tractor' %}">
+              <div class="product-image" style="background-image: url('{% static "images/img1.jpeg" %}')">
+                <div class="product-overlay">
+                  <h3 class="product-title">Front Dozer Tractor</h3>
+                </div>
+              </div>
+            </a>
+          </div>
+          
+  
+        <!-- Product 2 -->
+        <div class="product-card">
+          <div class="product-badge">Popular</div>
+          <a href="{% url 'hydraulicboomlift' %}">
+            <div class="product-image" style="background-image: url('{% static "images/img2.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Boom Lift Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 3 -->
+        <div class="product-card">
+          <div class="product-badge">Best Seller</div>
+          <a href="{% url 'frontendloader' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img3.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Front End Load Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 4 -->
+        <div class="product-card">
+          <div class="product-badge">New</div>
+          <a href="{% url 'lift_tractor' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img4.jpeg" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Hydraulic Lift Tractor</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+  
+        <!-- Product 5 -->
+        <div class="product-card">
+          <div class="product-badge">Popular</div>
+          <a href="{% url 'hole_digger' %}" class="product-card">
+            <div class="product-image" style="background-image: url('{% static "images/img6.png" %}')">
+              <div class="product-overlay">
+                <h3 class="product-title">Post Hole Digger</h3>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
   
     <!-- Stats Section -->
@@ -1322,49 +1408,89 @@
         </div>
     </section>
 
-   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Clone all product cards and append them to create seamless loop
-        const productsGrid = document.querySelector('.products-grid');
-        const productCards = document.querySelectorAll('.product-card');
-        
-        // Only clone if we have products
-        if (productCards.length > 0) {
-            // Clone all cards and append them
-            const clonedCards = Array.from(productCards).map(card => card.cloneNode(true));
-            clonedCards.forEach(card => {
-                productsGrid.appendChild(card);
-            });
-
-            // Adjust animation duration based on number of cards
-            const style = document.createElement('style');
-            const totalCards = productCards.length * 2; // original + cloned
-            const animationDuration = totalCards * 3; // 3 seconds per card
-            
-            style.textContent = `
-                .products-grid {
-                    animation: scroll ${animationDuration}s linear infinite;
-                }
-                @keyframes scroll {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // Pause animation when user interacts with a product
-        const cards = document.querySelectorAll('.product-card');
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                productsGrid.style.animationPlayState = 'paused';
-            });
-            card.addEventListener('mouseleave', () => {
-                productsGrid.style.animationPlayState = 'running';
-            });
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productsGrid = document.getElementById('products-grid');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    
+    // Variables for continuous scrolling
+    let scrollInterval;
+    let isMouseOver = false;
+    const scrollSpeed = 1; // Adjust speed as needed
+    
+    // Clone products for continuous scrolling
+    function cloneForScroll() {
+        const products = Array.from(productsGrid.children);
+        products.forEach(product => {
+            const clone = product.cloneNode(true);
+            productsGrid.appendChild(clone);
         });
+    }
+    
+    // Initialize cloning
+    cloneForScroll();
+    
+    // Continuous scroll function
+    function startScroll() {
+        if (!isMouseOver) {
+            productsGrid.scrollLeft += scrollSpeed;
+            
+            // Reset scroll position when reaching the end
+            if (productsGrid.scrollLeft >= (productsGrid.scrollWidth / 2)) {
+                productsGrid.scrollLeft = 0;
+            }
+        }
+    }
+    
+    // Start scrolling
+    scrollInterval = setInterval(startScroll, 30);
+    
+    // Pause on hover
+    productsGrid.addEventListener('mouseenter', () => {
+        isMouseOver = true;
     });
+    
+    productsGrid.addEventListener('mouseleave', () => {
+        isMouseOver = false;
+    });
+    
+    // Enable manual scrolling
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+    
+    productsGrid.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        productsGrid.style.cursor = 'grabbing';
+        startX = e.pageX - productsGrid.offsetLeft;
+        scrollLeft = productsGrid.scrollLeft;
+    });
+    
+    productsGrid.addEventListener('mouseleave', () => {
+        isDragging = false;
+        productsGrid.style.cursor = 'default';
+    });
+    
+    productsGrid.addEventListener('mouseup', () => {
+        isDragging = false;
+        productsGrid.style.cursor = 'default';
+    });
+    
+    productsGrid.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - productsGrid.offsetLeft;
+        const walk = (x - startX) * 2; // scroll speed multiplier
+        productsGrid.scrollLeft = scrollLeft - walk;
+    });
+    
+    // Clean up on window unload
+    window.addEventListener('beforeunload', () => {
+        clearInterval(scrollInterval);
+    });
+});
 </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
