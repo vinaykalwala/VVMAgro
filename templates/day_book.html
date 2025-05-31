@@ -123,6 +123,15 @@
   margin: 20px 0 30px 0;
  
 }
+.in-bg {
+    background-color: #d4edda;
+}
+.out-bg {
+    background-color: #f8d7da;
+}
+.others-bg {
+    background-color: #fff3cd;
+}
 
 
 </style>
@@ -180,9 +189,24 @@
           <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ v.party.name }}</td>
-            <td>
-              {% if v.voucher_type == "Buyer_Voucher" %}In{% elif v.voucher_type == "Seller_Voucher" %}Out{% else %}Others{% endif %}
-            </td>
+           <td class="
+    {% if v.voucher_type == 'Buyer_Voucher' %}
+        in-bg
+    {% elif v.voucher_type == 'Seller_Voucher' %}
+        out-bg
+    {% else %}
+        others-bg
+    {% endif %}
+">
+    {% if v.voucher_type == "Buyer_Voucher" %}
+        In
+    {% elif v.voucher_type == "Seller_Voucher" %}
+        Out
+    {% else %}
+        Others
+    {% endif %}
+</td>
+
             <td>{{ v.get_voucher_type_display }}</td>
             <td><a href="{% url 'voucher_detail' voucher_id=v.id %}" class="link">{{ v.voucher_number }}</a></td>
             <td>{{ v.grand_total }}</td>
