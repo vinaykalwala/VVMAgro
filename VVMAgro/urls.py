@@ -79,6 +79,10 @@ urlpatterns = [
 
     path('stock-report/', stock_report_view, name='stock_report'),
     path('day-book/', day_book_view, name='day_book'),
+    path('users/', user_list, name='user_list'),
+    path('users/<int:user_id>/edit/', edit_user, name='edit_user'),
+    path('users/<int:user_id>/change-password/', change_user_password, name='change_user_password'),
+    path('low-stock/', notify_low_stock_products, name='low_stock_products'),
 
 
 ]

@@ -1,0 +1,56 @@
+{% block content %}
+<h2>User Management</h2>
+<table border="1" cellpadding="10" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Profile Pic</th>
+            <th>Password</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.get_role_display }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone_number }}</td>
+            <td>
+                {% if user.profile_pic %}
+                    <img src="{{ user.profile_pic.url }}" width="50" height="50" style="object-fit: cover;">
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td>
+                <span id="pwd-{{ user.id }}" style="display: none; font-weight: bold; color: red;">
+                    {{ user.original_password }}
+                </span>
+                <button type="button" onclick="togglePassword({{ user.id }}, this)">Show Password</button>
+            </td>
+            <td>
+                <a href="{% url 'edit_user' user.id %}">Edit</a> |
+                <a href="{% url 'change_user_password' user.id %}">Change Password</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function togglePassword(userId, btn) {
+    const pwdSpan = document.getElementById('pwd-' + userId);
+    if (pwdSpan.style.display === 'none') {
+        pwdSpan.style.display = 'inline';
+        btn.textContent = 'Hide Password';
+    } else {
+        pwdSpan.style.display = 'none';
+        btn.textContent = 'Show Password';
+    }
+}
+</script>
+{% endblock %}

@@ -122,3 +122,13 @@ class JobForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5}),
         }
+
+
+class CustomUserEditForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'phone_number', 'role', 'profile_pic']
+
+
+class ChangePasswordForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput(), label="New Password")

@@ -1,0 +1,49 @@
+{% block content %}
+<h2>Low Stock Products</h2>
+
+{% if low_stock_products %}
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Stock Quantity</th>
+                <th>Warehouse</th>
+                <th>Group</th>
+                <th>Unit of Measurement</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in low_stock_products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.stock_quantity }}</td>
+                <td>
+                    {% if product.warehouse %}
+                        {{ product.warehouse.name }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if product.group %}
+                        {{ product.group.name }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ product.unit_of_measurement }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Send Email Button -->
+    <form method="post" action="{% url 'low_stock_products' %}">
+        {% csrf_token %}
+        <button type="submit">Send Email Notification</button>
+    </form>
+
+{% else %}
+    <p>All products have sufficient stock.</p>
+{% endif %}
+{% endblock %}

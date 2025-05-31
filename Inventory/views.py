@@ -703,3 +703,94 @@ def day_book_view(request):
         'vouchers': vouchers,
     }
     return render(request, 'day_book.html', context)
+
+
+
+from .forms import CustomUserEditForm, ChangePasswordForm
+from django.contrib.auth.decorators import user_passes_test
+
+def is_admin(user):
+    return user.is_superuser or user.role == 'manager'
+
+
+@user_passes_test(is_admin)
+def user_list(request):
+    users = CustomUser.objects.filter(is_superuser=False)
+    return render(request, 'user_list.html', {'users': users})
+
+
+@user_passes_test(is_admin)
+def edit_user(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        form = CustomUserEditForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User updated successfully.')
+            return redirect('user_list')
+    else:
+        form = CustomUserEditForm(instance=user)
+    return render(request, 'edit_user.html', {'form': form, 'user_obj': user})
+
+
+@user_passes_test(is_admin)
+def change_user_password(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['new_password']
+            user.set_password(password)
+            user.original_password = password
+            user.save()
+            messages.success(request, 'Password changed successfully.')
+            return redirect('user_list')
+    else:
+        form = ChangePasswordForm()
+    return render(request, 'change_password.html', {'form': form, 'user_obj': user})
+
+
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from .models import Product
+
+def notify_low_stock_products(request):
+    # Get products with stock less than 10
+    low_stock_products = Product.objects.select_related('warehouse', 'group').filter(stock_quantity__lt=10)
+
+    # Compose email if needed
+    if low_stock_products.exists():
+        # Prepare message lines for each product
+        product_lines = []
+        for product in low_stock_products:
+            warehouse_name = product.warehouse.name if product.warehouse else "N/A"
+            group_name = product.group.name if product.group else "N/A"
+            line = f"- {product.name} | Stock: {product.stock_quantity} | Warehouse: {warehouse_name} | Group: {group_name} | Unit: {product.unit_of_measurement}"
+            product_lines.append(line)
+
+        # Email body
+        message_body = (
+            "The following products have low stock (less than 10 units):\n\n"
+            + "\n".join(product_lines)
+        )
+
+        # Get superusers with valid email
+        User = get_user_model()
+        superusers = User.objects.filter(is_superuser=True, email__isnull=False)
+
+        # Send email to each superuser
+        for superuser in superusers:
+            send_mail(
+                subject="Low Stock Alert",
+                message=message_body,
+                from_email=settings.DEFAULT_FROM_EMAIL or settings.EMAIL_HOST_USER,
+                recipient_list=[superuser.email],
+                fail_silently=False,
+            )
+
+    # Render the template with context
+    return render(request, 'low_stock_products.html', {
+        'low_stock_products': low_stock_products
+    })
