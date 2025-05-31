@@ -1,7 +1,78 @@
-<h2>Confirm Delete</h2>
-<p>Are you sure you want to delete "{{ object }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-    <a href="javascript:history.back()">Cancel</a>
-</form>
+{% extends 'backendpages/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confirm Delete</title>
+  <style>
+    .delete-container {
+      max-width: 500px;
+      margin: 60px auto;
+      padding: 30px;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .delete-container h2 {
+      color: #303F9F;
+      margin-bottom: 20px;
+    }
+
+    .delete-container p {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    .delete-container button,
+    .delete-container a {
+      display: inline-block;
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .delete-container button {
+      background-color: #dc3545;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .delete-container button:hover {
+      background-color: #c82333;
+    }
+
+    .delete-container a {
+      background-color: #6c757d;
+      color: #fff;
+    }
+
+    .delete-container a:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <div class="delete-container">
+      <h2>Confirm Delete</h2>
+      <p>Are you sure you want to delete "<strong>{{ object }}</strong>"?</p>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+        <a href="javascript:history.back()">Cancel</a>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+{% endblock %}

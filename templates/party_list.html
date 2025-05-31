@@ -1,40 +1,176 @@
-<h1>Parties</h1>
-<a href="{% url 'party_create' %}">Create New Party</a>
+{% extends 'backendpages/base.html' %}
+{% block content %}
+<style>
+  .main-content {
+    padding: 30px 20px;
+    font-family: Arial, sans-serif;
+  }
 
-<table border="1" cellpadding="8">
-    <thead>
+  .header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .main-content h1 {
+    text-align: center;
+    color: #3F5187;
+    margin: 0;
+  }
+
+  .create-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #3F5187;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+  }
+
+  .create-link:hover {
+    background-color: #2e3b66;
+  }
+
+  .party-group {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .party-group::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  table.party-group-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .party-group-table th {
+    background-color: #3F5187;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #ffffff;
+  }
+
+  .party-group-table td {
+    padding: 10px;
+    border: 1px solid rgb(191, 193, 218);
+    color: #3F5187;
+  }
+
+  .party-group-table tr:nth-child(even) {
+    background-color: rgb(229, 231, 251);
+  }
+
+  .party-group-table a {
+    color: #3F5187;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .party-group-table a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .party-group-table {
+      font-size: 13px;
+    }
+  }
+
+  .party-group-table .action-link {
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .party-group-table .edit-link {
+    background-color: #28a745; /* Green */
+    color: white;
+    margin-bottom: 5px;
+  }
+
+  .party-group-table .edit-link:hover {
+    background-color: #218838;
+  }
+
+  .party-group-table .delete-link {
+    background-color: #dc3545; /* Red */
+    color: white;
+  }
+
+  .party-group-table .delete-link:hover {
+    background-color: #c82333;
+  }
+
+  @media (max-width: 1200px) {
+    .header-flex {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .main-content h1 {
+      text-align: left;
+      flex: 1;
+    }
+  }
+</style>
+
+<div class="main-content">
+  <div class="header-flex">
+    <h1>Parties</h1>
+    <a href="{% url 'party_create' %}" class="create-link">Create New Party</a>
+  </div>
+
+  <div class="party-group">
+    <table class="party-group-table">
+      <thead>
         <tr>
-            <th>Name</th>
-            <th>Group</th>
-            <th>GSTIN/UIN</th>
-            <th>Address</th>
-            <th>Location</th>
-            <th>Pincode</th>
-            <th>State</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Actions</th>
+          <th>Name</th>
+          <th>Group</th>
+          <th>GSTIN/UIN</th>
+          <th>Address</th>
+          <th>Location</th>
+          <th>Pincode</th>
+          <th>State</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Actions</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for party in parties %}
         <tr>
-            <td>{{ party.name }}</td>
-            <td>{{ party.group.name }}</td>
-            <td>{{ party.gstin_uin_number }}</td>
-            <td>{{ party.address }}</td>
-            <td>{{ party.location }}</td>
-            <td>{{ party.pincode }}</td>
-            <td>{{ party.state }}</td>
-            <td>{{ party.phone|default:"N/A" }}</td>
-            <td>{{ party.email|default:"N/A" }}</td>
-            <td>
-                <a href="{% url 'party_update' party.id %}">Edit</a> |
-                <a href="{% url 'party_delete' party.id %}">Delete</a>
-            </td>
+          <td>{{ party.name }}</td>
+          <td>{{ party.group.name }}</td>
+          <td>{{ party.gstin_uin_number }}</td>
+          <td>{{ party.address }}</td>
+          <td>{{ party.location }}</td>
+          <td>{{ party.pincode }}</td>
+          <td>{{ party.state }}</td>
+          <td>{{ party.phone|default:"N/A" }}</td>
+          <td>{{ party.email|default:"N/A" }}</td>
+          <td>
+            <a href="{% url 'party_update' party.id %}" class="action-link edit-link">Edit</a>
+            <a href="{% url 'party_delete' party.id %}" class="action-link delete-link">Delete</a>
+          </td>
         </tr>
         {% empty %}
         <tr><td colspan="10">No parties available.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

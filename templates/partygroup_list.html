@@ -1,7 +1,113 @@
-<h1>Party Groups</h1>
-<a href="{% url 'partygroup_create' %}">Create New Party Group</a>
+{% extends 'backendpages/base.html' %}
+{% block content %}
 
-<table border="1" cellpadding="8">
+    <style>
+ .main-content {
+    padding: 30px;
+    font-family: Arial, sans-serif;
+  }
+
+  .main-content h1 {
+    text-align: center;
+    color: #3F5187;
+    margin-bottom: 20px;
+  }
+
+  .create-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    background-color: #3F5187;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+  }
+
+  .create-link:hover {
+    background-color: #2e3b66;
+  }
+
+  .party-group {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  table.party-group-table {
+     width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .party-group-table th {
+    background-color: #3F5187;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #ffffff;
+  }
+
+  .party-group-table td {
+   padding: 10px;
+    border: 1px solid rgb(191, 193, 218);
+    color: #3F5187;
+  }
+
+  .party-group-table tr:nth-child(even) {
+    background-color: rgb(229, 231, 251);
+  }
+
+  .party-group-table a {
+    color: #3F5187;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .party-group-table a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .party-group-table{
+      font-size: 13px;
+    }
+  }
+   .party-group-table .action-link {
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .party-group-table .edit-link {
+    background-color: #28a745; /* Green */
+    color: white;
+  }
+
+  .party-group-table .edit-link:hover {
+    background-color: #218838;
+  }
+
+  .party-group-table .delete-link {
+    background-color: #dc3545; /* Red */
+    color: white;
+  }
+
+  .party-group-table .delete-link:hover {
+    background-color: #c82333;
+  }
+    </style>
+
+    
+<div class="main-content">
+
+<h1>Party Groups</h1>
+<a href="{% url 'partygroup_create' %}" class="create-link">Create New Party Group</a>
+<div class="party-group">
+<table class="party-group-table">
     <thead>
         <tr>
             <th>Name</th>
@@ -15,8 +121,8 @@
             <td>{{ group.name }}</td>
             <td>{{ group.description|default:"N/A" }}</td>
             <td>
-                <a href="{% url 'partygroup_update' group.id %}">Edit</a> |
-                <a href="{% url 'partygroup_delete' group.id %}">Delete</a>
+                <a href="{% url 'partygroup_update' group.id %}" class="action-link edit-link">Edit</a>
+                <a href="{% url 'partygroup_delete' group.id %}" class="action-link delete-link">Delete</a>
             </td>
         </tr>
         {% empty %}
@@ -24,3 +130,7 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
+</div>
+
+{% endblock %}

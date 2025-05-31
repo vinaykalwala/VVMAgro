@@ -144,7 +144,7 @@
     }
 
     /* Form container to stack all children vertically */
-    form {
+    .form {
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -180,7 +180,7 @@
   <div class="main-content">
     <div class="voucher-container">
       <h1 class="voucher-heading">Create Voucher</h1>
-      <form method="post">
+      <form method="post" class="form">
         {% csrf_token %}
         <div class="voucher-form-fields">
           {% for field in voucher_form %}
@@ -205,7 +205,9 @@
                 <th>Movement Type</th>
                 <th>Warehouse</th>
                 <th>Quantity</th>
+                 <th>Gst Status</th>
                 <th>Phase</th>
+               
               </tr>
             </thead>
             <tbody>
@@ -215,6 +217,8 @@
                 <td>{{ item.movement_type }}</td>
                 <td>{{ item.warehouse }}</td>
                 <td>{{ item.quantity }}</td>
+                <td>{{ item.product.gst_applicable }}</td>
+
                 <td>
                   {% if item.movement_type == "job_work" %}
                     <select name="phase_{{ item.index }}">
