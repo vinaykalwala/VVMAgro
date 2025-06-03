@@ -703,3 +703,52 @@ def day_book_view(request):
         'vouchers': vouchers,
     }
     return render(request, 'day_book.html', context)
+
+
+from django.shortcuts import render
+from .models import Gallery
+
+def gallery(request):
+    images = Gallery.objects.all()
+    return render(request, 'staticpages/gallery.html', {'images': images})
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Gallery
+from .forms import GalleryForm
+from django.contrib import messages
+
+def gallery_list(request):
+    galleries = Gallery.objects.all()
+    return render(request, 'staticpages/gallery_list.html', {'galleries': galleries})
+
+def gallery_create(request):
+    if request.method == 'POST':
+        form = GalleryForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Gallery item created successfully!')
+            return redirect('gallery_list')
+    else:
+        form = GalleryForm()
+    return render(request, 'staticpages/gallery_form.html', {'form': form})
+
+def gallery_edit(request, pk):
+    gallery = get_object_or_404(Gallery, pk=pk)
+    if request.method == 'POST':
+        form = GalleryForm(request.POST, request.FILES, instance=gallery)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Gallery item updated successfully!')
+            return redirect('gallery_list')
+    else:
+        form = GalleryForm(instance=gallery)
+    return render(request, 'staticpages/gallery_form.html', {'form': form})
+
+def gallery_delete(request, pk):
+    gallery = get_object_or_404(Gallery, pk=pk)
+    if request.method == 'POST':
+        gallery.delete()
+        messages.success(request, 'Gallery item deleted successfully!')
+        return redirect('gallery_list')
+    return render(request, 'staticpages/gallery_confirm_delete.html', {'gallery': gallery})
+
