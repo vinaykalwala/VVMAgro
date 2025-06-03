@@ -77,7 +77,6 @@ urlpatterns = [
 
     path('stock-report/', stock_report_view, name='stock_report'),
     path('day-book/', day_book_view, name='day_book'),
-<<<<<<< HEAD
     
     #Gallery
     path('gallery/', gallery, name='gallery'),
@@ -87,12 +86,10 @@ urlpatterns = [
     path('gallery_delete/<int:pk>/', gallery_delete, name='gallery_delete'),
 
     
-=======
     path('users/', user_list, name='user_list'),
     path('users/<int:user_id>/edit/', edit_user, name='edit_user'),
     path('users/<int:user_id>/change-password/', change_user_password, name='change_user_password'),
     path('low-stock/', notify_low_stock_products, name='low_stock_products'),
->>>>>>> 875cdf3cd95ecf78af7e8fde07652271dae84eb2
 
     path('voucher-types/', voucher_type_list, name='voucher_type_list'),
     path('voucher/create/<str:voucher_type>/', create_voucher_with_items, name='create_voucher_with_items'),

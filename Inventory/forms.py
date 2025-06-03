@@ -122,7 +122,6 @@ class JobForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5}),
         }
-<<<<<<< HEAD
         
 from django import forms
 from .models import Gallery
@@ -136,7 +135,6 @@ class GalleryForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
-=======
 
 
 class CustomUserEditForm(forms.ModelForm):
@@ -228,4 +226,3 @@ VoucherProductItemFormSet = inlineformset_factory(
     extra=1,
     can_delete=True,
 )
->>>>>>> 875cdf3cd95ecf78af7e8fde07652271dae84eb2

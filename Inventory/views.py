@@ -535,7 +535,6 @@ def day_book_view(request):
     return render(request, 'day_book.html', context)
 
 
-<<<<<<< HEAD
 from django.shortcuts import render
 from .models import Gallery
 
@@ -583,7 +582,6 @@ def gallery_delete(request, pk):
         return redirect('gallery_list')
     return render(request, 'staticpages/gallery_confirm_delete.html', {'gallery': gallery})
 
-=======
 
 from .forms import CustomUserEditForm, ChangePasswordForm
 from django.contrib.auth.decorators import user_passes_test
@@ -856,4 +854,3 @@ def create_voucher_with_items(request, voucher_type):
         "product_data": json.dumps(product_data),
         "preview_voucher_number": preview_voucher_number
     })
->>>>>>> 875cdf3cd95ecf78af7e8fde07652271dae84eb2
