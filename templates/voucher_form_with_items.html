@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Voucher</title>
+    <style>
+        .form-row {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .remove-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .errorlist {
+            color: red;
+            margin: 0 0 10px 0;
+            padding-left: 20px;
+        }
+        .errorlist li {
+            list-style-type: disc;
+        }
+        /* Message styles */
+        .messages {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .messages .error {
+            background-color: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+        .messages .success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+        /* You can add other message types here */
+    </style>
+</head>
+<body>
+    <h1>Create Voucher - {{ voucher_type }}</h1>
+
+    <!-- Display Django messages here -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <h2>Voucher Details</h2>
+
+        {% if preview_voucher_number %}
+  <div class="alert alert-info">
+    <strong>Voucher Number Preview:</strong> {{ preview_voucher_number }}
+  </div>
+{% endif %}
+
+
+        <!-- Non-field errors for main form -->
+        {% if form.non_field_errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {{ form.as_p }}
+
+        <h2>Voucher Products</h2>
+        <div id="formset-container">
+            {{ formset.management_form }}
+
+            {% for form in formset %}
+
+                <div class="form-row">
+
+                    <!-- Non-field errors for this formset form -->
+                    {% if form.non_field_errors %}
+                        <ul class="errorlist">
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% for hidden_field in form.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+
+                    {% for field in form.visible_fields %}
+                        <div class="form-field {% if field.name == 'phase' and voucher_type != 'Job_Work_Voucher' %}hidden{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small>{{ field.help_text }}</small>
+                            {% endif %}
+
+                            <!-- Field errors -->
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                    <button type="button" class="remove-button" onclick="removeForm(this)">Remove</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" onclick="addForm()">Add Product</button>
+        <br><br>
+        <button type="submit">Submit Voucher & Items</button>
+    </form>
+
+    <script>
+        const prefix = 'items';
+        const productData = {{ product_data|safe }};
+        let formCount = {{ formset.total_form_count }};
+        const totalFormsInput = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+        const voucherType = "{{ voucher_type }}";
+
+        function updateWarehouse(selectElement) {
+            const selectedProductId = selectElement.value;
+            const formRow = selectElement.closest('.form-row');
+            const warehouseSelect = formRow.querySelector('select[name$="warehouse"]');
+
+            if (warehouseSelect && productData[selectedProductId]) {
+                const targetWarehouseId = productData[selectedProductId].warehouse_id;
+
+                for (let option of warehouseSelect.options) {
+                    option.selected = (option.value === String(targetWarehouseId));
+                }
+            } else if (warehouseSelect) {
+                warehouseSelect.selectedIndex = 0;
+            }
+        }
+
+        function bindChangeListeners() {
+            document.querySelectorAll('select[name$="product"]').forEach(select => {
+                select.removeEventListener('change', onProductChange);
+                select.addEventListener('change', onProductChange);
+                updateWarehouse(select);
+            });
+        }
+
+        function onProductChange(event) {
+            updateWarehouse(event.target);
+        }
+
+        function addForm() {
+            const container = document.getElementById('formset-container');
+            const emptyFormHtml = document.getElementById('empty-form-template').innerHTML;
+            const newFormHtml = emptyFormHtml.replace(/__prefix__/g, formCount);
+
+            const formRow = document.createElement('div');
+            formRow.classList.add('form-row');
+            formRow.innerHTML = newFormHtml + `<button type="button" class="remove-button" onclick="removeForm(this)">Remove</button>`;
+
+            if (voucherType !== 'Job_Work_Voucher') {
+                formRow.querySelectorAll('div.form-field').forEach(field => {
+                    if (field.innerHTML.includes('id_phase')) {
+                        field.classList.add('hidden');
+                    }
+                });
+            }
+
+            container.appendChild(formRow);
+            formCount++;
+            totalFormsInput.value = formCount;
+
+            const newProductSelect = formRow.querySelector('select[name$="product"]');
+            if (newProductSelect) {
+                newProductSelect.addEventListener('change', onProductChange);
+            }
+        }
+
+        function updateMovementType() {
+            const movementSelect = document.querySelector('select[name="movement_type"]');
+            const voucherType = "{{ voucher_type }}";
+
+            if (!movementSelect) return;
+
+            let selectedValue = '';
+
+            switch (voucherType) {
+                case 'Buyer_Voucher':
+                    selectedValue = 'out';
+                    break;
+                case 'Seller_Voucher':
+                    selectedValue = 'in';
+                    break;
+                case 'Job_Work_Voucher':
+                    selectedValue = 'job_work';
+                    break;
+                default:
+                    selectedValue = '';
+            }
+
+            for (const option of movementSelect.options) {
+                option.selected = (option.value === selectedValue);
+            }
+        }
+
+        function removeForm(button) {
+            const formRow = button.parentElement;
+            const deleteInput = formRow.querySelector('input[name$="-DELETE"]');
+
+            if (deleteInput) {
+                deleteInput.value = 'on';
+                formRow.style.display = 'none';
+            } else {
+                formRow.remove();
+                formCount--;
+                totalFormsInput.value = formCount;
+
+                const forms = document.querySelectorAll('#formset-container .form-row:not([style*="display: none"])');
+                forms.forEach((form, index) => {
+                    form.querySelectorAll('input, select, textarea, label').forEach(el => {
+                        if (el.name) el.name = el.name.replace(/items-\d+-/, `items-${index}-`);
+                        if (el.id) el.id = el.id.replace(/id_items-\d+-/, `id_items-${index}-`);
+                        if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/id_items-\d+-/, `id_items-${index}-`);
+                    });
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            bindChangeListeners();
+            updateMovementType();
+        });
+    </script>
+
+    <!-- Hidden template for cloning -->
+    <div id="empty-form-template" style="display: none;">
+        {% for hidden_field in formset.empty_form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        {% for field in formset.empty_form.visible_fields %}
+            <div class="form-field {% if field.name == 'phase' and voucher_type != 'Job_Work_Voucher' %}hidden{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

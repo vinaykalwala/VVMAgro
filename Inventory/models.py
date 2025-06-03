@@ -65,20 +65,9 @@ class Product(models.Model):
     hsn_sac_source_of_details = models.CharField(max_length=255, blank=True, help_text="Source from where HSN/SAC info was obtained")
     hsn_sac_description = models.TextField(blank=True, help_text="Description for the HSN/SAC code")
 
-    # GST Rate and related details
-    gst_applicable = models.BooleanField(default=False, help_text="Check if GST is applicable")
-    gst_rate_details = models.TextField(blank=True, help_text="Details or notes about the GST rate applied")
-    gst_source_of_details = models.CharField(max_length=255, blank=True, help_text="Source from where GST info was obtained")
-
-    cgst_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=9.00)
-    sgst_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=9.00)
-
-    freight_applicable = models.BooleanField(default=False)
-    freight_charge = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     type_of_supply = models.CharField(max_length=20, choices=SUPPLY_TYPE_CHOICES)
     phase = models.CharField(max_length=20, choices=PHASE_CHOICES, null=True, blank=True)
-    rate_of_duty=models.CharField(max_length=5,null=True,blank=True)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -116,26 +105,40 @@ class Party(models.Model):
         return self.name
 
 from django.db import models
+from datetime import datetime
 
 class Voucher(models.Model):
     VOUCHER_TYPES = [
-        ('Buyer_Voucher', 'Buyer_Voucher'),
-        ('Seller_Voucher', 'Seller_Voucher'),
-        ('Job_Work_Voucher', 'Job_Work_Voucher'),
+        ('Buyer_Voucher', 'Buyer Voucher'),
+        ('Seller_Voucher', 'Seller Voucher'),
+        ('Job_Work_Voucher', 'Job Work Voucher'),
         ('Quotation', 'Quotation'),
-        ('Delivery_Challan', 'Delivery_Challan'),
+        ('Delivery_Challan', 'Delivery Challan'),
     ]
-    voucher_number = models.CharField(max_length=30, unique=True, blank=True)
+    MOVEMENT_TYPE_CHOICES = [
+        ('in', 'In'),
+        ('out', 'Out'),
+        ('job_work', 'Job Work'),
+    ]
+
+    voucher_number = models.CharField(max_length=30, blank=True)
     voucher_type = models.CharField(max_length=20, choices=VOUCHER_TYPES)
-    created_at = models.DateTimeField(auto_now_add=True)
-    igst_applicable = models.BooleanField(default=False)
-    remarks = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(default=datetime.now)  # Editable manually
+    movement_type = models.CharField(max_length=10, choices=MOVEMENT_TYPE_CHOICES)
 
     party = models.ForeignKey('Party', on_delete=models.CASCADE)
     place_of_supply = models.CharField(max_length=100, blank=True, null=True)
+
+    remarks = models.TextField(blank=True, null=True)
+
     freight_applicable = models.BooleanField(default=False)
     freight_charge = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
+    # For Quotation & Delivery Challan
+    reference_number = models.CharField(max_length=50, blank=True, null=True)
+    reference_date = models.DateField(blank=True, null=True)
+
+    # Totals (auto-calculated)
     total_subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     total_cgst = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     total_sgst = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
@@ -143,51 +146,48 @@ class Voucher(models.Model):
     grand_total = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
 
     def save(self, *args, **kwargs):
-        # Auto-set place of supply from party's state
         if self.party and not self.place_of_supply:
             self.place_of_supply = self.party.state_name
 
-        # Auto-generate voucher number if not set
         if not self.voucher_number:
             now = datetime.now()
             fy_start = now.year if now.month >= 4 else now.year - 1
             fy_end = fy_start + 1
-            fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"  # e.g., 24-25
-
-            # Count existing vouchers for this FY
-            prefix = f"VVMAgro/{fy_str}/"
+            fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
+            prefix = f"VVMAgro/{fy_str}/{self.voucher_type}/"
             count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
-            self.voucher_number = f"{prefix}{str(count).zfill(3)}" 
+            self.voucher_number = f"{prefix}{str(count).zfill(3)}"
 
         super().save(*args, **kwargs)
-    
 
     def __str__(self):
-        return f"Voucher {self.id} - {self.get_voucher_type_display()}"
+        return f"{self.voucher_number} - {self.get_voucher_type_display()}"
 
 class VoucherProductItem(models.Model):
-    MOVEMENT_TYPE_CHOICES = [
-        ('in', 'In'),
-        ('out', 'Out'),
-        ('job_work', 'Job Work'),
-    ]
 
     voucher = models.ForeignKey(Voucher, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
-    movement_type = models.CharField(max_length=10, choices=MOVEMENT_TYPE_CHOICES)
     warehouse = models.ForeignKey('Warehouse', on_delete=models.CASCADE)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
 
+
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
     subtotal = models.DecimalField(max_digits=15, decimal_places=2)
+
+    # GST in percentages (from Product model)
+    cgst_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    sgst_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    igst_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+
+    # GST calculated amounts
     cgst_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     sgst_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     igst_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+
     total_amount = models.DecimalField(max_digits=15, decimal_places=2)
 
     def __str__(self):
-        return f"{self.product.name} - Qty: {self.quantity} (Voucher {self.voucher.id})"
-
+        return f"{self.product.name} - Qty: {self.quantity} ({self.voucher.voucher_number})"
 
 
 class Job(models.Model):
@@ -230,3 +230,16 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.subject}"
+    
+
+class Gallery(models.Model):
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='gallery/')
+    description = models.TextField(blank=True)
+    upload_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-upload_date']
+    
+    def __str__(self):
+        return self.title
