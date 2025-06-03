@@ -760,9 +760,12 @@ def notify_low_stock_products(request):
     # Get products with stock less than 10
     low_stock_products = Product.objects.select_related('warehouse', 'group').filter(stock_quantity__lt=10)
 
-    # Compose email if needed
-    if low_stock_products.exists():
-        # Prepare message lines for each product
+    # Count for UI alert badge
+    low_stock_count = low_stock_products.count()
+
+    # Compose and send email if any low-stock products
+    if low_stock_count > 0:
+        # Prepare message lines
         product_lines = []
         for product in low_stock_products:
             warehouse_name = product.warehouse.name if product.warehouse else "N/A"
@@ -770,10 +773,10 @@ def notify_low_stock_products(request):
             line = f"- {product.name} | Stock: {product.stock_quantity} | Warehouse: {warehouse_name} | Group: {group_name} | Unit: {product.unit_of_measurement}"
             product_lines.append(line)
 
-        # Email body
+        # Email content
         message_body = (
-            "The following products have low stock (less than 10 units):\n\n"
-            + "\n".join(product_lines)
+            "The following products have low stock (less than 10 units):\n\n" +
+            "\n".join(product_lines)
         )
 
         # Get superusers with valid email
@@ -792,5 +795,6 @@ def notify_low_stock_products(request):
 
     # Render the template with context
     return render(request, 'low_stock_products.html', {
-        'low_stock_products': low_stock_products
+        'low_stock_products': low_stock_products,
+        'low_stock_count': low_stock_count
     })
