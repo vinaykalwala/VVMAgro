@@ -1,0 +1,10 @@
+
+{% block content %}
+<h2>Edit User: {{ user_obj.username }}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update</button>
+</form>
+<a href="{% url 'user_list' %}">Back to user list</a>
+{% endblock %}

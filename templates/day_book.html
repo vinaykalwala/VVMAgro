@@ -1,10 +1,161 @@
-<h2>Day Book</h2>
+{% extends 'backendpages/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Voucher</title>
 
-<form method="get">
-  <label>Date: <input type="date" name="date"></label>
-  <label>Start Date: <input type="date" name="start_date"></label>
-  <label>End Date: <input type="date" name="end_date"></label>
-  <label>Voucher Type:
+<style>
+  .daybook-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.daybook-form .form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+}
+
+.daybook-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #3F5187;
+  font-size: 14px;
+}
+
+.daybook-form input,
+.daybook-form select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-btn {
+  background-color: #3F5187;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  background-color: rgb(191, 193, 218);
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .daybook-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+
+  .daybook-table-wrapper {
+    overflow-x: auto;
+    background-color: #fff;
+    border: 1px solid rgb(191, 193, 218);
+    border-radius: 8px;
+  }
+
+  .daybook-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .daybook-table th {
+    background-color: #3F5187;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #ffffff;
+  }
+
+  .daybook-table td {
+    padding: 10px;
+    border: 1px solid rgb(191, 193, 218);
+    color: #3F5187;
+  }
+
+  .daybook-table tr:nth-child(even) {
+    background-color: rgb(229, 231, 251);
+  }
+
+  .link {
+    display: inline-block;
+    background-color: #3F5187;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .link:hover {
+    background-color: rgb(191, 193, 218);
+    transform: scale(1.05);
+  }
+
+  @media screen and (max-width: 768px) {
+    .daybook-table {
+      min-width: 600px;
+    }
+  }
+  .daybook-heading {
+  text-align: center;
+  color: #3F5187;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 20px 0 30px 0;
+ 
+}
+.in-bg {
+    background-color: #d4edda;
+}
+.out-bg {
+    background-color: #f8d7da;
+}
+.others-bg {
+    background-color: #fff3cd;
+}
+
+
+</style>
+</head>
+<body>
+<div class="main-content">
+  <div class="daybook-wrapper">
+    <h2 class="daybook-heading">Day Book</h2>
+
+   <form method="get" class="daybook-form">
+  <div class="form-group">
+    <label>Date:</label>
+    <input type="date" name="date">
+  </div>
+  <div class="form-group">
+    <label>Start Date:</label>
+    <input type="date" name="start_date">
+  </div>
+  <div class="form-group">
+    <label>End Date:</label>
+    <input type="date" name="end_date">
+  </div>
+  <div class="form-group">
+    <label>Voucher Type:</label>
     <select name="voucher_type">
       <option value="">All</option>
       <option value="Buyer_Voucher">Buyer</option>
@@ -13,33 +164,67 @@
       <option value="Quotation">Quotation</option>
       <option value="Delivery_Challan">Delivery Challan</option>
     </select>
-  </label>
-  <button type="submit">Filter</button>
+  </div>
+  <div class="form-group">
+    <label>&nbsp;</label>
+    <button type="submit" class="filter-btn">Filter</button>
+  </div>
 </form>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>Sl.No</th>
-      <th>Buying/Selling</th>
-      <th>Type of Voucher</th>
-      <th>Voucher Number</th>
-      <th>Amount</th>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for v in vouchers %}
-    <tr>
-      <td>{{ forloop.counter }}</td>
-      <td>
-        {% if v.voucher_type == "Buyer_Voucher" %}Buying{% elif v.voucher_type == "Seller_Voucher" %}Selling{% else %}Others{% endif %}
-      </td>
-      <td>{{ v.get_voucher_type_display }}</td>
-      <td><a href="{% url 'voucher_detail' voucher_id=v.id %}">{{ v.voucher_number }}</a></td>
-      <td>{{ v.grand_total }}</td>
-      <td>{{ v.created_at|date:"Y-m-d H:i" }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    <div class="daybook-table-wrapper">
+      <table class="daybook-table">
+        <thead>
+          <tr>
+            <th>Sl.No</th>
+            <th>Party Name</th>
+            <th>Buying/Selling</th>
+            <th>Type of Voucher</th>
+            <th>Voucher Number</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in vouchers %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ v.party.name }}</td>
+<<<<<<< HEAD
+            <td>
+              {% if v.voucher_type == "Buyer_Voucher" %}In{% elif v.voucher_type == "Seller_Voucher" %}Out{% elif v.voucher_type == "Job_Work_Voucher" %}Job Work{% else %}Others{% endif %}
+            </td>
+=======
+           <td class="
+    {% if v.voucher_type == 'Buyer_Voucher' %}
+        in-bg
+    {% elif v.voucher_type == 'Seller_Voucher' %}
+        out-bg
+    {% else %}
+        others-bg
+    {% endif %}
+">
+    {% if v.voucher_type == "Buyer_Voucher" %}
+        In
+    {% elif v.voucher_type == "Seller_Voucher" %}
+        Out
+    {% else %}
+        Others
+    {% endif %}
+</td>
+
+>>>>>>> b8eeba9c9c7e3e4b8ecd6c7e75bc1408e6cd6049
+            <td>{{ v.get_voucher_type_display }}</td>
+            <td><a href="{% url 'voucher_detail' voucher_id=v.id %}" class="link">{{ v.voucher_number }}</a></td>
+            <td>{{ v.grand_total }}</td>
+            <td>{{ v.created_at|date:"Y-m-d H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>
+{% endblock %}

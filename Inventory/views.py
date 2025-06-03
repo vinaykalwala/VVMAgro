@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from .models import *
 from .forms import *
@@ -100,178 +101,6 @@ def user_dashboard(request):
 def manager_dashboard(request):
     return render(request, 'backendpages/manager_dashboard.html',{'user_profile': request.user})
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.forms import formset_factory
-from django.contrib import messages
-from decimal import Decimal
-from .models import Voucher, VoucherProductItem, Product, Warehouse
-from .forms import ProductExchangeItemForm, VoucherForm
-
-def product_exchange_view(request):
-    ProductFormSet = formset_factory(ProductExchangeItemForm, extra=1)
-
-    if request.method == 'POST':
-        formset = ProductFormSet(request.POST, prefix='products')
-        if formset.is_valid():
-            product_data = []
-            for form in formset:
-                data = form.cleaned_data
-                if data:
-                    product_id = data['product'].id  # Get ID from Product instance
-                    product_data.append({
-                        'product_id': product_id,
-                        'movement_type': data['movement_type'],
-                        'warehouse_id': data['warehouse'].id,
-                        'quantity': float(data['quantity']),  # convert Decimal to float for JSON
-                    })
-            request.session['product_exchange_data'] = product_data
-            return redirect('voucher_create')
-    else:
-        formset = ProductFormSet(prefix='products')
-
-    # Pass all products to template for JavaScript supply type filtering
-    products = Product.objects.all()
-
-    return render(request, 'product_exchange.html', {
-        'formset': formset,
-        'products': products,
-    })
-
-def get_allowed_voucher_types(movement_types):
-    # Check if all movement types are the same
-    unique_types = set(movement_types)
-
-    if unique_types == {'in'}:
-        return ['Seller_Voucher', 'Quotation', 'Delivery_Challan']
-    elif unique_types == {'out'}:
-        return ['Buyer_Voucher', 'Quotation', 'Delivery_Challan']
-    elif unique_types == {'job_work'}:
-        return ['Job_Work_Voucher', 'Quotation', 'Delivery_Challan']
-    else:
-        # Mixed movement types or none, restrict or raise error if needed
-        return ['Quotation', 'Delivery_Challan']  # fallback or limited options
-
-from decimal import Decimal
-from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Warehouse, VoucherProductItem
-from .forms import VoucherForm
-
-
-def voucher_create_view(request):
-    product_data = request.session.get('product_exchange_data')
-    if not product_data:
-        messages.error(request, "No product data found. Please add products first.")
-        return redirect('product_exchange')
-
-    movement_types = [item['movement_type'] for item in product_data]
-    allowed_voucher_types = get_allowed_voucher_types(movement_types)
-
-    if request.method == 'POST':
-        voucher_form = VoucherForm(request.POST, allowed_voucher_types=allowed_voucher_types)
-        if voucher_form.is_valid():
-            voucher = voucher_form.save()
-
-            total_subtotal = Decimal('0.00')
-            total_cgst = Decimal('0.00')
-            total_sgst = Decimal('0.00')
-            total_igst = Decimal('0.00')
-
-            igst_applicable = voucher.igst_applicable
-
-            for index, item in enumerate(product_data):
-                product = Product.objects.get(id=item['product_id'])
-                warehouse = Warehouse.objects.get(id=item['warehouse_id'])
-                qty = Decimal(item['quantity'])
-                price = product.price_per_unit
-                subtotal = price * qty
-
-                cgst_amount = sgst_amount = igst_amount = Decimal('0.00')
-
-                if product.gst_applicable:
-                    cgst_amount = (subtotal * product.cgst_percent) / 100
-                    sgst_amount = (subtotal * product.sgst_percent) / 100
-                    if igst_applicable:
-                        igst_amount = cgst_amount + sgst_amount
-                        cgst_amount = sgst_amount = Decimal('0.00')
-
-                total_amount = subtotal + cgst_amount + sgst_amount + igst_amount
-
-                if voucher.freight_applicable and voucher.freight_charge:
-                    total_amount += voucher.freight_charge
-
-
-                # Get selected phase from form input
-                selected_phase = request.POST.get(f'phase_{index}', None)
-
-                # Update product stock and phase if applicable
-                if item['movement_type'] == 'job_work' and voucher.voucher_type == 'Job_Work_Voucher':
-                    product.stock_quantity += qty
-                    if selected_phase in dict(Product.PHASE_CHOICES):
-                        product.phase = selected_phase
-                elif item['movement_type'] == 'in' and voucher.voucher_type == 'Seller_Voucher':
-                    product.stock_quantity += qty
-                elif item['movement_type'] == 'out' and voucher.voucher_type == 'Buyer_Voucher':
-                    product.stock_quantity -= qty
-                # Do not update stock for delivery challan or quotation
-
-                product.save()
-
-                VoucherProductItem.objects.create(
-                    voucher=voucher,
-                    product=product,
-                    movement_type=item['movement_type'],
-                    warehouse=warehouse,
-                    quantity=qty,
-                    price_per_unit=price,
-                    subtotal=subtotal,
-                    cgst_amount=cgst_amount,
-                    sgst_amount=sgst_amount,
-                    igst_amount=igst_amount,
-                    total_amount=total_amount
-                )
-
-                total_subtotal += subtotal
-                total_cgst += cgst_amount
-                total_sgst += sgst_amount
-                total_igst += igst_amount
-
-            voucher.total_subtotal = total_subtotal
-            voucher.total_cgst = total_cgst
-            voucher.total_sgst = total_sgst
-            voucher.total_igst = total_igst
-            voucher.grand_total = total_subtotal + total_cgst + total_sgst + total_igst
-            voucher.save()
-
-            del request.session['product_exchange_data']
-
-            messages.success(request, f"Voucher #{voucher.id} saved successfully!")
-            return redirect('voucher_detail', voucher_id=voucher.id)
-    else:
-        voucher_form = VoucherForm(allowed_voucher_types=allowed_voucher_types)
-
-    resolved_products = []
-    for index, item in enumerate(product_data):
-        try:
-            product = Product.objects.get(id=item['product_id'])
-            warehouse = Warehouse.objects.get(id=item['warehouse_id'])
-            resolved_products.append({
-                'index': index,
-                'name': product.name,
-                'movement_type': item['movement_type'],
-                'warehouse': warehouse.name,
-                'quantity': item['quantity'],
-                'phase': product.phase,
-            })
-        except (Product.DoesNotExist, Warehouse.DoesNotExist):
-            continue
-
-    return render(request, 'voucher_create.html', {
-        'voucher_form': voucher_form,
-        'products': resolved_products,
-        'product_phase_choices': Product.PHASE_CHOICES,
-    })
-
 
 from django.shortcuts import render, get_object_or_404
 from .models import Voucher
@@ -280,6 +109,7 @@ from num2words import num2words
 from django.db.models import Q
 from datetime import datetime
 
+@login_required
 def voucher_list_view(request):
     vouchers = Voucher.objects.all().order_by('-created_at')
 
@@ -334,7 +164,7 @@ def voucher_list_view(request):
     }
     return render(request, 'voucher_list.html', context)
 
-
+@login_required
 def voucher_detail_view(request, voucher_id):
     voucher = get_object_or_404(Voucher, id=voucher_id)
     items = voucher.items.all()
@@ -346,7 +176,7 @@ def voucher_detail_view(request, voucher_id):
         party_label = 'Quotation'
     else:
         if items.exists():
-            movement_type = items.first().movement_type
+            movement_type = voucher.movement_type
             if movement_type == 'in':
                 party_label = 'Seller'
             elif movement_type == 'out':
@@ -363,7 +193,7 @@ def voucher_detail_view(request, voucher_id):
     total_sgst = sum(item.sgst_amount for item in voucher.items.all())
     total_igst = sum(item.igst_amount for item in voucher.items.all())
     grand_total = sum(item.total_amount for item in voucher.items.all())
-    amount_in_words = f"Rupees {num2words(grand_total, lang='en_IN').title()} "
+    amount_in_words = f"Rupees {num2words(voucher.grand_total, lang='en_IN').title()} "
 
     context = {
         'voucher': voucher,
@@ -705,6 +535,7 @@ def day_book_view(request):
     return render(request, 'day_book.html', context)
 
 
+<<<<<<< HEAD
 from django.shortcuts import render
 from .models import Gallery
 
@@ -752,3 +583,277 @@ def gallery_delete(request, pk):
         return redirect('gallery_list')
     return render(request, 'staticpages/gallery_confirm_delete.html', {'gallery': gallery})
 
+=======
+
+from .forms import CustomUserEditForm, ChangePasswordForm
+from django.contrib.auth.decorators import user_passes_test
+
+def is_admin(user):
+    return user.is_superuser or user.role == 'manager'
+
+
+@user_passes_test(is_admin)
+def user_list(request):
+    users = CustomUser.objects.filter(is_superuser=False)
+    return render(request, 'user_list.html', {'users': users})
+
+
+@user_passes_test(is_admin)
+def edit_user(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        form = CustomUserEditForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User updated successfully.')
+            return redirect('user_list')
+    else:
+        form = CustomUserEditForm(instance=user)
+    return render(request, 'edit_user.html', {'form': form, 'user_obj': user})
+
+
+@user_passes_test(is_admin)
+def change_user_password(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['new_password']
+            user.set_password(password)
+            user.original_password = password
+            user.save()
+            messages.success(request, 'Password changed successfully.')
+            return redirect('user_list')
+    else:
+        form = ChangePasswordForm()
+    return render(request, 'change_password.html', {'form': form, 'user_obj': user})
+
+
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from .models import Product
+
+def notify_low_stock_products(request):
+    # Get products with stock less than 10
+    low_stock_products = Product.objects.select_related('warehouse', 'group').filter(stock_quantity__lt=10)
+
+    # Compose email if needed
+    if low_stock_products.exists():
+        # Prepare message lines for each product
+        product_lines = []
+        for product in low_stock_products:
+            warehouse_name = product.warehouse.name if product.warehouse else "N/A"
+            group_name = product.group.name if product.group else "N/A"
+            line = f"- {product.name} | Stock: {product.stock_quantity} | Warehouse: {warehouse_name} | Group: {group_name} | Unit: {product.unit_of_measurement}"
+            product_lines.append(line)
+
+        # Email body
+        message_body = (
+            "The following products have low stock (less than 10 units):\n\n"
+            + "\n".join(product_lines)
+        )
+
+        # Get superusers with valid email
+        User = get_user_model()
+        superusers = User.objects.filter(is_superuser=True, email__isnull=False)
+
+        # Send email to each superuser
+        for superuser in superusers:
+            send_mail(
+                subject="Low Stock Alert",
+                message=message_body,
+                from_email=settings.DEFAULT_FROM_EMAIL or settings.EMAIL_HOST_USER,
+                recipient_list=[superuser.email],
+                fail_silently=False,
+            )
+
+    # Render the template with context
+    return render(request, 'low_stock_products.html', {
+        'low_stock_products': low_stock_products
+    })
+
+
+
+def voucher_type_list(request):
+    types = [vt[0] for vt in Voucher.VOUCHER_TYPES]
+    return render(request, 'voucher_type_list.html', {'voucher_types': types})
+
+from django.db import transaction
+from django.shortcuts import render, redirect
+from django.forms import inlineformset_factory
+from django.db import transaction
+from django.contrib import messages
+from .models import Voucher, VoucherProductItem, Product
+from .forms import VoucherForm, VoucherProductItemFormSet
+import json
+from django.utils import timezone
+
+
+def create_voucher_with_items(request, voucher_type):
+    movement_type_map = {
+        'Seller_Voucher': 'in',
+        'Buyer_Voucher': 'out',
+        'Job_Work_Voucher': 'job_work',
+        'Quotation': '',
+        'Delivery_Challan': '',
+    }
+    initial_movement_type = movement_type_map.get(voucher_type, '')
+
+    def save_voucher_and_items(form, formset, voucher_type):
+        with transaction.atomic():
+            voucher = form.save(commit=False)
+            voucher.voucher_type = voucher_type
+            voucher.movement_type = movement_type_map.get(voucher_type, '')
+            if not voucher.voucher_number:
+                now = timezone.now()
+                fy_start = now.year if now.month >= 4 else now.year - 1
+                fy_end = fy_start + 1
+                fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
+                prefix = f"VVMAgro/{fy_str}/{voucher_type}/"
+                count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
+                voucher.voucher_number = f"{prefix}{str(count).zfill(3)}"
+            voucher.save()
+
+            total_subtotal = total_cgst = total_sgst = total_igst = grand_total = 0
+
+            for item_form in formset:
+                if item_form.cleaned_data.get('DELETE', False):
+                    continue
+                item = item_form.save(commit=False)
+                item.voucher = voucher
+
+                # Compute amounts
+                item.subtotal = item.quantity * item.price_per_unit
+                item.cgst_amount = (item.subtotal * item.cgst_percent) / 100
+                item.sgst_amount = (item.subtotal * item.sgst_percent) / 100
+                item.igst_amount = (item.subtotal * item.igst_percent) / 100
+                item.total_amount = item.subtotal + item.cgst_amount + item.sgst_amount + item.igst_amount
+
+                # Adjust stock and other fields based on voucher type
+                if voucher_type == 'Seller_Voucher':
+                    voucher.movement_type = 'in'
+                    item.product.stock_quantity += item.quantity
+                    item.product.save()
+
+                elif voucher_type == 'Buyer_Voucher':
+                    voucher.movement_type = 'out'
+                    item.product.stock_quantity -= item.quantity
+                    item.product.save()
+
+                elif voucher_type == 'Job_Work_Voucher':
+                    voucher.movement_type = 'job_work'
+                    item.product.stock_quantity += item.quantity
+                    selected_phase = item_form.cleaned_data.get('phase', '')
+                    if selected_phase:
+                        item.product.phase = selected_phase
+                        item.product.save()
+
+                elif voucher_type in ['Quotation', 'Delivery_Challan']:
+                    voucher.movement_type = ''
+
+                item.save()
+
+                # Accumulate totals
+                total_subtotal += item.subtotal
+                total_cgst += item.cgst_amount
+                total_sgst += item.sgst_amount
+                total_igst += item.igst_amount
+                grand_total += item.total_amount
+
+            # Add freight charges if applicable
+            if voucher.freight_applicable and voucher.freight_charge:
+                grand_total += voucher.freight_charge
+
+            voucher.total_subtotal = total_subtotal
+            voucher.total_cgst = total_cgst
+            voucher.total_sgst = total_sgst
+            voucher.total_igst = total_igst
+            voucher.grand_total = grand_total
+            voucher.save()
+
+        return voucher
+
+    if request.method == 'POST':
+        form = VoucherForm(request.POST or None, voucher_type=voucher_type)
+        formset = VoucherProductItemFormSet(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+
+            # For Job_Work_Voucher: validate product type_of_supply
+            if voucher_type == 'Job_Work_Voucher':
+                invalid_products = []
+                for item_form in formset:
+                    if item_form.cleaned_data.get('DELETE', False):
+                        continue
+                    product = item_form.cleaned_data.get('product')
+                    if product and product.type_of_supply != 'raw_material':
+                        invalid_products.append(product.name)
+
+                if invalid_products:
+                    messages.error(request,
+                        "For Job Work Voucher, only products with type_of_supply as 'raw_material' are allowed. "
+                        "Invalid products: " + ", ".join(invalid_products)
+                    )
+                    # Re-render form with errors below
+
+                else:
+                    voucher = save_voucher_and_items(form, formset, voucher_type)
+                    return redirect('voucher_detail', voucher_id=voucher.id)
+
+            # For Buyer_Voucher: check stock quantity before saving
+            elif voucher_type == 'Buyer_Voucher':
+                insufficient_stock_products = []
+                for item_form in formset:
+                    if item_form.cleaned_data.get('DELETE', False):
+                        continue
+                    product = item_form.cleaned_data.get('product')
+                    quantity = item_form.cleaned_data.get('quantity')
+                    if product and quantity and product.stock_quantity < quantity:
+                        insufficient_stock_products.append(
+                            f"{product.name} (available: {product.stock_quantity}, requested: {quantity})"
+                        )
+
+                if insufficient_stock_products:
+                    messages.error(request,
+                        "Insufficient stock for the following products: " + ", ".join(insufficient_stock_products)
+                    )
+                    # Re-render form with errors below
+
+                else:
+                    voucher = save_voucher_and_items(form, formset, voucher_type)
+                    return redirect('voucher_detail', voucher_id=voucher.id)
+
+            else:
+                # For other voucher types: no special validation, just save
+                voucher = save_voucher_and_items(form, formset, voucher_type)
+                return redirect('voucher_detail', voucher_id=voucher.id)
+
+    else:
+        form = VoucherForm(initial={'voucher_type': voucher_type, 'movement_type': initial_movement_type})
+        formset = VoucherProductItemFormSet()
+        now = timezone.now()
+        fy_start = now.year if now.month >= 4 else now.year - 1
+        fy_end = fy_start + 1
+        fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
+        prefix = f"VVMAgro/{fy_str}/{voucher_type}/"
+        count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
+        preview_voucher_number = f"{prefix}{str(count).zfill(3)}"
+
+    products = Product.objects.select_related('warehouse').all()
+    product_data = {
+        str(product.id): {
+            "warehouse_id": str(product.warehouse.id) if product.warehouse else ""
+        }
+        for product in products
+    }
+
+    return render(request, 'voucher_form_with_items.html', {
+        'form': form,
+        'formset': formset,
+        'voucher_type': voucher_type,
+        "product_data": json.dumps(product_data),
+        "preview_voucher_number": preview_voucher_number
+    })
+>>>>>>> 875cdf3cd95ecf78af7e8fde07652271dae84eb2

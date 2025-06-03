@@ -14,32 +14,33 @@
     width: 240px;
     height: 100vh;
     position: fixed;
-    top: 300;
+    top:0;
     left: 0;
     background-color: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
     transition: transform 0.3s ease-in-out;
     transform: translateX(0);
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
-  transition: transform 0.3s ease-in-out;
-  transform: translateX(0);
-}
+  }
 
-/* Chrome, Safari and Opera */
-.sidebar::-webkit-scrollbar {
-  display: none;
-}
+  /* Chrome, Safari and Opera */
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
   .sidebar h2 {
     padding: 20px 10px 10px 10px;
-    color:  #3F5187;
+    color: #3F5187;
     font-size: 20px;
     font-weight: 700;
-    background-color:rgb(229, 231, 251);
-    border-bottom: 1px solid  #3F5187;
+    background-color: rgb(229, 231, 251);
+    border-bottom: 1px solid #3F5187;
     text-align: center;
+      margin-top: 51px;
   }
+  
   #closeSidebarBtn {
     display: none;
     margin: 15px 16px 5px;
@@ -59,14 +60,14 @@
   .sidebar ul li {
     padding: 15px 20px;
     cursor: pointer;
-    color:  #3F5187;
+    color: #3F5187;
     display: flex;
     align-items: center;
     justify-content: space-between;
     transition: background-color 0.3s;
   }
   .sidebar ul li:hover {
-    background-color:  #3F5187;
+    background-color: #3F5187;
     color: white;
   }
   .sidebar ul li a {
@@ -96,8 +97,8 @@
     position: relative;
     margin: 15px;
     background: white;
-    border: 1px solid  #3F5187;
-    color:  #3F5187;
+    border: 1px solid #3F5187;
+    color: #3F5187;
     padding: 10px 12px;
     border-radius: 4px;
     cursor: pointer;
@@ -134,91 +135,95 @@
   {% if request.user.is_staff %}
   <h2>Admin Dashboard</h2>
   <ul>
-    <!-- <li>
-      <a href="{% url 'product_exchange' %}">
+    <li>
+      <a href="{% url 'voucher_type_list' %}">
         <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
       </a>
     </li>
-   <li>
-  <a href="{% url 'party_list' %}">
-    <i class="fas fa-users"></i> Party List <i class="fas fa-chevron-right"></i>
-  </a>
-</li>
-<li>
-  <a href="{% url 'productgroup_list' %}">
-    <i class="fas fa-layer-group"></i> Product Group <i class="fas fa-chevron-right"></i>
-  </a>
-</li>
-<li>
-  <a href="{% url 'warehouse_list' %}">
-    <i class="fas fa-warehouse"></i> Warehouse List <i class="fas fa-chevron-right"></i>
-  </a>
-</li>
-<li>
-  <a href="{% url 'product_list' %}">
-    <i class="fas fa-box-open"></i> Product List <i class="fas fa-chevron-right"></i>
-  </a>
-</li>
-<li>
-  <a href="{% url 'partygroup_list' %}">
-    <i class="fas fa-object-group"></i> Party Group <i class="fas fa-chevron-right"></i>
-  </a>
-</li>
-<li>
-  <a href="{% url 'stock_report' %}">
-    <i class="fas fa-chart-bar"></i> Stock Report <i class="fas fa-chevron-right"></i>
-  </a>
-</li>
-<li>
-  <a href="{% url 'day_book' %}">
-    <i class="fas fa-book"></i> Day Book <i class="fas fa-chevron-right"></i>
-  </a>
-</li>
- -->
-
+      <li>
+      <a href="{% url 'stock_report' %}">
+        <i class="fas fa-chart-bar"></i> Stock Report <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'day_book' %}">
+        <i class="fas fa-book"></i> Day Book <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+     <li>
+      <a href="{% url 'product_create' %}">
+        <i class="fas fa-plus-circle"></i>Add New Product<i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'party_list' %}">
+        <i class="fas fa-users"></i> Party List <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'productgroup_list' %}">
+        <i class="fas fa-layer-group"></i> Product Group <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'warehouse_list' %}">
+        <i class="fas fa-warehouse"></i> Warehouse List <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'product_list' %}">
+        <i class="fas fa-box-open"></i> Product List <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'partygroup_list' %}">
+        <i class="fas fa-object-group"></i> Party Group <i class="fas fa-chevron-right"></i>
+      </a>
+    </li>
+   <!-- <li>
+      <a href="{% url 'low_stock_products' %}">
+        <i class="fas fa-exclamation-triangle" style="color: rgb(243, 105, 105);"></i> Stock Alert <i class="fas fa-chevron-right"></i>
+      </a>
+    </li> -->
     <li>
       <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Contact List <i class="fas fa-chevron-right"></i></a>
     </li>
     <li>
       <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i> Job Applications <i class="fas fa-chevron-right"></i></a>
     </li>
-    <!-- Signup only for staff/admins -->
     <li>
       <a href="{% url 'signup' %}">
         <i class="fas fa-user-plus"></i> Signup <i class="fas fa-chevron-right"></i>
       </a>
     </li>
+     <!-- <li>
+      <a href="{% url 'user_list' %}">
+        <i class="fas fa-user-plus"></i> User Management <i class="fas fa-chevron-right"></i>
+      </a>
+    </li> -->
   </ul>
-
-{% elif request.user.role == 'manager' %}
+  {% elif request.user.role == 'manager' %}
   <h2>Manager Dashboard</h2>
   <ul>
-   <li>
-      <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Contact List <i class="fas fa-chevron-right"></i></a>
-    </li>
-     <li>
-      <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i> Job Applications <i class="fas fa-chevron-right"></i></a>
-    </li>
-    <!-- Signup is excluded here -->
-  </ul>
-
-{% else %}
-  <h2>User Dashboard</h2>
-  <ul>
-   
-    
     <li>
       <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Contact List <i class="fas fa-chevron-right"></i></a>
     </li>
-     <li>
+    <li>
       <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i> Job Applications <i class="fas fa-chevron-right"></i></a>
     </li>
-    <!-- Signup is excluded here too -->
   </ul>
-{% endif %}
-
+  {% else %}
+  <h2>User Dashboard</h2>
+  <ul>
+    <li>
+      <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Contact List <i class="fas fa-chevron-right"></i></a>
+    </li>
+    <li>
+      <a href="{% url 'job_applications' %}"><i class="fas fa-briefcase"></i> Job Applications <i class="fas fa-chevron-right"></i></a>
+    </li>
+  </ul>
+  {% endif %}
 </aside>
-
 
 <script>
   const sidebar = document.getElementById('sidebar');

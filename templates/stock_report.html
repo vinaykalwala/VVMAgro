@@ -1,54 +1,163 @@
-<form method="get" action=".">
+
+{% extends 'backendpages/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Report</title>
+<style>
+  .search-stock-wrapper {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  .search-stock-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .search-stock-form input[type="text"],
+  .search-stock-form select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    min-width: 180px;
+  }
+
+  .search-stock-form button {
+    background-color: #3F5187;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .search-stock-form button:hover {
+    background-color: #2e3b66;
+  }
+
+  .stock-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+  .stock-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .stock-table th {
+    background-color: #3F5187;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #fff;
+  }
+
+  .stock-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    color: #3F5187;
+  }
+
+  .stock-table tr:nth-child(even) {
+    background-color: #f1f3fa;
+  }
+
+  @media (max-width: 768px) {
+    .search-stock-form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+   .daybook-heading {
+  text-align: center;
+  color: #3F5187;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 20px 0 30px 0;
+ 
+}
+
+</style>
+</head>
+<body>
+<div class="main-content">
+<div class="search-stock-wrapper">
+        <h2 class="daybook-heading">Stock Report</h2>
+
+  <form method="get" action="." class="search-stock-form">
     <input type="text" name="q" placeholder="Search Product Name" value="{{ query }}">
 
     <select name="warehouse">
-        <option value="">All Warehouses</option>
-        {% for warehouse in warehouses %}
-            <option value="{{ warehouse.id }}" {% if warehouse.id|stringformat:"s" == selected_warehouse %}selected{% endif %}>{{ warehouse.name }}</option>
-        {% endfor %}
+      <option value="">All Warehouses</option>
+      {% for warehouse in warehouses %}
+        <option value="{{ warehouse.id }}" {% if warehouse.id|stringformat:"s" == selected_warehouse %}selected{% endif %}>
+          {{ warehouse.name }}
+        </option>
+      {% endfor %}
     </select>
 
     <select name="phase">
-        <option value="">All Phases</option>
-        <option value="phase_1" {% if selected_phase == 'phase_1' %}selected{% endif %}>Phase 1</option>
-        <option value="phase_2" {% if selected_phase == 'phase_2' %}selected{% endif %}>Phase 2</option>
-        <option value="phase_3" {% if selected_phase == 'phase_3' %}selected{% endif %}>Phase 3</option>
+      <option value="">All Phases</option>
+      <option value="phase_1" {% if selected_phase == 'phase_1' %}selected{% endif %}>Phase 1</option>
+      <option value="phase_2" {% if selected_phase == 'phase_2' %}selected{% endif %}>Phase 2</option>
+      <option value="phase_3" {% if selected_phase == 'phase_3' %}selected{% endif %}>Phase 3</option>
     </select>
 
     <select name="type_of_supply">
-        <option value="">All Types</option>
-        <option value="goods" {% if selected_type == 'goods' %}selected{% endif %}>Goods</option>
-        <option value="raw_material" {% if selected_type == 'raw_material' %}selected{% endif %}>Raw Material</option>
+      <option value="">All Types</option>
+      <option value="goods" {% if selected_type == 'goods' %}selected{% endif %}>Goods</option>
+      <option value="raw_material" {% if selected_type == 'raw_material' %}selected{% endif %}>Raw Material</option>
     </select>
 
     <button type="submit">Search</button>
-</form>
+  </form>
 
-<table>
-    <thead>
+  <div class="stock-table-wrapper">
+    <table class="stock-table">
+      <thead>
         <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Stock</th>
-            <th>Warehouse</th>
-            <th>Location</th>
-            <th>Phase</th>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Stock</th>
+          <th>Warehouse</th>
+          <th>Location</th>
+          <th>Phase</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for item in stock_data %}
         <tr>
-            <td>{{ item.product_id }}</td>
-            <td>{{ item.product_name }}</td>
-            <td>{{ item.type_of_supply }}</td>
-            <td>{{ item.stock_quantity }}</td>
-            <td>{{ item.warehouse_name }}</td>
-            <td>{{ item.warehouse_location }}</td>
-            <td>{{ item.phase }}</td>
+          <td>{{ item.product_id }}</td>
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.type_of_supply }}</td>
+          <td>{{ item.stock_quantity }}</td>
+          <td>{{ item.warehouse_name }}</td>
+          <td>{{ item.warehouse_location }}</td>
+          <td>{{ item.phase }}</td>
         </tr>
         {% empty %}
         <tr><td colspan="7">No products found.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+</body>
+</html>
+{% endblock %}
