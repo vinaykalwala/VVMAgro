@@ -15,3 +15,5 @@ admin.site.register(VoucherProductItem)
 
 admin.site.register(Job)
 admin.site.register(JobApplication)
+
+admin.site.register(Gallery)
