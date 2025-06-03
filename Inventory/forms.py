@@ -36,7 +36,7 @@ from .models import Product, Warehouse, Party, VoucherProductItem, Voucher
 
 class ProductExchangeItemForm(forms.Form):
     product = forms.ModelChoiceField(queryset=Product.objects.all())
-    movement_type = forms.ChoiceField(choices=VoucherProductItem.MOVEMENT_TYPE_CHOICES)
+    movement_type = forms.ChoiceField(choices=Voucher.MOVEMENT_TYPE_CHOICES)
     warehouse = forms.ModelChoiceField(queryset=Warehouse.objects.filter(is_active=True))
     quantity = forms.DecimalField(min_value=0.01, max_digits=10, decimal_places=2)
 
@@ -52,18 +52,18 @@ class ProductExchangeItemForm(forms.Form):
                     "If product type of supply is 'Goods', movement type cannot be 'Jobwork'."
                 )
         return cleaned_data
-class VoucherForm(forms.ModelForm):
-    class Meta:
-        model = Voucher
-        fields = ['voucher_type', 'igst_applicable','party','freight_applicable','freight_charge','remarks','place_of_supply']  
+# class VoucherForm(forms.ModelForm):
+#     class Meta:
+#         model = Voucher
+#         fields = ['voucher_type', 'igst_applicable','party','freight_applicable','freight_charge','remarks','place_of_supply']  
 
-    def __init__(self, *args, **kwargs):
-        allowed_voucher_types = kwargs.pop('allowed_voucher_types', None)
-        super().__init__(*args, **kwargs)
-        if allowed_voucher_types:
-            self.fields['voucher_type'].choices = [
-                (k, v) for k, v in Voucher.VOUCHER_TYPES if k in allowed_voucher_types
-            ]
+#     def __init__(self, *args, **kwargs):
+#         allowed_voucher_types = kwargs.pop('allowed_voucher_types', None)
+#         super().__init__(*args, **kwargs)
+#         if allowed_voucher_types:
+#             self.fields['voucher_type'].choices = [
+#                 (k, v) for k, v in Voucher.VOUCHER_TYPES if k in allowed_voucher_types
+#             ]
 
 
 class ProductGroupForm(forms.ModelForm):
@@ -132,3 +132,84 @@ class CustomUserEditForm(forms.ModelForm):
 
 class ChangePasswordForm(forms.Form):
     new_password = forms.CharField(widget=forms.PasswordInput(), label="New Password")
+
+from django import forms
+from .models import Voucher, VoucherProductItem, Party, Product, Warehouse
+
+from django import forms
+from django.forms import inlineformset_factory,BaseInlineFormSet
+from .models import Voucher, VoucherProductItem
+
+class VoucherForm(forms.ModelForm):
+    class Meta:
+        model = Voucher
+        fields = [
+            'voucher_number',
+            'created_at',
+            'party',
+            'movement_type',
+            'place_of_supply',
+            'remarks',
+            'freight_applicable',
+            'freight_charge',
+            'reference_number',
+            'reference_date',
+        ]
+        widgets = {
+            'created_at': forms.DateInput(attrs={'type': 'date'}),
+            'reference_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+    def __init__(self, *args, **kwargs):
+        voucher_type = kwargs.pop('voucher_type', None)  # expect this from view
+        super().__init__(*args, **kwargs)
+
+        if voucher_type:
+            # Set initial movement_type and optionally disable input
+            if voucher_type == 'Seller_Voucher':
+                self.fields['movement_type'].initial = 'in'
+            elif voucher_type == 'Buyer_Voucher':
+                self.fields['movement_type'].initial = 'out'
+            elif voucher_type == 'Job_Work_Voucher':
+                self.fields['movement_type'].initial = 'job_work'
+            else:
+                # Hide or disable field for Quotation or Delivery Challan
+                self.fields.pop('movement_type', None)    
+
+class VoucherProductItemForm(forms.ModelForm):
+    phase = forms.ChoiceField(
+        choices=Product.PHASE_CHOICES,
+        required=False,
+        label='Phase'
+    )
+    class Meta:
+        model = VoucherProductItem
+        fields = [
+            'product', 'warehouse', 
+            'quantity', 'price_per_unit',
+            'cgst_percent', 'sgst_percent', 'igst_percent',
+        ]
+        widgets = {
+            'subtotal': forms.NumberInput(attrs={'readonly': 'readonly'}),
+            'cgst_amount': forms.NumberInput(attrs={'readonly': 'readonly'}),
+            'sgst_amount': forms.NumberInput(attrs={'readonly': 'readonly'}),
+            'igst_amount': forms.NumberInput(attrs={'readonly': 'readonly'}),
+            'total_amount': forms.NumberInput(attrs={'readonly': 'readonly'}),
+        }
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            # Optionally, set initial phase if product is preselected
+            if 'product' in self.initial:
+                try:
+                    product = Product.objects.get(id=self.initial['product'])
+                    self.fields['phase'].initial = product.phase
+                except Product.DoesNotExist:
+                    pass
+
+VoucherProductItemFormSet = inlineformset_factory(
+    Voucher,
+    VoucherProductItem,
+    form=VoucherProductItemForm,
+    extra=1,
+    can_delete=True,
+)

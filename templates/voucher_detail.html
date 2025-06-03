@@ -126,7 +126,10 @@
             <td class="text-left" colspan="2">
                 <strong>Invoice No:</strong> {{ voucher.voucher_number }}<br>
                 <strong>Date:</strong> {{ voucher.created_at|date:"d M Y" }}<br>
-                <strong>Place of Supply:</strong> {{ voucher.place_of_supply }}
+                <strong>Place of Supply:</strong> {{ voucher.place_of_supply }} <br>
+                <strong>Reference Number:</strong> {{ voucher.reference_number }} <br>
+                <strong>Reference Date:</strong> {{ voucher.reference_date }}
+
             </td>
         </tr>
     </table>
@@ -142,7 +145,11 @@
                 <th>Qty</th>
                 <th>Rate</th>
                 <th>Per</th>
-                <th>Amount</th>
+                <th>Subtotal</th>
+                <th>Cgst</th>
+                <th>Sgst</th>
+                <th>Igst</th>
+                <th>Total Amount</th>
             </tr>
         </thead>
         <tbody>
@@ -155,6 +162,10 @@
                 <td>{{ item.price_per_unit|floatformat:2|intcomma }}</td>
                 <td>{{ item.product.unit_of_measurement }}</td>
                 <td>{{ item.subtotal|floatformat:2|intcomma }}</td>
+                <td>{{ item.cgst_amount }}</td>
+                <td>{{ item.sgst_amount }}</td>
+                <td>{{ item.igst_amount }}</td>
+                <td>{{ item.total_amount }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -183,7 +194,7 @@
         </tr>
         <tr>
             <td class="no-border text-right" colspan="6"><strong>Grand Total</strong></td>
-            <td><strong>{{ grand_total|floatformat:2|intcomma }}</strong></td>
+            <td><strong>{{ voucher.grand_total|floatformat:2|intcomma }}</strong></td>
         </tr>
     </table>
 

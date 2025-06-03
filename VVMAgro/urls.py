@@ -35,8 +35,6 @@ urlpatterns = [
     path('admin_dashboard/', admin_dashboard, name='admin_dashboard'),
     path('user_dashboard/', user_dashboard, name='user_dashboard'),
     path('manager_dashboard/', manager_dashboard, name='manager_dashboard'),
-    path('product-exchange/', product_exchange_view, name='product_exchange'),
-    path('voucher/create/', voucher_create_view, name='voucher_create'),
     path('vouchers/', voucher_list_view, name='voucher_list'),
     path('voucher/<int:voucher_id>/',voucher_detail_view, name='voucher_detail'),
 
@@ -84,6 +82,10 @@ urlpatterns = [
     path('users/<int:user_id>/change-password/', change_user_password, name='change_user_password'),
     path('low-stock/', notify_low_stock_products, name='low_stock_products'),
 
+    path('voucher-types/', voucher_type_list, name='voucher_type_list'),
+    path('voucher/create/<str:voucher_type>/', create_voucher_with_items, name='create_voucher_with_items'),
+
+    
 
 ]
 if settings.DEBUG:

@@ -181,7 +181,7 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ v.party.name }}</td>
             <td>
-              {% if v.voucher_type == "Buyer_Voucher" %}In{% elif v.voucher_type == "Seller_Voucher" %}Out{% else %}Others{% endif %}
+              {% if v.voucher_type == "Buyer_Voucher" %}In{% elif v.voucher_type == "Seller_Voucher" %}Out{% elif v.voucher_type == "Job_Work_Voucher" %}Job Work{% else %}Others{% endif %}
             </td>
             <td>{{ v.get_voucher_type_display }}</td>
             <td><a href="{% url 'voucher_detail' voucher_id=v.id %}" class="link">{{ v.voucher_number }}</a></td>

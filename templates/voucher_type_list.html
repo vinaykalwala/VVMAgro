@@ -1,0 +1,6 @@
+<h2>Select Voucher Type</h2>
+<ul>
+  {% for vt in voucher_types %}
+    <li><a href="{% url 'create_voucher_with_items' vt %}">{{ vt }}</a></li>
+  {% endfor %}
+</ul>
