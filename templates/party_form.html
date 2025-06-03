@@ -1,6 +1,154 @@
-<h2>{{ form.instance.pk|yesno:"Edit,Create" }} Party</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+{% extends 'backendpages/base.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        padding: 20px;
+        flex-wrap: wrap;
+        gap: 40px;
+    }
+
+    .form-wrapper {
+        flex: 1;
+        max-width: 900px;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border: 5px solid #3F5187;
+    }
+
+    .form-wrapper h2 {
+        text-align: center;
+        font-size: 28px;
+        color: #3F5187;
+        margin-bottom: 30px;
+    }
+
+    .form-wrapper form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-wrapper form p {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+
+    .form-wrapper label {
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #3F5187;
+    }
+
+    .form-wrapper input,
+    .form-wrapper select,
+    .form-wrapper textarea {
+        padding: 10px;
+        border: 1px solid #3F5187;
+        border-radius: 6px;
+        font-size: 16px;
+        background-color: rgb(229, 231, 251);
+        width: 100%;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-wrapper input:focus,
+    .form-wrapper select:focus,
+    .form-wrapper textarea:focus {
+        border-color: #4CAF50;
+        outline: none;
+    }
+
+    .form-wrapper input[type="checkbox"] {
+        width: auto;
+        margin-right: 10px;
+        transform: scale(1.2);
+        vertical-align: middle;
+    }
+
+    .form-wrapper p:has(input[type="checkbox"]) {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-wrapper button {
+        margin-top: 10px;
+        padding: 14px 16px;
+        background-color: #3F5187;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+        width: 100%;
+        max-width: 100px;
+        align-self: flex-start;
+    }
+
+    .form-wrapper button:hover {
+        background-color: #2e3c6f;
+    }
+
+    @media (max-width: 768px) {
+        .form-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .form-wrapper {
+            max-width: 100%;
+            align-items: center;
+        }
+
+        .form-wrapper button {
+            align-self: center;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .form-container {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-wrapper {
+            max-width: 100%;
+            align-items: center;
+        }
+
+        .form-wrapper form {
+            width: 100%;
+        }
+
+        .form-wrapper button {
+            align-self: center;
+        }
+    }
+</style>
+
+<div class="main-content">
+    <div class="form-container">
+        <div class="form-wrapper">
+            <h2>{{ form.instance.pk|yesno:"Edit,Create" }} Party</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -14,6 +14,7 @@
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(34, 139, 34, 0.15);
+       border: 5px solid #3F5187;
       
     }
 
@@ -205,19 +206,23 @@
                 <th>Movement Type</th>
                 <th>Warehouse</th>
                 <th>Quantity</th>
-                 <th>Gst Status</th>
+                 <th>GST Applicable</th>
+      <th>CGST %</th>
+      <th>SGST %</th>
                 <th>Phase</th>
                
               </tr>
             </thead>
             <tbody>
-              {% for item in products %}
+              {% for item in request.session.product_exchange_data %}
               <tr>
                 <td>{{ item.name }}</td>
                 <td>{{ item.movement_type }}</td>
                 <td>{{ item.warehouse }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.product.gst_applicable }}</td>
+                <td>{{ item.gst_applicable|yesno:"Yes,No" }}</td>
+      <td>{{ item.cgst_percent }}</td>
+      <td>{{ item.sgst_percent }}</td>
 
                 <td>
                   {% if item.movement_type == "job_work" %}
