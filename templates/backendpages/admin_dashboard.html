@@ -152,6 +152,42 @@
     border-radius: 15px;
 }
 
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .admin-welcome-wrapper {
+        flex-direction: column;
+        padding: 40px 20px;
+    }
+    .admin-welcome-left, .admin-welcome-right {
+        flex: 1 1 100%;
+        text-align: center;
+        padding: 10px 0;
+    }
+    .admin-welcome-left {
+        align-items: center;
+    }
+    .admin-welcome-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-welcome-title {
+        font-size: 1.6rem;
+    }
+    .admin-welcome-subtitle {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+    .admin-welcome-btn, .admin-welcome-btn-outline {
+        padding: 10px 18px;
+        font-size: 0.9rem;
+    }
+    .admin-welcome-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
 
 
     </style>
