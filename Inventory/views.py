@@ -900,3 +900,43 @@ def upload_products(request):
         form = ProductUploadForm()
     
     return render(request, 'upload_products.html', {'form': form})
+
+
+from .forms import PartyUploadForm
+
+def upload_parties(request):
+    if request.method == 'POST':
+        form = PartyUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['excel_file']
+            try:
+                df = pd.read_excel(excel_file)
+
+                for _, row in df.iterrows():
+                    try:
+                        group = PartyGroup.objects.get(name=row['group'])
+                    except PartyGroup.DoesNotExist:
+                        messages.error(request, f"Group '{row['group']}' does not exist.")
+                        continue
+
+                    Party.objects.create(
+                        group=group,
+                        name=row['name'],
+                        gstin_uin_number=row['gstin_uin_number'],
+                        address=row['address'],
+                        location=row['location'],
+                        pincode=row['pincode'],
+                        state=row['state'],
+                        phone=row.get('phone', ''),
+                        email=row.get('email', '')
+                    )
+
+                messages.success(request, "Party data uploaded successfully!")
+                return redirect('upload_parties')
+
+            except Exception as e:
+                messages.error(request, f"Error processing file: {e}")
+    else:
+        form = PartyUploadForm()
+    
+    return render(request, 'upload_parties.html', {'form': form})
