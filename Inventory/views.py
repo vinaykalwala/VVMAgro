@@ -268,9 +268,26 @@ def warehouse_delete(request, pk):
     return render(request, 'confirm_delete.html', {'object': warehouse})
 
 # Product Views
+from django.db.models import Q
+
 def product_list(request):
+    query = request.GET.get('q', '').strip()
     products = Product.objects.select_related('group', 'warehouse').all()
-    return render(request, 'product_list.html', {'products': products})
+
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) |
+            Q(group__name__icontains=query) |
+            Q(warehouse__name__icontains=query) |
+            Q(stock_quantity__icontains=query) |
+            Q(hsn_sac__icontains=query)
+        )
+
+    return render(request, 'product_list.html', {
+        'products': products,
+        'query': query,
+    })
+
 
 def product_create(request):
     form = ProductForm(request.POST or None)
