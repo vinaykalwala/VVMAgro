@@ -132,6 +132,10 @@
     <h1>Parties</h1>
     <a href="{% url 'party_create' %}" class="create-link">Create New Party</a>
   </div>
+  <form method="get" style="margin-bottom: 20px;">
+  <input type="text" name="q" placeholder="Search party..." value="{{ query }}">
+  <button type="submit">Search</button>
+</form>
 
   <div class="party-group">
     <table class="party-group-table">
