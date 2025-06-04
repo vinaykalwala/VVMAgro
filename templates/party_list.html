@@ -93,6 +93,7 @@
     text-decoration: none;
     display: inline-block;
     transition: background-color 0.2s, color 0.2s;
+    text-align: center;
   }
 
   .party-group-table .edit-link {
@@ -125,13 +126,31 @@
       flex: 1;
     }
   }
+  .action-buttons {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 8px; /* Adjust gap as needed */
+    margin-left: 0; /* Remove left margin for better alignment */
+    width: 100%; /* Make buttons container full width */
+  }
+}
+
 </style>
 
 <div class="main-content">
   <div class="header-flex">
-    <h1>Parties</h1>
+  <h1>Parties</h1>
+  <div class="action-buttons">
     <a href="{% url 'party_create' %}" class="create-link">Create New Party</a>
+    <a href="{% url 'upload_parties' %}" class="create-link">Create Bulk Parties</a>
   </div>
+</div>
 
   <div class="party-group">
     <table class="party-group-table">
