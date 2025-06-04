@@ -122,6 +122,19 @@ class JobForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5}),
         }
+        
+from django import forms
+from .models import Gallery
+
+class GalleryForm(forms.ModelForm):
+    class Meta:
+        model = Gallery
+        fields = ['title', 'image', 'description']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
 
 
 class CustomUserEditForm(forms.ModelForm):
@@ -213,6 +226,9 @@ VoucherProductItemFormSet = inlineformset_factory(
     extra=1,
     can_delete=True,
 )
+<<<<<<< HEAD
 
 class ProductUploadForm(forms.Form):
     excel_file = forms.FileField()
+=======
+>>>>>>> d1c392a90c1a536d3e17a7c073a04184d0770f37

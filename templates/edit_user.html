@@ -1,10 +1,133 @@
+{% extends 'backendpages/base.html' %}
+{% load static %}
 
 {% block content %}
-<h2>Edit User: {{ user_obj.username }}</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Update</button>
-</form>
-<a href="{% url 'user_list' %}">Back to user list</a>
+<style>
+.edit-user-wrapper {
+    max-width: 800px;
+    margin: 50px auto 40px;
+    padding: 30px 35px;
+    background-color: #ffffff;
+    border: 3px solid #3F5187;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.edit-user-wrapper h2 {
+    text-align: center;
+    color: #3F5187;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.edit-user-wrapper form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.edit-user-wrapper form p {
+    display: flex;
+    flex-direction: column;
+}
+.edit-user-wrapper input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    transform: scale(1.2); /* optional: makes it a bit larger */
+    margin-top: 10px;
+}
+
+.edit-user-wrapper label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #3F5187;
+}
+
+.edit-user-wrapper input,
+.edit-user-wrapper select,
+.edit-user-wrapper textarea {
+    padding: 10px;
+    border: 1.5px solid #3F5187;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: rgb(229, 231, 251);
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.edit-user-wrapper input:focus,
+.edit-user-wrapper select:focus,
+.edit-user-wrapper textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.edit-user-wrapper button {
+    padding: 14px;
+    background-color: #3F5187;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.edit-user-wrapper button:hover {
+    background-color: #2e3c6f;
+}
+
+.edit-user-wrapper a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 8px 16px;
+    text-align: center;
+    background-color: #2e3c6f;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+.edit-user-wrapper a:hover {
+    background-color: #24315a;
+}
+
+@media (max-width: 480px) {
+    .edit-user-wrapper {
+        margin: 30px 15px;
+        padding: 25px 20px;
+    }
+
+    .edit-user-wrapper h2 {
+        font-size: 24px;
+    }
+
+    .edit-user-wrapper button {
+        font-size: 14px;
+    }
+}
+</style>
+
+<div class="main-content">
+  <div class="edit-user-wrapper">
+    <h2>Edit User: {{ user_obj.username }}</h2>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update</button>
+    </form>
+    <a href="{% url 'user_list' %}">Back to user list</a>
+  </div>
+</div>
 {% endblock %}

@@ -1,45 +1,169 @@
+{% extends 'backendpages/base.html' %}
+{% load static %}
+
 {% block content %}
-<h2>User Management</h2>
-<table border="1" cellpadding="10" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Profile Pic</th>
-            <th>Password</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.get_role_display }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.phone_number }}</td>
-            <td>
-                {% if user.profile_pic %}
-                    <img src="{{ user.profile_pic.url }}" width="50" height="50" style="object-fit: cover;">
-                {% else %}
-                    N/A
-                {% endif %}
-            </td>
-            <td>
-                <span id="pwd-{{ user.id }}" style="display: none; font-weight: bold; color: red;">
-                    {{ user.original_password }}
-                </span>
-                <button type="button" onclick="togglePassword({{ user.id }}, this)">Show Password</button>
-            </td>
-            <td>
-                <a href="{% url 'edit_user' user.id %}">Edit</a> |
-                <a href="{% url 'change_user_password' user.id %}">Change Password</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<style>
+.main-content {
+    padding: 30px;
+    font-family: Arial, sans-serif;
+}
+
+.main-content h2 {
+    text-align: center;
+    color: #3F5187;
+    margin-bottom: 20px;
+}
+
+.create-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    background-color: #3F5187;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.create-link:hover {
+    background-color: #2e3b66;
+}
+
+.warehouse-table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+table.warehouse-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+}
+
+.warehouse-table th {
+    background-color: #3F5187;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #ffffff;
+}
+
+.warehouse-table td {
+    padding: 10px;
+    border: 1px solid rgb(191, 193, 218);
+    color: #3F5187;
+    vertical-align: middle;
+}
+
+.warehouse-table tr:nth-child(even) {
+    background-color: rgb(229, 231, 251);
+}
+
+.warehouse-table img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.warehouse-table .action-link {
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s, color 0.2s;
+    margin-right: 5px;
+}
+
+.warehouse-table .edit-link {
+    background-color: #28a745;
+    color: white;
+}
+
+.warehouse-table .edit-link:hover {
+    background-color: #218838;
+}
+
+.warehouse-table .password-link {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.warehouse-table .password-link:hover {
+    background-color: #e0a800;
+}
+
+.warehouse-table button {
+    background-color: #007bff;
+    color: white;
+    padding: 6px 12px;
+    font-size: 13px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.warehouse-table button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .warehouse-table {
+        font-size: 13px;
+    }
+}
+</style>
+
+<div class="main-content">
+    <h2>User Management</h2>
+
+    <div class="warehouse-table-wrapper">
+        <table class="warehouse-table">
+            <thead>
+                <tr>
+                     <th>Profile Pic</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                   
+                    <th>Password</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                      <td>
+                        {% if user.profile_pic %}
+                            <img src="{{ user.profile_pic.url }}" width="50" height="50">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.get_role_display }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone_number }}</td>
+                  
+                    <td>
+                        <span id="pwd-{{ user.id }}" style="display: none; font-weight: bold; color: red;">
+                            {{ user.original_password }}
+                        </span>
+                        <button type="button" onclick="togglePassword({{ user.id }}, this)">Show Password</button>
+                    </td>
+                    <td>
+                        <a href="{% url 'edit_user' user.id %}" class="action-link edit-link">Edit</a>
+                        <a href="{% url 'change_user_password' user.id %}" class="action-link password-link">Change Password</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <script>
 function togglePassword(userId, btn) {

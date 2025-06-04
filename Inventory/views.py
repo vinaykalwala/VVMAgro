@@ -535,6 +535,53 @@ def day_book_view(request):
     return render(request, 'day_book.html', context)
 
 
+from django.shortcuts import render
+from .models import Gallery
+
+def gallery(request):
+    images = Gallery.objects.all()
+    return render(request, 'staticpages/gallery.html', {'images': images})
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Gallery
+from .forms import GalleryForm
+from django.contrib import messages
+
+def gallery_list(request):
+    galleries = Gallery.objects.all()
+    return render(request, 'staticpages/gallery_list.html', {'galleries': galleries})
+
+def gallery_create(request):
+    if request.method == 'POST':
+        form = GalleryForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Gallery item created successfully!')
+            return redirect('gallery_list')
+    else:
+        form = GalleryForm()
+    return render(request, 'staticpages/gallery_form.html', {'form': form})
+
+def gallery_edit(request, pk):
+    gallery = get_object_or_404(Gallery, pk=pk)
+    if request.method == 'POST':
+        form = GalleryForm(request.POST, request.FILES, instance=gallery)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Gallery item updated successfully!')
+            return redirect('gallery_list')
+    else:
+        form = GalleryForm(instance=gallery)
+    return render(request, 'staticpages/gallery_form.html', {'form': form})
+
+def gallery_delete(request, pk):
+    gallery = get_object_or_404(Gallery, pk=pk)
+    if request.method == 'POST':
+        gallery.delete()
+        messages.success(request, 'Gallery item deleted successfully!')
+        return redirect('gallery_list')
+    return render(request, 'staticpages/gallery_confirm_delete.html', {'gallery': gallery})
+
 
 from .forms import CustomUserEditForm, ChangePasswordForm
 from django.contrib.auth.decorators import user_passes_test
@@ -590,9 +637,12 @@ def notify_low_stock_products(request):
     # Get products with stock less than 10
     low_stock_products = Product.objects.select_related('warehouse', 'group').filter(stock_quantity__lt=10)
 
-    # Compose email if needed
-    if low_stock_products.exists():
-        # Prepare message lines for each product
+    # Count for UI alert badge
+    low_stock_count = low_stock_products.count()
+
+    # Compose and send email if any low-stock products
+    if low_stock_count > 0:
+        # Prepare message lines
         product_lines = []
         for product in low_stock_products:
             warehouse_name = product.warehouse.name if product.warehouse else "N/A"
@@ -600,10 +650,10 @@ def notify_low_stock_products(request):
             line = f"- {product.name} | Stock: {product.stock_quantity} | Warehouse: {warehouse_name} | Group: {group_name} | Unit: {product.unit_of_measurement}"
             product_lines.append(line)
 
-        # Email body
+        # Email content
         message_body = (
-            "The following products have low stock (less than 10 units):\n\n"
-            + "\n".join(product_lines)
+            "The following products have low stock (less than 10 units):\n\n" +
+            "\n".join(product_lines)
         )
 
         # Get superusers with valid email
@@ -622,7 +672,8 @@ def notify_low_stock_products(request):
 
     # Render the template with context
     return render(request, 'low_stock_products.html', {
-        'low_stock_products': low_stock_products
+        'low_stock_products': low_stock_products,
+        'low_stock_count': low_stock_count
     })
 
 
