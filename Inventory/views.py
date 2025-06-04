@@ -339,9 +339,33 @@ def partygroup_delete(request, pk):
     return render(request, 'confirm_delete.html', {'object': group})
 
 # Party Views
+# views.py
+from django.db.models import Q
+from django.shortcuts import render
+from .models import Party
+
 def party_list(request):
-    parties = Party.objects.all()
-    return render(request, 'party_list.html', {'parties': parties})
+    query = request.GET.get('q', '').strip()
+    parties = Party.objects.select_related('group').all()
+
+    if query:
+        parties = parties.filter(
+            Q(name__icontains=query) |
+            Q(group__name__icontains=query) |
+            Q(gstin_uin_number__icontains=query) |
+            Q(address__icontains=query) |
+            Q(location__icontains=query) |
+            Q(pincode__icontains=query) |
+            Q(state__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(email__icontains=query)
+        )
+
+    return render(request, 'party_list.html', {
+        'parties': parties,
+        'query': query
+    })
+
 
 def party_create(request):
     form = PartyForm(request.POST or None)

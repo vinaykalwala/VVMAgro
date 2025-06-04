@@ -150,7 +150,14 @@
     <a href="{% url 'party_create' %}" class="create-link">Create New Party</a>
     <a href="{% url 'upload_parties' %}" class="create-link">Create Bulk Parties</a>
   </div>
+<<<<<<< HEAD
 </div>
+=======
+  <form method="get" style="margin-bottom: 20px;">
+  <input type="text" name="q" placeholder="Search party..." value="{{ query }}">
+  <button type="submit">Search</button>
+</form>
+>>>>>>> 774d367c20a1aa6fa9c3c7eed15fd6ab5be6d5db
 
   <div class="party-group">
     <table class="party-group-table">
