@@ -673,7 +673,6 @@ def notify_low_stock_products(request):
     # Render the template with context
     return render(request, 'low_stock_products.html', {
         'low_stock_products': low_stock_products,
-        'low_stock_count': low_stock_count
     })
 
 

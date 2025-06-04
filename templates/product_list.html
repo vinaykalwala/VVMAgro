@@ -145,8 +145,7 @@
             
             <th>GST Applicable</th>
             
-            <th>CGST %</th>
-            <th>SGST %</th>
+          
             
             <th>Type of Supply</th>
             <th>Phase</th>
@@ -167,8 +166,7 @@
             
             <td>{{ product.gst_applicable|yesno:"Yes,No" }}</td>
             
-            <td>{{ product.cgst_percent }}</td>
-            <td>{{ product.sgst_percent }}</td>
+           
             
             <td>{{ product.get_type_of_supply_display }}</td>
             <td>{{ product.get_phase_display|default:"N/A" }}</td>
