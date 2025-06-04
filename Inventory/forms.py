@@ -226,9 +226,6 @@ VoucherProductItemFormSet = inlineformset_factory(
     extra=1,
     can_delete=True,
 )
-<<<<<<< HEAD
 
 class ProductUploadForm(forms.Form):
     excel_file = forms.FileField()
-=======
->>>>>>> d1c392a90c1a536d3e17a7c073a04184d0770f37
