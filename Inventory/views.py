@@ -807,3 +807,45 @@ def create_voucher_with_items(request, voucher_type):
         "product_data": json.dumps(product_data),
         "preview_voucher_number": preview_voucher_number
     })
+
+
+import pandas as pd
+from .forms import ProductUploadForm
+
+def upload_products(request):
+    if request.method == 'POST':
+        form = ProductUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['excel_file']
+            try:
+                df = pd.read_excel(excel_file)
+                for _, row in df.iterrows():
+                    group_obj = ProductGroup.objects.get(name=row['group'])
+                    warehouse_obj = None
+                    if 'warehouse' in row and pd.notna(row['warehouse']):
+                        warehouse_obj = Warehouse.objects.filter(name=row['warehouse']).first()
+
+                    Product.objects.create(
+                        name=row['name'],
+                        group=group_obj,
+                        price_per_unit=row['price_per_unit'],
+                        unit_of_measurement=row['unit_of_measurement'],
+                        stock_quantity=row['stock_quantity'],
+                        warehouse=warehouse_obj,
+                        hsn_sac=row['hsn_sac'],
+                        hsn_sac_details=row.get('hsn_sac_details', ''),
+                        hsn_sac_source_of_details=row.get('hsn_sac_source_of_details', ''),
+                        hsn_sac_description=row.get('hsn_sac_description', ''),
+                        type_of_supply=row['type_of_supply'],
+                        phase=row.get('phase', None),
+                        description=row.get('description', '')
+                    )
+
+                messages.success(request, "Products uploaded successfully!")
+                return redirect('upload_products')
+            except Exception as e:
+                messages.error(request, f"Error: {e}")
+    else:
+        form = ProductUploadForm()
+    
+    return render(request, 'upload_products.html', {'form': form})
