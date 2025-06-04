@@ -1,0 +1,12 @@
+{% load static %}
+{% block content %}
+  <h2>Upload Products Excel File</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+  </form>
+  {% for message in messages %}
+    <p style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">{{ message }}</p>
+  {% endfor %}
+{% endblock %}

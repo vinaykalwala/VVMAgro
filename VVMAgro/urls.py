@@ -93,6 +93,7 @@ urlpatterns = [
 
     path('voucher-types/', voucher_type_list, name='voucher_type_list'),
     path('voucher/create/<str:voucher_type>/', create_voucher_with_items, name='create_voucher_with_items'),
+    path('upload-products/', upload_products, name='upload_products'),
 
     
 
