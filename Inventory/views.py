@@ -268,9 +268,26 @@ def warehouse_delete(request, pk):
     return render(request, 'confirm_delete.html', {'object': warehouse})
 
 # Product Views
+from django.db.models import Q
+
 def product_list(request):
+    query = request.GET.get('q', '').strip()
     products = Product.objects.select_related('group', 'warehouse').all()
-    return render(request, 'product_list.html', {'products': products})
+
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) |
+            Q(group__name__icontains=query) |
+            Q(warehouse__name__icontains=query) |
+            Q(stock_quantity__icontains=query) |
+            Q(hsn_sac__icontains=query)
+        )
+
+    return render(request, 'product_list.html', {
+        'products': products,
+        'query': query,
+    })
+
 
 def product_create(request):
     form = ProductForm(request.POST or None)
@@ -322,9 +339,33 @@ def partygroup_delete(request, pk):
     return render(request, 'confirm_delete.html', {'object': group})
 
 # Party Views
+# views.py
+from django.db.models import Q
+from django.shortcuts import render
+from .models import Party
+
 def party_list(request):
-    parties = Party.objects.all()
-    return render(request, 'party_list.html', {'parties': parties})
+    query = request.GET.get('q', '').strip()
+    parties = Party.objects.select_related('group').all()
+
+    if query:
+        parties = parties.filter(
+            Q(name__icontains=query) |
+            Q(group__name__icontains=query) |
+            Q(gstin_uin_number__icontains=query) |
+            Q(address__icontains=query) |
+            Q(location__icontains=query) |
+            Q(pincode__icontains=query) |
+            Q(state__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(email__icontains=query)
+        )
+
+    return render(request, 'party_list.html', {
+        'parties': parties,
+        'query': query
+    })
+
 
 def party_create(request):
     form = PartyForm(request.POST or None)
@@ -637,9 +678,12 @@ def notify_low_stock_products(request):
     # Get products with stock less than 10
     low_stock_products = Product.objects.select_related('warehouse', 'group').filter(stock_quantity__lt=10)
 
-    # Compose email if needed
-    if low_stock_products.exists():
-        # Prepare message lines for each product
+    # Count for UI alert badge
+    low_stock_count = low_stock_products.count()
+
+    # Compose and send email if any low-stock products
+    if low_stock_count > 0:
+        # Prepare message lines
         product_lines = []
         for product in low_stock_products:
             warehouse_name = product.warehouse.name if product.warehouse else "N/A"
@@ -647,10 +691,10 @@ def notify_low_stock_products(request):
             line = f"- {product.name} | Stock: {product.stock_quantity} | Warehouse: {warehouse_name} | Group: {group_name} | Unit: {product.unit_of_measurement}"
             product_lines.append(line)
 
-        # Email body
+        # Email content
         message_body = (
-            "The following products have low stock (less than 10 units):\n\n"
-            + "\n".join(product_lines)
+            "The following products have low stock (less than 10 units):\n\n" +
+            "\n".join(product_lines)
         )
 
         # Get superusers with valid email
@@ -669,7 +713,7 @@ def notify_low_stock_products(request):
 
     # Render the template with context
     return render(request, 'low_stock_products.html', {
-        'low_stock_products': low_stock_products
+        'low_stock_products': low_stock_products,
     })
 
 
@@ -854,3 +898,85 @@ def create_voucher_with_items(request, voucher_type):
         "product_data": json.dumps(product_data),
         "preview_voucher_number": preview_voucher_number
     })
+
+
+import pandas as pd
+from .forms import ProductUploadForm
+
+def upload_products(request):
+    if request.method == 'POST':
+        form = ProductUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['excel_file']
+            try:
+                df = pd.read_excel(excel_file)
+                for _, row in df.iterrows():
+                    group_obj = ProductGroup.objects.get(name=row['group'])
+                    warehouse_obj = None
+                    if 'warehouse' in row and pd.notna(row['warehouse']):
+                        warehouse_obj = Warehouse.objects.filter(name=row['warehouse']).first()
+
+                    Product.objects.create(
+                        name=row['name'],
+                        group=group_obj,
+                        price_per_unit=row['price_per_unit'],
+                        unit_of_measurement=row['unit_of_measurement'],
+                        stock_quantity=row['stock_quantity'],
+                        warehouse=warehouse_obj,
+                        hsn_sac=row['hsn_sac'],
+                        hsn_sac_details=row.get('hsn_sac_details', ''),
+                        hsn_sac_source_of_details=row.get('hsn_sac_source_of_details', ''),
+                        hsn_sac_description=row.get('hsn_sac_description', ''),
+                        type_of_supply=row['type_of_supply'],
+                        phase=row.get('phase', None),
+                        description=row.get('description', '')
+                    )
+
+                messages.success(request, "Products uploaded successfully!")
+                return redirect('upload_products')
+            except Exception as e:
+                messages.error(request, f"Error: {e}")
+    else:
+        form = ProductUploadForm()
+    
+    return render(request, 'upload_products.html', {'form': form})
+
+
+from .forms import PartyUploadForm
+
+def upload_parties(request):
+    if request.method == 'POST':
+        form = PartyUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['excel_file']
+            try:
+                df = pd.read_excel(excel_file)
+
+                for _, row in df.iterrows():
+                    try:
+                        group = PartyGroup.objects.get(name=row['group'])
+                    except PartyGroup.DoesNotExist:
+                        messages.error(request, f"Group '{row['group']}' does not exist.")
+                        continue
+
+                    Party.objects.create(
+                        group=group,
+                        name=row['name'],
+                        gstin_uin_number=row['gstin_uin_number'],
+                        address=row['address'],
+                        location=row['location'],
+                        pincode=row['pincode'],
+                        state=row['state'],
+                        phone=row.get('phone', ''),
+                        email=row.get('email', '')
+                    )
+
+                messages.success(request, "Party data uploaded successfully!")
+                return redirect('upload_parties')
+
+            except Exception as e:
+                messages.error(request, f"Error processing file: {e}")
+    else:
+        form = PartyUploadForm()
+    
+    return render(request, 'upload_parties.html', {'form': form})

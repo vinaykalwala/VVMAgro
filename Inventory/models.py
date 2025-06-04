@@ -124,7 +124,7 @@ class Voucher(models.Model):
     voucher_number = models.CharField(max_length=30, blank=True)
     voucher_type = models.CharField(max_length=20, choices=VOUCHER_TYPES)
     created_at = models.DateTimeField(default=datetime.now)  # Editable manually
-    movement_type = models.CharField(max_length=10, choices=MOVEMENT_TYPE_CHOICES)
+    movement_type = models.CharField(max_length=10, choices=MOVEMENT_TYPE_CHOICES, default='in')
 
     party = models.ForeignKey('Party', on_delete=models.CASCADE)
     place_of_supply = models.CharField(max_length=100, blank=True, null=True)
@@ -230,6 +230,8 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.subject}"
+
+
     
 
 class Gallery(models.Model):

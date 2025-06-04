@@ -138,9 +138,39 @@
             align-self: center;
         }
     }
+    .upload-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #3F5187;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #383c8e;
+}
+.upload-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 </style>
 
 <div class="main-content">
+<div class="upload-btn-wrapper">
+    <a href="{% url 'upload_products' %}" class="upload-btn">Upload Products In Bulk  Using Excel File</a>
+</div>
+     <div class="upload-btn-wrapper">
+        <p>or</p>
+</div>
     <div class="form-container">
         <div class="form-wrapper">
             <h2>{{ form.instance.pk|yesno:"Edit,Create" }} Product</h2>

@@ -123,15 +123,23 @@
   margin: 20px 0 30px 0;
  
 }
+
 .in-bg {
-    background-color: #d4edda;
+  background-color: #c8f7c5; /* Light green for Buyer */
 }
+
 .out-bg {
-    background-color: #f8d7da;
+  background-color: #f7c5c5; /* Light red for Seller */
 }
+
+.jobwork-bg {
+  background-color: #c5d8f7; /* Light blue for Job Work */
+}
+
 .others-bg {
-    background-color: #fff3cd;
+  background-color: #e0e0e0; /* Light gray for Others */
 }
+
 
 
 </style>
@@ -189,16 +197,13 @@
           <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ v.party.name }}</td>
-<<<<<<< HEAD
-            <td>
-              {% if v.voucher_type == "Buyer_Voucher" %}In{% elif v.voucher_type == "Seller_Voucher" %}Out{% elif v.voucher_type == "Job_Work_Voucher" %}Job Work{% else %}Others{% endif %}
-            </td>
-=======
-           <td class="
+          <td class="
     {% if v.voucher_type == 'Buyer_Voucher' %}
         in-bg
     {% elif v.voucher_type == 'Seller_Voucher' %}
         out-bg
+    {% elif v.voucher_type == 'Job_Work_Voucher' %}
+        jobwork-bg
     {% else %}
         others-bg
     {% endif %}
@@ -207,12 +212,15 @@
         In
     {% elif v.voucher_type == "Seller_Voucher" %}
         Out
+    {% elif v.voucher_type == "Job_Work_Voucher" %}
+        Job Work
     {% else %}
         Others
     {% endif %}
 </td>
 
->>>>>>> b8eeba9c9c7e3e4b8ecd6c7e75bc1408e6cd6049
+  
+
             <td>{{ v.get_voucher_type_display }}</td>
             <td><a href="{% url 'voucher_detail' voucher_id=v.id %}" class="link">{{ v.voucher_number }}</a></td>
             <td>{{ v.grand_total }}</td>

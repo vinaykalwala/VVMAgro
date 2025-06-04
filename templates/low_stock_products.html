@@ -1,49 +1,195 @@
+{% extends 'backendpages/base.html' %}
+{% load static %}
+
 {% block content %}
-<h2>Low Stock Products</h2>
+<style>
+    .main-content {
+        padding: 30px;
+    }
 
-{% if low_stock_products %}
-    <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Stock Quantity</th>
-                <th>Warehouse</th>
-                <th>Group</th>
-                <th>Unit of Measurement</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in low_stock_products %}
-            <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ product.stock_quantity }}</td>
-                <td>
-                    {% if product.warehouse %}
-                        {{ product.warehouse.name }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-                <td>
-                    {% if product.group %}
-                        {{ product.group.name }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-                <td>{{ product.unit_of_measurement }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    .alert-panel {
+        background-color: #fed9d9;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 25px 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        overflow-x: auto;
+    }
 
-    <!-- Send Email Button -->
-    <form method="post" action="{% url 'low_stock_products' %}">
-        {% csrf_token %}
-        <button type="submit">Send Email Notification</button>
-    </form>
+    .alert-panel h2 {
+        margin-top: 0;
+        font-size: 26px;
+        font-weight: bold;
+        color: #856404;
+    }
 
-{% else %}
-    <p>All products have sufficient stock.</p>
-{% endif %}
+    .responsive-table {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        min-width: 600px;
+    }
+
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap;
+        font-size: 16px;
+          border: 1px solid rgb(191, 193, 218);;
+
+    }
+
+    th {
+        background-color: #3F5187;
+        font-weight: bold;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    tr:nth-child(even) {
+        background-color: rgb(229, 231, 251);
+    }
+
+    .send-email-btn {
+        margin-top: 20px;
+        padding: 12px 20px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .send-email-btn:hover {
+        background-color: #c82333;
+    }
+
+    .no-alert {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 20px 25px;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+
+    /* Medium Devices: Tablets and 850px-wide screens */
+    @media (max-width: 1024px) {
+        .main-content {
+            padding: 20px;
+        }
+
+        .alert-panel h2 {
+            font-size: 24px;
+        }
+
+        th, td {
+            font-size: 15px;
+            padding: 10px 12px;
+        }
+
+        .send-email-btn {
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin: 20px auto 0;
+        }
+    }
+
+    /* Small Devices: Phones */
+    @media (max-width: 768px) {
+        .main-content {
+            padding: 15px;
+        }
+
+        table {
+            min-width: 100%;
+        }
+
+        th, td {
+            font-size: 14px;
+            padding: 8px 10px;
+        }
+
+        .alert-panel h2 {
+            font-size: 20px;
+        }
+
+        .send-email-btn {
+            font-size: 14px;
+            padding: 10px 14px;
+        }
+    }
+
+    /* Extra Small Devices */
+    @media (max-width: 480px) {
+        .send-email-btn {
+            width: 100%;
+            font-size: 13px;
+            padding: 10px;
+        }
+
+        .alert-panel {
+            padding: 15px 18px;
+        }
+    }
+</style>
+
+<div class="main-content">
+    {% if low_stock_products %}
+    <div class="alert-panel">
+        <h2>⚠️ Low Stock Products</h2>
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Stock Quantity</th>
+                        <th>Warehouse</th>
+                        <th>Group</th>
+                        <th>Unit of Measurement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in low_stock_products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.stock_quantity }}</td>
+                        <td>{{ product.warehouse.name|default:"N/A" }}</td>
+                        <td>{{ product.group.name|default:"N/A" }}</td>
+                        <td>{{ product.unit_of_measurement }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <form method="post" action="{% url 'low_stock_products' %}">
+            {% csrf_token %}
+            <button type="submit" class="send-email-btn">Send Email Notification</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="no-alert">
+        <p>✅ All products have sufficient stock.</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

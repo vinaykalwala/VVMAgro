@@ -1,53 +1,216 @@
-<h1>Vouchers</h1>
-<form method="get" action="">
-    <input type="text" name="voucher_number" placeholder="Voucher Number" value="{{ search_params.voucher_number }}">
-    
-    <select name="voucher_type">
+{% extends 'backendpages/base.html' %}
+{% block content %}
+<style>
+.daybook-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.daybook-form .form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+}
+
+.daybook-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #3F5187;
+  font-size: 14px;
+}
+
+.daybook-form input,
+.daybook-form select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-btn {
+  background-color: #3F5187;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  background-color: rgb(191, 193, 218);
+  transform: scale(1.05);
+}
+.clear-link {
+  background-color: #fa4040;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  text-align: center;
+}
+
+.clear-link:hover {
+  background-color: rgb(191, 193, 218);
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .daybook-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.daybook-table-wrapper {
+  overflow-x: auto;
+  background-color: #fff;
+  border: 1px solid rgb(191, 193, 218);
+  border-radius: 8px;
+}
+
+.daybook-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.daybook-table th {
+  background-color: #3F5187;
+  color: #fff;
+  padding: 10px;
+  border: 1px solid #ffffff;
+}
+
+.daybook-table td {
+  padding: 10px;
+  border: 1px solid rgb(191, 193, 218);
+  color: #3F5187;
+}
+
+.daybook-table tr:nth-child(even) {
+  background-color: rgb(229, 231, 251);
+}
+
+.link {
+  display: inline-block;
+  background-color: #3F5187;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.link:hover {
+  background-color: rgb(191, 193, 218);
+  transform: scale(1.05);
+}
+
+@media screen and (max-width: 768px) {
+  .daybook-table {
+    min-width: 600px;
+  }
+}
+
+.daybook-heading {
+  text-align: center;
+  color: #3F5187;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 20px 0 30px 0;
+}
+
+
+</style>
+
+<div class="main-content">
+  <h1 class="daybook-heading">Vouchers</h1>
+
+  <form method="get" action="" class="daybook-form">
+   
+
+    <div class="form-group">
+      <label for="voucher_type">Voucher Type</label>
+      <select name="voucher_type" id="voucher_type">
         <option value="">All Types</option>
         {% for code, label in vouchers.model.VOUCHER_TYPES %}
-            <option value="{{ code }}" {% if search_params.voucher_type == code %}selected{% endif %}>{{ label }}</option>
+          <option value="{{ code }}" {% if search_params.voucher_type == code %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
-    </select>
+      </select>
+    </div>
 
-    <input type="text" name="party_name" placeholder="Party Name" value="{{ search_params.party_name }}">
+    <div class="form-group">
+      <label for="party_name">Party Name</label>
+      <input type="text" name="party_name" id="party_name" value="{{ search_params.party_name }}">
+    </div>
 
-    <label>Exact Date:
-        <input type="date" name="date_exact" value="{{ search_params.date_exact }}">
-    </label>
+    <div class="form-group">
+      <label for="date_exact">Exact Date</label>
+      <input type="date" name="date_exact" id="date_exact" value="{{ search_params.date_exact }}">
+    </div>
 
-    <label>From:
-        <input type="date" name="date_from" value="{{ search_params.date_from }}">
-    </label>
-    <label>To:
-        <input type="date" name="date_to" value="{{ search_params.date_to }}">
-    </label>
+    <div class="form-group">
+      <label for="date_from">From</label>
+      <input type="date" name="date_from" id="date_from" value="{{ search_params.date_from }}">
+    </div>
 
-    <button type="submit">Search</button>
-    <a href="{% url 'voucher_list' %}">Clear</a>
-</form>
-<table border="1" cellpadding="8">
-    <thead>
+    <div class="form-group">
+      <label for="date_to">To</label>
+      <input type="date" name="date_to" id="date_to" value="{{ search_params.date_to }}">
+    </div>
+      <div class="form-group">
+      <label for="voucher_number">Voucher Number</label>
+      <input type="text" name="voucher_number" id="voucher_number" value="{{ search_params.voucher_number }}">
+    </div>
+    <div class="form-group">
+      <button type="submit" class="filter-btn">Search</button>
+    </div>
+
+    <div class="form-group">
+      <a href="{% url 'voucher_list' %}" class="clear-link">Clear</a>
+    </div>
+  </form>
+
+  <div class="daybook-table-wrapper">
+    <table class="daybook-table">
+      <thead>
         <tr>
-            <th>Voucher Number</th>
-            <th>Type</th>
-            <th>Party</th>
-            <th>Created At</th>
-            <th>Grand Total</th>
-            <th>Details</th>
+          <th>Voucher Number</th>
+          <th>Type</th>
+          <th>Party</th>
+          <th>Created At</th>
+          <th>Grand Total</th>
+          <th>Details</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for voucher in vouchers %}
-        <tr>
-            <td>{{ voucher.voucher_number }}</td>
-            <td>{{ voucher.get_voucher_type_display }}</td>
-            <td>{{ voucher.party.name }}</td>
-            <td>{{ voucher.created_at|date:"d M Y H:i" }}</td>
-            <td>{{ voucher.grand_total }}</td>
-            <td><a href="{% url 'voucher_detail' voucher.id %}">View Details</a></td>
+        <tr class="{% if voucher.voucher_type == 'IN' %}in-bg{% elif voucher.voucher_type == 'OUT' %}out-bg{% elif voucher.voucher_type == 'JOBWORK' %}jobwork-bg{% else %}others-bg{% endif %}">
+          <td>{{ voucher.voucher_number }}</td>
+          <td>{{ voucher.get_voucher_type_display }}</td>
+          <td>{{ voucher.party.name }}</td>
+          <td>{{ voucher.created_at|date:"d M Y H:i" }}</td>
+          <td>{{ voucher.grand_total }}</td>
+          <td><a href="{% url 'voucher_detail' voucher.id %}" class="link">View Details</a></td>
         </tr>
         {% empty %}
         <tr><td colspan="6">No vouchers found.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

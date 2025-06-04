@@ -125,12 +125,65 @@
       flex: 1;
     }
   }
+  .search-bar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  max-width: 500px; /* Maximum width for the entire search bar */
+  width: 100%;      /* Take full width of parent container */
+  gap: 0;           /* no gap, so input and button are flush */
+}
+
+.search-bar input[type="text"] {
+  flex: 1; /* Takes all available space */
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 16px;
+  outline: none;
+  min-width: 0; /* For flexbox shrinking */
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  border: 1px solid #3F5187;
+  background-color: #3F5187;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  white-space: nowrap; /* prevent button text wrap */
+}
+
+.search-bar button:hover {
+  background-color: #2e3b66;
+}
+
+/* Responsive center and size adjustments */
+@media (max-width: 768px) {
+  .search-bar {
+    justify-content: center;
+    max-width: 90%; /* smaller max-width on mobile */
+  }
+
+  .search-bar input[type="text"],
+  .search-bar button {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+}
+
 </style>
 <div class="main-content">
     <div class="header-flex">
 <h1>Products</h1>
 <a href="{% url 'product_create' %}" class="create-link">Create New Product </a>
 </div>
+<form method="get" class="search-bar">
+  <input type="text" name="q" placeholder="Search products..." value="{{ query }}">
+  <button type="submit">Search</button>
+</form>
 <div class="party-group">
 <table class="party-group-table">
     <thead>
@@ -145,8 +198,7 @@
             
             <th>GST Applicable</th>
             
-            <th>CGST %</th>
-            <th>SGST %</th>
+          
             
             <th>Type of Supply</th>
             <th>Phase</th>
@@ -167,8 +219,7 @@
             
             <td>{{ product.gst_applicable|yesno:"Yes,No" }}</td>
             
-            <td>{{ product.cgst_percent }}</td>
-            <td>{{ product.sgst_percent }}</td>
+           
             
             <td>{{ product.get_type_of_supply_display }}</td>
             <td>{{ product.get_phase_display|default:"N/A" }}</td>

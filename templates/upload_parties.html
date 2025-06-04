@@ -1,0 +1,144 @@
+{% extends 'backendpages/base.html' %}
+{% block content %}
+{% load static %}
+<style>
+    .upload-container {
+        max-width: 800px;
+        margin: 40px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        border: 2px solid #3F5187;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .upload-container h2 {
+        text-align: center;
+        color: #3F5187;
+        margin-bottom: 20px;
+        font-size: 26px;
+    }
+
+    .upload-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .upload-container input[type="file"] {
+        padding: 10px;
+        border: 1px solid #3F5187;
+        border-radius: 6px;
+        background-color: #f0f4ff;
+        font-size: 16px;
+    }
+
+    .upload-container button {
+        padding: 12px;
+        background-color: #3F5187;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .upload-container button:hover {
+        background-color: #2e3c6f;
+    }
+
+    .message {
+        margin-top: 20px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .message.error {
+        color: red;
+    }
+
+    .message.success {
+        color: green;
+    }
+
+    .note {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #fff8dc;
+        border-left: 6px solid #f1c40f;
+        border-radius: 6px;
+        font-size: 15px;
+        color: #4a3b00;
+    }
+
+    .note ul {
+        margin-top: 10px;
+        padding-left: 20px;
+    }
+
+    .note li {
+        margin-bottom: 8px;
+    }
+
+    .download-link {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 14px;
+        background-color: #3F5187;
+        color: #fff;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+    .download-link:hover {
+        background-color: #2e3c6f;
+    }
+
+    @media (max-width: 768px) {
+        .upload-container {
+            margin: 20px;
+            padding: 20px;
+        }
+    }
+</style>
+
+<div class="main-content">
+  <div class="upload-container">
+    <h2>Upload Parties Excel File</h2>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Upload</button>
+    </form>
+
+    {% for message in messages %}
+      <p class="message {{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+
+   <div class="note">
+  <strong>Note:</strong> Please ensure your Excel file follows this format:
+  <ul>
+    <li><code>group</code> – Must match an existing Party Group</li>
+    <li><code>name</code> – Party name</li>
+    <li><code>gstin_uin_number</code> – GSTIN or UIN number</li>
+    <li><code>address</code> – Full address</li>
+    <li><code>location</code> – Location/City</li>
+    <li><code>pincode</code> – Postal code</li>
+    <li><code>state</code> – State name</li>
+    <li><code>phone</code> – Phone number (optional)</li>
+    <li><code>email</code> – Email address (optional)</li>
+  </ul>
+  <br>
+  <p>If you're unsure, please download the sample Excel file below and use it as a reference.</p>
+  <a href="{% static 'sample_parties_upload.xlsx' %}" class="download-link">📥 Download Sample Excel File</a>
+</div>
+
+  </div>
+</div>
+{% endblock %}
