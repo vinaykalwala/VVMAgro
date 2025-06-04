@@ -140,6 +140,54 @@
     width: 100%; /* Make buttons container full width */
   }
 }
+ .search-bar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  max-width: 500px; 
+  width: 100%;
+  gap: 0;       
+}
+
+.search-bar input[type="text"] {
+  flex: 1; 
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 16px;
+  outline: none;
+  min-width: 0; 
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  border: 1px solid #3F5187;
+  background-color: #3F5187;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  white-space: nowrap; /* prevent button text wrap */
+}
+
+.search-bar button:hover {
+  background-color: #2e3b66;
+}
+
+/* Responsive center and size adjustments */
+@media (max-width: 768px) {
+  .search-bar {
+    justify-content: center;
+    max-width: 90%; /* smaller max-width on mobile */
+  }
+
+  .search-bar input[type="text"],
+  .search-bar button {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+}
 
 </style>
 
@@ -150,14 +198,11 @@
     <a href="{% url 'party_create' %}" class="create-link">Create New Party</a>
     <a href="{% url 'upload_parties' %}" class="create-link">Create Bulk Parties</a>
   </div>
-<<<<<<< HEAD
 </div>
-=======
-  <form method="get" style="margin-bottom: 20px;">
+ <form method="get" class="search-bar">
   <input type="text" name="q" placeholder="Search party..." value="{{ query }}">
   <button type="submit">Search</button>
 </form>
->>>>>>> 774d367c20a1aa6fa9c3c7eed15fd6ab5be6d5db
 
   <div class="party-group">
     <table class="party-group-table">
