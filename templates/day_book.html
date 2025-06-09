@@ -209,9 +209,9 @@
     {% endif %}
 ">
     {% if v.voucher_type == "Buyer_Voucher" %}
-        In
-    {% elif v.voucher_type == "Seller_Voucher" %}
         Out
+    {% elif v.voucher_type == "Seller_Voucher" %}
+        In
     {% elif v.voucher_type == "Job_Work_Voucher" %}
         Job Work
     {% else %}

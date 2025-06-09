@@ -191,7 +191,8 @@
 
 <div class="main-content">
     <div class="voucher-container">
-        <h1>Create Voucher - {{ voucher_type }}</h1>
+        <h1>{% if is_edit %} Edit Voucher - {{ voucher_type }} {% else %} Create Voucher - {{ voucher_type }} {% endif %}</h1>
+
 
         {% if messages %}
             <div>

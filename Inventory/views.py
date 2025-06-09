@@ -1008,3 +1008,92 @@ def upload_parties(request):
         form = PartyUploadForm()
     
     return render(request, 'upload_parties.html', {'form': form})
+
+@login_required
+def edit_voucher_with_items(request, voucher_id):
+    voucher = get_object_or_404(Voucher, id=voucher_id)
+    voucher_type = voucher.voucher_type
+    movement_type_map = {
+        'Seller_Voucher': 'in',
+        'Buyer_Voucher': 'out',
+        'Job_Work_Voucher': 'job_work',
+        'Quotation': '',
+        'Delivery_Challan': '',
+    }
+
+    def save_voucher_and_items(form, formset):
+        with transaction.atomic():
+            voucher = form.save(commit=False)
+            voucher.movement_type = movement_type_map.get(voucher.voucher_type, '')
+            voucher.save()
+
+            total_subtotal = total_cgst = total_sgst = total_igst = grand_total = 0
+
+            formset.save(commit=False)
+
+            # Delete marked items first
+            for item_form in formset.deleted_forms:
+                if item_form.instance.pk:
+                    item_form.instance.delete()
+
+            # Update existing items or add new
+            for item_form in formset:
+                if item_form.cleaned_data.get('DELETE', False):
+                    continue
+                item = item_form.save(commit=False)
+                item.voucher = voucher
+
+                item.subtotal = item.quantity * item.price_per_unit
+                item.cgst_amount = (item.subtotal * item.cgst_percent) / 100
+                item.sgst_amount = (item.subtotal * item.sgst_percent) / 100
+                item.igst_amount = (item.subtotal * item.igst_percent) / 100
+                item.total_amount = item.subtotal + item.cgst_amount + item.sgst_amount + item.igst_amount
+
+                item.save()
+
+                total_subtotal += item.subtotal
+                total_cgst += item.cgst_amount
+                total_sgst += item.sgst_amount
+                total_igst += item.igst_amount
+                grand_total += item.total_amount
+
+            if voucher.freight_applicable and voucher.freight_charge:
+                grand_total += voucher.freight_charge
+
+            voucher.total_subtotal = total_subtotal
+            voucher.total_cgst = total_cgst
+            voucher.total_sgst = total_sgst
+            voucher.total_igst = total_igst
+            voucher.grand_total = grand_total
+            voucher.save()
+
+        return voucher
+
+    if request.method == 'POST':
+        form = VoucherForm(request.POST, instance=voucher, voucher_type=voucher_type)
+        formset = VoucherProductItemFormSetNoExtra(request.POST, instance=voucher)
+
+        if form.is_valid() and formset.is_valid():
+            voucher = save_voucher_and_items(form, formset)
+            return redirect('voucher_detail', voucher_id=voucher.id)
+
+    else:
+        form = VoucherForm(instance=voucher, voucher_type=voucher_type)
+        formset = VoucherProductItemFormSetNoExtra(instance=voucher)
+
+    products = Product.objects.select_related('warehouse').all()
+    product_data = {
+        str(product.id): {
+            "warehouse_id": str(product.warehouse.id) if product.warehouse else ""
+        }
+        for product in products
+    }
+
+    return render(request, 'voucher_form_with_items.html', {
+        'form': form,
+        'formset': formset,
+        'voucher_type': voucher_type,
+        "product_data": json.dumps(product_data),
+        "preview_voucher_number": voucher.voucher_number,
+        'is_edit': True,
+    })
