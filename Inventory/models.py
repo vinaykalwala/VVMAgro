@@ -121,7 +121,7 @@ class Voucher(models.Model):
         ('job_work', 'Job Work'),
     ]
 
-    voucher_number = models.CharField(max_length=30, blank=True)
+    voucher_number = models.CharField(max_length=50, blank=True)
     voucher_type = models.CharField(max_length=20, choices=VOUCHER_TYPES)
     created_at = models.DateTimeField(default=datetime.now)  # Editable manually
     movement_type = models.CharField(max_length=10, choices=MOVEMENT_TYPE_CHOICES, default='in')
