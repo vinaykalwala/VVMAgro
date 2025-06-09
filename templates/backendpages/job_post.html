@@ -1,29 +1,129 @@
+{% extends 'backendpages/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container mx-auto mt-8 p-4 max-w-2xl">
-    <h1 class="text-2xl font-bold mb-6">Post a New Job</h1>
-    
-    <!-- {% if messages %}
-        <div class="mb-4">
-            {% for message in messages %}
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %} -->
+<style>
+  .job-form-wrapper {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    <form method="POST" class="space-y-4">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="flex justify-end space-x-2">
-            <a href="{% url 'admin_dashboard' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded">
-                Cancel
-            </a>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                Post Job
-            </button>
+  .job-form-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    border-top: 8px solid #3F5187;
+  }
+
+  .job-form-card h1 {
+    text-align: center;
+    color: #3F5187;
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  form .form-group {
+    margin-bottom: 20px;
+  }
+
+  form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #3F5187;
+  }
+
+  form input,
+  form textarea,
+  form select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 16px;
+        border: 1px solid #3F5187;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+            background-color: rgb(229, 231, 251);
+
+  }
+
+  form input:focus,
+  form textarea:focus,
+  form select:focus {
+    border-color: #3F5187;
+    outline: none;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .form-actions a,
+  .form-actions button {
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .form-actions a {
+    background-color: #ccc;
+    color: #333;
+  }
+
+  .form-actions a:hover {
+    background-color: #bbb;
+  }
+
+  .form-actions button {
+    background-color: #3F5187;
+    color: white;
+  }
+
+  .form-actions button:hover {
+    background-color: #2e3e6c;
+  }
+
+  @media (max-width: 600px) {
+    .job-form-card {
+      padding: 25px;
+    }
+  }
+</style>
+<div class="main-content">
+<div class="job-form-wrapper">
+  <div class="job-form-card">
+    <h1>Post a New Job</h1>
+
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <p style="color: red; font-size: 14px;">{{ field.errors.0 }}</p>
+          {% endif %}
         </div>
+      {% endfor %}
+
+      <div class="form-actions">
+        <a href="{% url 'admin_dashboard' %}">Cancel</a>
+        <button type="submit">Post Job</button>
+      </div>
     </form>
+  </div>
+</div>
 </div>
 {% endblock %}

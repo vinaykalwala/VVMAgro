@@ -393,27 +393,96 @@
             font-size: 0.9rem;
         }
     }
+    .about {
+    display: flex;
+    flex-wrap: wrap;
+    padding:0 20px;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    text-align: left;
+  }
+
+  .angled-frame {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    clip-path: polygon(0 5%, 100% 0, 100% 90%, 0% 100%);
+    overflow: hidden;
+    border: 5px solid #303F9F;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .angled-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    transform: scale(1.05);
+  }
+
+  .about-text {
+    max-width: 500px;
+  }
+
+  .about-text h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .about-text h2 span {
+    color: #303F9F;
+  }
+
+  .about-text p {
+    margin-bottom: 10px;
+  }
+
 </style>
 
 <section class="hero">
     <div class="hero-content">
         <h1>About VVM Agro Industries</h1>
-        <p>Pioneering Agricultural Machinery and Tractors Since 2016</p>
+        <p>Pioneering Agricultural Machinery and Tractors Since 2011</p>
     </div>
 </section>
+<section class="about">
+  <div class="angled-frame">
+    <img src="{% static 'ceo.jpg' %}" alt="Security Guards">
+  </div>
+ <div class="about-text" data-aos="fade-left">
+  <h2><span> Vuppala Sudharshan </span>CEO</h2>
+  <p>At Arax Security, we specialize in delivering professional services across Security, Housekeeping, Facility Management, and Skilled Manpower Outsourcing.</p>
+  <p>Whether it's securing your assets, maintaining high standards of cleanliness, or managing large facilities — we provide end-to-end solutions backed by trained personnel and a commitment to excellence.</p>
+  <p><strong>ARAX</strong> services are trusted by corporates, gated communities, educational institutions, and government sectors across Telangana.</p>
+</div>
+</section>
+<section class="about">
+ 
+ <div class="about-text" data-aos="fade-left">
+  <h2><span> Somavarapu Srikanth </span>Managing Director</h2>
+  <p>At Arax Security, we specialize in delivering professional services across Security, Housekeeping, Facility Management, and Skilled Manpower Outsourcing.</p>
+  <p>Whether it's securing your assets, maintaining high standards of cleanliness, or managing large facilities — we provide end-to-end solutions backed by trained personnel and a commitment to excellence.</p>
+  <p><strong>ARAX</strong> services are trusted by corporates, gated communities, educational institutions, and government sectors across Telangana.</p>
+   
+</div>
+<div class="angled-frame">
+    <img src="{% static 'md.jpg' %}" alt="Security Guards">
+  </div>
+</section>
+
 
 <div class="container">
     <div class="section">
         <h2>Our Journey</h2>
         <img src="{% static 'images/vvmagrohydrauliclifttractor.jpg' %}" alt="Tractor working in a field" class="section-image">
-        <p>Founded on 27-Jun-2016, VVM Agro Industries is a Micro enterprise (2023-24) dedicated to transforming agriculture and electrical contracting through innovative equipment. Our journey began in Hyderabad, Telangana, and expanded to Hayathanagar, Ranga Reddy District, Telangana, with additional operations in Mancherial, Telangana.</p>
-        <p>Under our V VMotors division, we manufacture high-performance tractors ranging from 33 HP to 90 HP and serve as an authorized state distributor for Indofarm Tractor spare parts across Telangana & Andhra Pradesh. Our innovative Hole Lifter, designed for electrical contractors, digs holes up to 6 feet and lifts poles (8m, 9.1m, 11m), significantly reducing manpower and costs.</p>
+        <p>Founded on 1-Jan-2011, VVM Agro Industries is a Micro enterprise  dedicated to transforming agriculture and electrical contracting through innovative equipment. Our journey began in Hayathanagar Ranga Reddy District, Telangana, and expanded to Hyderabad, Telangana, with additional operations in Muppireddypally, Medak District, Telangana.</p>
+        <p>Under our VVM Motors division, we manufacture high-performance tractor implements on Tractors ranging <strong>from 33 HP to 75 HP</strong> across Telangana, Andhra Pradesh , Karnataka, Maharashtra & Odisha. Our innovative Hole Lifter, designed for electrical contractors, digs holes up to 10 feet and lifts poles (8m, 9.1m, 11m), significantly reducing manpower and costs.</p>
         <p>We also specialize in:</p>
         <ul>
             <li class="fas fa-tractor">Wood working machines for precision processing</li>
             <li class="fas fa-tractor">Tractor attachments for efficient agricultural tasks</li>
-            <li class="fas fa-tractor">Waste recycling machines for sustainable horticulture</li>
-            <li class="fas fa-tractor">Forestry tools for advanced operations</li>
         </ul>
         <p>With tie-ups with banks and finance companies, we ensure accessible solutions for our customers, backed by excellent after-sales service.</p>
     </div>
@@ -448,25 +517,25 @@
             <div class="product-card" aria-label="Front Dozer Tractor">
                 <div class="product-image" style="background-image: url('{% static 'images/vvmagrofrontdozer.jpg' %}')"></div>
                 <div class="product-overlay">
-                    <h3 class="product-title">Front Dozer Tractor</h3>
+                    <h3 class="product-title">Front Dozer Crane</h3>
                 </div>
             </div>
             <div class="product-card" aria-label="Boom Lift Tractor">
                 <div class="product-image" style="background-image: url('{% static 'images/vvmagroboomlift.jpg' %}')"></div>
                 <div class="product-overlay">
-                    <h3 class="product-title">Boom Lift Tractor</h3>
+                    <h3 class="product-title">1 Ton Crane</h3>
                 </div>
             </div>
             <div class="product-card" aria-label="Front End Load Tractor">
                 <div class="product-image" style="background-image: url('{% static 'images/vvmagrofrontendloader.jpg' %}')"></div>
                 <div class="product-overlay">
-                    <h3 class="product-title">Front End Load Tractor</h3>
+                    <h3 class="product-title">1.5 Ton Crane</h3>
                 </div>
             </div>
             <div class="product-card" aria-label="Hydraulic Lift Tractor">
                 <div class="product-image" style="background-image: url('{% static 'images/vvmagrohydrauliclifttractor.jpg' %}')"></div>
                 <div class="product-overlay">
-                    <h3 class="product-title">Hydraulic Lift Tractor</h3>
+                    <h3 class="product-title">1.5 Ton Crane</h3>
                 </div>
             </div>
             <div class="product-card" aria-label="Post Hole Digger">
@@ -482,19 +551,30 @@
         <h2>Organization Details</h2>
         <img src="{% static 'hyderabad-office.jpg' %}" alt="VVM Agro Industries Hyderabad office" class="section-image">
         <ul>
-            <li class="fas fa-tractor"><strong>Name:</strong> VVM Agro Industries (V VMotors)</li>
+            <li class="fas fa-tractor"><strong>Name:</strong> VVM Agro Industries</li>
             <li class="fas fa-tractor"><strong>CEO:</strong> Vuppala Sudharshan</li>
+            <li class="fas fa-tractor"><strong>Managing Director:</strong> Somavarapu Srikanth</li>
             <li class="fas fa-tractor"><strong>Type:</strong> Micro (2023-24, 2022-23, 2021-22)</li>
             <li class="fas fa-tractor"><strong>Structure:</strong> Partnership</li>
             <li class="fas fa-tractor"><strong>Incorporation:</strong> 27-Jun-2016</li>
             <li class="fas fa-tractor"><strong>Activity:</strong> Manufacturing</li>
             <li class="fas fa-tractor"><strong>Social Category:</strong> OBC</li>
-            <li class="fas fa-tractor"><strong>Commencement:</strong> 01-Dec-2020</li>
+            <li class="fas fa-tractor"><strong>Commencement:</strong> 27-Jun-2016</li>
             <li class="fas fa-tractor"><strong>Locations:</strong> 1104&1105, Opp Petrol Pump, Doolapally, 02, M G Road, Hyderabad, Telangana, 500055; Hayathanagar, Ranga Reddy District, Telangana</li>
             <li class="fas fa-tractor"><strong>Branches:</strong> Hyderabad, Mancherial (Telangana); Hayathanagar (Telangana)</li>
             <li class="fas fa-tractor"><strong>Turnover:</strong> 1.5 - 5 Cr</li>
             <li class="fas fa-tractor"><strong>Employees:</strong> Up to 10 People</li>
-            <li class="fas fa-tractor"><strong>GST:</strong> 36AANFV9684N1ZW (Registered: 01-Jul-2017)</li>
+            <li class="fas fa-tractor"><strong>GST:</strong> 36AANFV9684N1ZW (Registered: 27-Jun-2016)</li>
+        </ul>
+        <hr>
+        <ul>
+            
+             <li class="fas fa-tractor"><strong>Name:</strong> V V Motors </li>
+             <li class="fas fa-tractor"><strong>Incorporation:</strong> 1-Jan-2011</li>
+             <li class="fas fa-tractor"><strong>Commencement:</strong> 1-Jan-2011</li>
+
+
+
         </ul>
     </div>
 
@@ -512,6 +592,12 @@
                 <div class="timeline-content">
                     <h3>2006</h3>
                     <p>Established Venkatamani Sai Power Lines, an electrical trading and fabrication business.</p>
+                </div>
+            </div>
+             <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>2011</h3>
+                    <p>Established V V Motors Founded on 1-jan-2011.</p>
                 </div>
             </div>
             <div class="timeline-item">
@@ -546,8 +632,8 @@
         <img src="{% static 'images/vvmagroindustrystandards.jpg' %}" alt="VVM Agro Industries industry standards" class="section-image">
         <p><strong>Classification:</strong> Manufacture of lifting and handling equipment (NIC: Machinery and equipment n.e.c.).</p>
         <ul>
-            <li class="fas fa-tractor"><strong>HSN 84322910:</strong> Rotary hoes</li>
-            <li class="fas fa-tractor"><strong>HSN 84328020:</strong> Rotary tiller</li>
+            <li class="fas fa-tractor"><strong>HSN 8426:</strong> Hole Lifter</li>
+            <li class="fas fa-tractor"><strong>HSN 804846:</strong> Bearings</li>
             <li class="fas fa-tractor"><strong>HSN 84328090:</strong> Other machinery</li>
             <li class="fas fa-tractor"><strong>HSN 84329010:</strong> Agricultural machinery parts</li>
             <li class="fas fa-tractor"><strong>HSN 84329090:</strong> Other parts</li>

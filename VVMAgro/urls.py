@@ -80,7 +80,7 @@ urlpatterns = [
     
     #Gallery
     path('gallery/', gallery, name='gallery'),
-    path('gallery_list', gallery_list, name='gallery_list'),
+    path('gallery_list/', gallery_list, name='gallery_list'),
     path('gallery_create/', gallery_create, name='gallery_create'),
     path('gallery_edit/<int:pk>/', gallery_edit, name='gallery_edit'),
     path('gallery_delete/<int:pk>/', gallery_delete, name='gallery_delete'),
