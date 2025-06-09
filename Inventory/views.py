@@ -779,6 +779,16 @@ def create_voucher_with_items(request, voucher_type):
 
     initial_movement_type = movement_type_map.get(voucher_type, '')
 
+    # ✅ Always generate preview voucher number for GET and POST
+    now = timezone.now()
+    fy_start = now.year if now.month >= 4 else now.year - 1
+    fy_end = fy_start + 1
+    fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
+    prefix_code = voucher_type_prefix_map.get(voucher_type, 'UNK')
+    prefix = f"VVMAgro/{fy_str}/{prefix_code}/"
+    count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
+    preview_voucher_number = f"{prefix}{str(count).zfill(3)}"
+
     def save_voucher_and_items(form, formset, voucher_type):
         with transaction.atomic():
             voucher = form.save(commit=False)
@@ -786,13 +796,6 @@ def create_voucher_with_items(request, voucher_type):
             voucher.movement_type = movement_type_map.get(voucher_type, '')
 
             if not voucher.voucher_number:
-                now = timezone.now()
-                fy_start = now.year if now.month >= 4 else now.year - 1
-                fy_end = fy_start + 1
-                fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
-                prefix_code = voucher_type_prefix_map.get(voucher_type, 'UNK')
-                prefix = f"VVMAgro/{fy_str}/{prefix_code}/"
-                count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
                 voucher.voucher_number = f"{prefix}{str(count).zfill(3)}"
 
             voucher.save()
@@ -805,14 +808,12 @@ def create_voucher_with_items(request, voucher_type):
                 item = item_form.save(commit=False)
                 item.voucher = voucher
 
-                # Compute amounts
                 item.subtotal = item.quantity * item.price_per_unit
                 item.cgst_amount = (item.subtotal * item.cgst_percent) / 100
                 item.sgst_amount = (item.subtotal * item.sgst_percent) / 100
                 item.igst_amount = (item.subtotal * item.igst_percent) / 100
                 item.total_amount = item.subtotal + item.cgst_amount + item.sgst_amount + item.igst_amount
 
-                # Adjust stock and other fields based on voucher type
                 if voucher_type == 'Seller_Voucher':
                     voucher.movement_type = 'in'
                     item.product.stock_quantity += item.quantity
@@ -836,14 +837,12 @@ def create_voucher_with_items(request, voucher_type):
 
                 item.save()
 
-                # Accumulate totals
                 total_subtotal += item.subtotal
                 total_cgst += item.cgst_amount
                 total_sgst += item.sgst_amount
                 total_igst += item.igst_amount
                 grand_total += item.total_amount
 
-            # Add freight charges if applicable
             if voucher.freight_applicable and voucher.freight_charge:
                 grand_total += voucher.freight_charge
 
@@ -856,14 +855,12 @@ def create_voucher_with_items(request, voucher_type):
 
         return voucher
 
-    # Handle POST request
     if request.method == 'POST':
         form = VoucherForm(request.POST or None, voucher_type=voucher_type)
         formset = VoucherProductItemFormSet(request.POST)
 
         if form.is_valid() and formset.is_valid():
 
-            # For Job_Work_Voucher: validate product type_of_supply
             if voucher_type == 'Job_Work_Voucher':
                 invalid_products = []
                 for item_form in formset:
@@ -882,7 +879,6 @@ def create_voucher_with_items(request, voucher_type):
                     voucher = save_voucher_and_items(form, formset, voucher_type)
                     return redirect('voucher_detail', voucher_id=voucher.id)
 
-            # For Buyer_Voucher: check stock quantity before saving
             elif voucher_type == 'Buyer_Voucher':
                 insufficient_stock_products = []
                 for item_form in formset:
@@ -904,25 +900,13 @@ def create_voucher_with_items(request, voucher_type):
                     return redirect('voucher_detail', voucher_id=voucher.id)
 
             else:
-                # For other voucher types: no special validation, just save
                 voucher = save_voucher_and_items(form, formset, voucher_type)
                 return redirect('voucher_detail', voucher_id=voucher.id)
 
     else:
-        # Initial GET request — prepare empty form
         form = VoucherForm(initial={'voucher_type': voucher_type, 'movement_type': initial_movement_type})
         formset = VoucherProductItemFormSet()
 
-        now = timezone.now()
-        fy_start = now.year if now.month >= 4 else now.year - 1
-        fy_end = fy_start + 1
-        fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
-        prefix_code = voucher_type_prefix_map.get(voucher_type, 'UNK')
-        prefix = f"VVMAgro/{fy_str}/{prefix_code}/"
-        count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
-        preview_voucher_number = f"{prefix}{str(count).zfill(3)}"
-
-    # Load product data for form JS (optional)
     products = Product.objects.select_related('warehouse').all()
     product_data = {
         str(product.id): {
@@ -938,7 +922,6 @@ def create_voucher_with_items(request, voucher_type):
         "product_data": json.dumps(product_data),
         "preview_voucher_number": preview_voucher_number
     })
-
 
 import pandas as pd
 from .forms import ProductUploadForm
