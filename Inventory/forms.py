@@ -224,14 +224,14 @@ VoucherProductItemFormSet = inlineformset_factory(
     VoucherProductItem,
     form=VoucherProductItemForm,
     extra=1,
-    can_delete=False,
+    can_delete=True,
 )
 
 VoucherProductItemFormSetNoExtra = inlineformset_factory(
     Voucher, VoucherProductItem,
     form=VoucherProductItemForm,
     extra=0,   # for Edit
-    can_delete=False
+    can_delete=True
 )
 class ProductUploadForm(forms.Form):
     excel_file = forms.FileField()

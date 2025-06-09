@@ -768,6 +768,15 @@ def create_voucher_with_items(request, voucher_type):
         'Quotation': '',
         'Delivery_Challan': '',
     }
+
+    voucher_type_prefix_map = {
+        'Buyer_Voucher': 'INV',
+        'Seller_Voucher': 'P',
+        'Job_Work_Voucher': 'JW',
+        'Quotation': 'Q',
+        'Delivery_Challan': 'DC',
+    }
+
     initial_movement_type = movement_type_map.get(voucher_type, '')
 
     def save_voucher_and_items(form, formset, voucher_type):
@@ -775,14 +784,17 @@ def create_voucher_with_items(request, voucher_type):
             voucher = form.save(commit=False)
             voucher.voucher_type = voucher_type
             voucher.movement_type = movement_type_map.get(voucher_type, '')
+
             if not voucher.voucher_number:
                 now = timezone.now()
                 fy_start = now.year if now.month >= 4 else now.year - 1
                 fy_end = fy_start + 1
                 fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
-                prefix = f"VVMAgro/{fy_str}/{voucher_type}/"
+                prefix_code = voucher_type_prefix_map.get(voucher_type, 'UNK')
+                prefix = f"VVMAgro/{fy_str}/{prefix_code}/"
                 count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
                 voucher.voucher_number = f"{prefix}{str(count).zfill(3)}"
+
             voucher.save()
 
             total_subtotal = total_cgst = total_sgst = total_igst = grand_total = 0
@@ -844,6 +856,7 @@ def create_voucher_with_items(request, voucher_type):
 
         return voucher
 
+    # Handle POST request
     if request.method == 'POST':
         form = VoucherForm(request.POST or None, voucher_type=voucher_type)
         formset = VoucherProductItemFormSet(request.POST)
@@ -865,8 +878,6 @@ def create_voucher_with_items(request, voucher_type):
                         "For Job Work Voucher, only products with type_of_supply as 'raw_material' are allowed. "
                         "Invalid products: " + ", ".join(invalid_products)
                     )
-                    # Re-render form with errors below
-
                 else:
                     voucher = save_voucher_and_items(form, formset, voucher_type)
                     return redirect('voucher_detail', voucher_id=voucher.id)
@@ -888,8 +899,6 @@ def create_voucher_with_items(request, voucher_type):
                     messages.error(request,
                         "Insufficient stock for the following products: " + ", ".join(insufficient_stock_products)
                     )
-                    # Re-render form with errors below
-
                 else:
                     voucher = save_voucher_and_items(form, formset, voucher_type)
                     return redirect('voucher_detail', voucher_id=voucher.id)
@@ -900,16 +909,20 @@ def create_voucher_with_items(request, voucher_type):
                 return redirect('voucher_detail', voucher_id=voucher.id)
 
     else:
+        # Initial GET request — prepare empty form
         form = VoucherForm(initial={'voucher_type': voucher_type, 'movement_type': initial_movement_type})
         formset = VoucherProductItemFormSet()
+
         now = timezone.now()
         fy_start = now.year if now.month >= 4 else now.year - 1
         fy_end = fy_start + 1
         fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
-        prefix = f"VVMAgro/{fy_str}/{voucher_type}/"
+        prefix_code = voucher_type_prefix_map.get(voucher_type, 'UNK')
+        prefix = f"VVMAgro/{fy_str}/{prefix_code}/"
         count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
         preview_voucher_number = f"{prefix}{str(count).zfill(3)}"
 
+    # Load product data for form JS (optional)
     products = Product.objects.select_related('warehouse').all()
     product_data = {
         str(product.id): {
