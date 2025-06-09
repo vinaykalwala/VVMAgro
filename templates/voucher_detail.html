@@ -58,20 +58,32 @@
         .section {
             margin: 10px 0;
         }
-        .btn-print {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #3F5187;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-        }
-        .btn-print:hover {
-            background-color: #6377b4;
-        }
+       
+.voucher-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.btn-print {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3F5187;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-print:hover {
+  background-color: #2c3e65;
+}
 
         @media print {
             body {
@@ -213,9 +225,16 @@
     </div>
 </div>
 
-<button onclick="window.print()" class="btn-print">
+<div class="voucher-actions">
+  <button onclick="window.print()" class="btn-print">
     🖨️ Print Invoice
-</button>
+  </button>
+
+  <a href="{% url 'voucher_list' %}" class="btn-print">
+    🔙 Back To Vouchers
+  </a>
+</div>
+
 
 </body>
 </html>
