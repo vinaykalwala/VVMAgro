@@ -1,4 +1,4 @@
-{% extends 'staticpages/base.html' %}
+{% extends 'backendpages/base.html' %}
 
 {% block content %}
 <style>
@@ -12,12 +12,14 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         margin-top: 40px;
         margin-bottom: 40px;
+                border: 2px solid #3F5187;
+
     }
     
     .form-header {
         text-align: center;
         margin-bottom: 30px;
-        color: #2c3e50;
+        color: #3F5187;
     }
     
     .form-header h1 {
@@ -40,17 +42,18 @@
     
     .form-group label {
         font-weight: 600;
-        color: #34495e;
+        color: #3F5187;
         font-size: 1rem;
     }
     
     .form-control {
         padding: 12px 15px;
-        border: 1px solid #dfe6e9;
+        border: 1px solid #3F5187;
         border-radius: 8px;
         font-size: 1rem;
         transition: all 0.3s ease;
         background-color: #f8f9fa;
+        color: #3F5187;
     }
     
     .form-control:focus {
@@ -79,7 +82,7 @@
     }
     
     .btn-save {
-        background-color: #3498db;
+        background-color: #3F5187;
         color: white;
         padding: 12px 25px;
         border-radius: 8px;
@@ -95,13 +98,14 @@
     }
     
     .btn-cancel {
-        background-color: #95a5a6;
+        background-color: #c8c8c8;
         color: white;
         padding: 12px 25px;
         border-radius: 8px;
         font-weight: 600;
         border: none;
         transition: all 0.3s ease;
+        text-decoration: none;
     }
     
     .btn-cancel:hover {
@@ -130,7 +134,7 @@
     }
     
     .file-input-button {
-        background-color: #2ecc71;
+        background-color: #3F5187;
         color: white;
         padding: 10px 20px;
         border-radius: 8px;
@@ -143,7 +147,7 @@
     }
     
     .file-input-button:hover {
-        background-color: #27ae60;
+        background-color: #6382e7;
     }
     
     .file-input-button i {
@@ -185,6 +189,7 @@
         }
     }
 </style>
+<div class="main-content">
 
 <div class="form-container">
     <div class="form-header">
@@ -241,7 +246,7 @@
         </div>
     </form>
 </div>
-
+</div>
 <script>
     // Display selected file name
     document.querySelector('input[type="file"]').addEventListener('change', function(e) {
