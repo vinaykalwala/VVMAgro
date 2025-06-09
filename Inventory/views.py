@@ -50,6 +50,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 
+@login_required
 def signup_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -213,11 +214,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import ProductGroup, Warehouse, Product, PartyGroup, Party
 from .forms import ProductGroupForm, WarehouseForm, ProductForm, PartyGroupForm, PartyForm
 
+@login_required
 # ProductGroup Views
 def productgroup_list(request):
     groups = ProductGroup.objects.all()
     return render(request, 'productgroup_list.html', {'groups': groups})
 
+@login_required
 def productgroup_create(request):
     form = ProductGroupForm(request.POST or None)
     if form.is_valid():
@@ -225,6 +228,7 @@ def productgroup_create(request):
         return redirect('productgroup_list')
     return render(request, 'productgroup_form.html', {'form': form})
 
+@login_required
 def productgroup_update(request, pk):
     group = get_object_or_404(ProductGroup, pk=pk)
     form = ProductGroupForm(request.POST or None, instance=group)
@@ -233,6 +237,7 @@ def productgroup_update(request, pk):
         return redirect('productgroup_list')
     return render(request, 'productgroup_form.html', {'form': form})
 
+@login_required
 def productgroup_delete(request, pk):
     group = get_object_or_404(ProductGroup, pk=pk)
     if request.method == 'POST':
@@ -240,11 +245,13 @@ def productgroup_delete(request, pk):
         return redirect('productgroup_list')
     return render(request, 'confirm_delete.html', {'object': group})
 
+@login_required
 # Warehouse Views
 def warehouse_list(request):
     warehouses = Warehouse.objects.all()
     return render(request, 'warehouse_list.html', {'warehouses': warehouses})
 
+@login_required
 def warehouse_create(request):
     form = WarehouseForm(request.POST or None)
     if form.is_valid():
@@ -252,6 +259,7 @@ def warehouse_create(request):
         return redirect('warehouse_list')
     return render(request, 'warehouse_form.html', {'form': form})
 
+@login_required
 def warehouse_update(request, pk):
     warehouse = get_object_or_404(Warehouse, pk=pk)
     form = WarehouseForm(request.POST or None, instance=warehouse)
@@ -260,6 +268,7 @@ def warehouse_update(request, pk):
         return redirect('warehouse_list')
     return render(request, 'warehouse_form.html', {'form': form})
 
+@login_required
 def warehouse_delete(request, pk):
     warehouse = get_object_or_404(Warehouse, pk=pk)
     if request.method == 'POST':
@@ -269,7 +278,7 @@ def warehouse_delete(request, pk):
 
 # Product Views
 from django.db.models import Q
-
+@login_required
 def product_list(request):
     query = request.GET.get('q', '').strip()
     products = Product.objects.select_related('group', 'warehouse').all()
@@ -288,7 +297,7 @@ def product_list(request):
         'query': query,
     })
 
-
+@login_required
 def product_create(request):
     form = ProductForm(request.POST or None)
     if form.is_valid():
@@ -296,6 +305,7 @@ def product_create(request):
         return redirect('product_list')
     return render(request, 'product_form.html', {'form': form})
 
+@login_required
 def product_update(request, pk):
     product = get_object_or_404(Product, pk=pk)
     form = ProductForm(request.POST or None, instance=product)
@@ -304,6 +314,7 @@ def product_update(request, pk):
         return redirect('product_list')
     return render(request, 'product_form.html', {'form': form})
 
+@login_required
 def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
@@ -311,11 +322,13 @@ def product_delete(request, pk):
         return redirect('product_list')
     return render(request, 'confirm_delete.html', {'object': product})
 
+@login_required
 # PartyGroup Views
 def partygroup_list(request):
     groups = PartyGroup.objects.all()
     return render(request, 'partygroup_list.html', {'groups': groups})
 
+@login_required
 def partygroup_create(request):
     form = PartyGroupForm(request.POST or None)
     if form.is_valid():
@@ -323,6 +336,7 @@ def partygroup_create(request):
         return redirect('partygroup_list')
     return render(request, 'partygroup_form.html', {'form': form})
 
+@login_required
 def partygroup_update(request, pk):
     group = get_object_or_404(PartyGroup, pk=pk)
     form = PartyGroupForm(request.POST or None, instance=group)
@@ -331,6 +345,7 @@ def partygroup_update(request, pk):
         return redirect('partygroup_list')
     return render(request, 'partygroup_form.html', {'form': form})
 
+@login_required
 def partygroup_delete(request, pk):
     group = get_object_or_404(PartyGroup, pk=pk)
     if request.method == 'POST':
@@ -344,6 +359,7 @@ from django.db.models import Q
 from django.shortcuts import render
 from .models import Party
 
+@login_required
 def party_list(request):
     query = request.GET.get('q', '').strip()
     parties = Party.objects.select_related('group').all()
@@ -366,7 +382,7 @@ def party_list(request):
         'query': query
     })
 
-
+@login_required
 def party_create(request):
     form = PartyForm(request.POST or None)
     if form.is_valid():
@@ -374,6 +390,7 @@ def party_create(request):
         return redirect('party_list')
     return render(request, 'party_form.html', {'form': form})
 
+@login_required
 def party_update(request, pk):
     party = get_object_or_404(Party, pk=pk)
     form = PartyForm(request.POST or None, instance=party)
@@ -382,6 +399,7 @@ def party_update(request, pk):
         return redirect('party_list')
     return render(request, 'party_form.html', {'form': form})
 
+@login_required
 def party_delete(request, pk):
     party = get_object_or_404(Party, pk=pk)
     if request.method == 'POST':
@@ -415,6 +433,7 @@ def apply_for_job(request, job_id):
 def careers(request):
     jobs = Job.objects.all().order_by('-created_at')
     return render(request, "staticpages/careers.html", {"jobs": jobs})
+
 def contact_create_view(request):
     success = False  # Flag to show success message
 
@@ -429,6 +448,7 @@ def contact_create_view(request):
 
     return render(request, 'contact_form.html', {'form': form, 'success': success})
 
+@login_required
 def contact_list_view(request):
     contacts = Contact.objects.all().order_by('-created_at')
     return render(request, 'contact_list.html', {'contacts': contacts})
@@ -475,6 +495,7 @@ def application_detail_view(request, application_id):
 
 from django.db.models import Q
 
+@login_required
 def stock_report_view(request):
     query = request.GET.get('q', '')
     warehouse_id = request.GET.get('warehouse', '')
@@ -526,6 +547,8 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from django.utils.timezone import make_aware
 
+
+@login_required
 def day_book_view(request):
     vouchers = Voucher.objects.all().order_by('-created_at')
 
@@ -592,6 +615,7 @@ def gallery_list(request):
     galleries = Gallery.objects.all()
     return render(request, 'staticpages/gallery_list.html', {'galleries': galleries})
 
+@login_required
 def gallery_create(request):
     if request.method == 'POST':
         form = GalleryForm(request.POST, request.FILES)
@@ -603,6 +627,7 @@ def gallery_create(request):
         form = GalleryForm()
     return render(request, 'staticpages/gallery_form.html', {'form': form})
 
+@login_required
 def gallery_edit(request, pk):
     gallery = get_object_or_404(Gallery, pk=pk)
     if request.method == 'POST':
@@ -615,6 +640,7 @@ def gallery_edit(request, pk):
         form = GalleryForm(instance=gallery)
     return render(request, 'staticpages/gallery_form.html', {'form': form})
 
+@login_required
 def gallery_delete(request, pk):
     gallery = get_object_or_404(Gallery, pk=pk)
     if request.method == 'POST':
@@ -674,6 +700,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from .models import Product
 
+@login_required
 def notify_low_stock_products(request):
     # Get products with stock less than 10
     low_stock_products = Product.objects.select_related('warehouse', 'group').filter(stock_quantity__lt=10)
@@ -717,7 +744,7 @@ def notify_low_stock_products(request):
     })
 
 
-
+@login_required
 def voucher_type_list(request):
     types = [vt[0] for vt in Voucher.VOUCHER_TYPES]
     return render(request, 'voucher_type_list.html', {'voucher_types': types})
@@ -732,7 +759,7 @@ from .forms import VoucherForm, VoucherProductItemFormSet
 import json
 from django.utils import timezone
 
-
+@login_required
 def create_voucher_with_items(request, voucher_type):
     movement_type_map = {
         'Seller_Voucher': 'in',
@@ -903,6 +930,7 @@ def create_voucher_with_items(request, voucher_type):
 import pandas as pd
 from .forms import ProductUploadForm
 
+@login_required
 def upload_products(request):
     if request.method == 'POST':
         form = ProductUploadForm(request.POST, request.FILES)
@@ -943,7 +971,7 @@ def upload_products(request):
 
 
 from .forms import PartyUploadForm
-
+@login_required
 def upload_parties(request):
     if request.method == 'POST':
         form = PartyUploadForm(request.POST, request.FILES)
