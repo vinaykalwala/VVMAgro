@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from Inventory.models import *
 from Inventory.views import *
+from django.conf.urls import handler404, handler500
 
 
 urlpatterns = [
@@ -97,9 +98,12 @@ urlpatterns = [
     path('upload-products/', upload_products, name='upload_products'),
     path('upload-parties/', upload_parties, name='upload_parties'),
 
-    
+
 
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+handler404 = 'Inventory.views.custom_404_view'
+handler500 = 'Inventory.views.custom_500_view'

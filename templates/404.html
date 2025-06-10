@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Not Found - 404</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 100px; background-color: #f8f9fa; color: #333; }
+        h1 { font-size: 60px; margin-bottom: 20px; color: #dc3545; }
+        p { font-size: 20px; margin-bottom: 15px; }
+        a { color: #007BFF; text-decoration: none; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>404</h1>
+    <p>Oops! The page you are looking for was not found.</p>
+    <p>OR</p>
+    <p>You may not have proper permissions to access this page.</p>
+    <p>Please <a href="{% url 'login' %}">login</a> with appropriate credentials having the necessary permissions.</p>
+    <p><a href="{% url 'home' %}">Go back to Home</a></p>
+</body>
+</html>

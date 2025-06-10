@@ -1112,3 +1112,13 @@ def edit_voucher_with_items(request, voucher_id):
         "preview_voucher_number": voucher.voucher_number,
         'is_edit': True,
     })
+
+
+
+def custom_404_view(request, exception):
+    return render(request, '404.html', status=404)
+
+def custom_500_view(request):
+    return render(request, '500.html', status=500)
+
+
