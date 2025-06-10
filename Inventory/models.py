@@ -54,8 +54,9 @@ class Product(models.Model):
     group = models.ForeignKey(ProductGroup, on_delete=models.CASCADE, related_name='products')
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     unit_of_measurement = models.CharField(max_length=50)
-    stock_quantity = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    stock_quantity = stock_quantity = models.IntegerField(default=0)
     warehouse = models.ForeignKey('Warehouse', on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
+    stock_limit = models.IntegerField(default=0)
 
     #Statuatory Details
 

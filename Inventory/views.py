@@ -699,28 +699,29 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from .models import Product
+from django.db.models import F
 
 @login_required
 def notify_low_stock_products(request):
-    # Get products with stock less than 10
-    low_stock_products = Product.objects.select_related('warehouse', 'group').filter(stock_quantity__lt=10)
-
-    # Count for UI alert badge
-    low_stock_count = low_stock_products.count()
+    # Get products where stock_quantity < stock_limit
+    low_stock_products = Product.objects.select_related('warehouse', 'group').filter(stock_quantity__lt=F('stock_limit'))
 
     # Compose and send email if any low-stock products
-    if low_stock_count > 0:
-        # Prepare message lines
+    if low_stock_products.exists():
         product_lines = []
         for product in low_stock_products:
             warehouse_name = product.warehouse.name if product.warehouse else "N/A"
             group_name = product.group.name if product.group else "N/A"
-            line = f"- {product.name} | Stock: {product.stock_quantity} | Warehouse: {warehouse_name} | Group: {group_name} | Unit: {product.unit_of_measurement}"
+            line = (
+                f"- {product.name} | Stock: {product.stock_quantity} | "
+                f"Stock Limit: {product.stock_limit} | "
+                f"Warehouse: {warehouse_name} | Group: {group_name} | Unit: {product.unit_of_measurement}"
+            )
             product_lines.append(line)
 
         # Email content
         message_body = (
-            "The following products have low stock (less than 10 units):\n\n" +
+            "The following products have stock below their stock limit:\n\n" +
             "\n".join(product_lines)
         )
 
@@ -738,11 +739,10 @@ def notify_low_stock_products(request):
                 fail_silently=False,
             )
 
-    # Render the template with context
+    # Render the template with context (shows all low stock products in UI)
     return render(request, 'low_stock_products.html', {
         'low_stock_products': low_stock_products,
     })
-
 
 @login_required
 def voucher_type_list(request):
@@ -925,6 +925,8 @@ def create_voucher_with_items(request, voucher_type):
 
 import pandas as pd
 from .forms import ProductUploadForm
+from .models import Product, ProductGroup, Warehouse
+
 
 @login_required
 def upload_products(request):
@@ -934,19 +936,34 @@ def upload_products(request):
             excel_file = request.FILES['excel_file']
             try:
                 df = pd.read_excel(excel_file)
+
                 for _, row in df.iterrows():
                     group_obj = ProductGroup.objects.get(name=row['group'])
                     warehouse_obj = None
                     if 'warehouse' in row and pd.notna(row['warehouse']):
                         warehouse_obj = Warehouse.objects.filter(name=row['warehouse']).first()
 
+                    # Handle stock_limit safely — convert to int, fallback to 0 if missing
+                    stock_limit_value = row.get('stock_limit', 0)
+                    if pd.isna(stock_limit_value):
+                        stock_limit_value = 0
+                    stock_limit_value = int(stock_limit_value)
+
+                    # Handle stock_quantity safely — convert to int, fallback to 0 if missing
+                    stock_quantity_value = row.get('stock_quantity', 0)
+                    if pd.isna(stock_quantity_value):
+                        stock_quantity_value = 0
+                    stock_quantity_value = int(stock_quantity_value)
+
                     Product.objects.create(
                         name=row['name'],
                         group=group_obj,
                         price_per_unit=row['price_per_unit'],
                         unit_of_measurement=row['unit_of_measurement'],
-                        stock_quantity=row['stock_quantity'],
+                        stock_quantity=stock_quantity_value,  # Now properly handled as integer
                         warehouse=warehouse_obj,
+                        stock_limit=stock_limit_value,
+
                         hsn_sac=row['hsn_sac'],
                         hsn_sac_details=row.get('hsn_sac_details', ''),
                         hsn_sac_source_of_details=row.get('hsn_sac_source_of_details', ''),
@@ -958,11 +975,13 @@ def upload_products(request):
 
                 messages.success(request, "Products uploaded successfully!")
                 return redirect('upload_products')
+
             except Exception as e:
                 messages.error(request, f"Error: {e}")
+
     else:
         form = ProductUploadForm()
-    
+
     return render(request, 'upload_products.html', {'form': form})
 
 

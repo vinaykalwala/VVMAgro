@@ -192,11 +192,11 @@
             <th>Group</th>
             <th>Price per Unit</th>
             <th>Units</th>
-            <th>Stock Quantity</th>
+            
             <th>Warehouse</th>
             <th>HSN/SAC</th>
-            
-            <th>GST Applicable</th>
+            <th>Stock Quantity</th>
+            <th>Min Stock Limit</th>
             
           
             
@@ -213,11 +213,11 @@
             <td>{{ product.group.name }}</td>
             <td>{{ product.price_per_unit }}</td>
             <td>{{ product.unit_of_measurement }}</td>
-            <td>{{ product.stock_quantity }}</td>
+            
             <td>{{ product.warehouse.name}}</td>
             <td>{{ product.hsn_sac }}</td>
-            
-            <td>{{ product.gst_applicable|yesno:"Yes,No" }}</td>
+            <td>{{ product.stock_quantity }}</td>
+            <td>{{ product.stock_limit}}</td>
             
            
             

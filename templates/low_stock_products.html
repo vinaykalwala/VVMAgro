@@ -162,6 +162,7 @@
                     <tr>
                         <th>Product Name</th>
                         <th>Stock Quantity</th>
+                        <th>Stock Limit</th>
                         <th>Warehouse</th>
                         <th>Group</th>
                         <th>Unit of Measurement</th>
@@ -172,6 +173,7 @@
                     <tr>
                         <td>{{ product.name }}</td>
                         <td>{{ product.stock_quantity }}</td>
+                        <td>{{ product.stock_limit }}</td>
                         <td>{{ product.warehouse.name|default:"N/A" }}</td>
                         <td>{{ product.group.name|default:"N/A" }}</td>
                         <td>{{ product.unit_of_measurement }}</td>
