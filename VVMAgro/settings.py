@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-f-$(@4-wv32_hehjg@)!^lo1^0w2omf1_^yhv4v@l6mx=cv5t3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -79,23 +79,17 @@ WSGI_APPLICATION = 'VVMAgro.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'agro2.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'Agro2',
+        'USER': 'root',
+        'PASSWORD': 'Durgaprakash@143',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'Agro2',
-#         'USER': 'root',
-#         'PASSWORD': 'Durgaprakash@143',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
 
 
 
