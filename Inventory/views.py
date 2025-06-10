@@ -816,17 +816,17 @@ def create_voucher_with_items(request, voucher_type):
 
                 if voucher_type == 'Seller_Voucher':
                     voucher.movement_type = 'in'
-                    item.product.stock_quantity += item.quantity
+                    item.product.stock_quantity += int(item.quantity)  # Cast to int for safe update
                     item.product.save()
 
                 elif voucher_type == 'Buyer_Voucher':
                     voucher.movement_type = 'out'
-                    item.product.stock_quantity -= item.quantity
+                    item.product.stock_quantity -= int(item.quantity)  # Cast to int for safe update
                     item.product.save()
 
                 elif voucher_type == 'Job_Work_Voucher':
                     voucher.movement_type = 'job_work'
-                    item.product.stock_quantity += item.quantity
+                    item.product.stock_quantity += int(item.quantity)  # Cast to int for safe update
                     selected_phase = item_form.cleaned_data.get('phase', '')
                     if selected_phase:
                         item.product.phase = selected_phase
@@ -886,9 +886,9 @@ def create_voucher_with_items(request, voucher_type):
                         continue
                     product = item_form.cleaned_data.get('product')
                     quantity = item_form.cleaned_data.get('quantity')
-                    if product and quantity and product.stock_quantity < quantity:
+                    if product and quantity and product.stock_quantity < int(quantity):  # Cast to int for comparison
                         insufficient_stock_products.append(
-                            f"{product.name} (available: {product.stock_quantity}, requested: {quantity})"
+                            f"{product.name} (available: {product.stock_quantity}, requested: {int(quantity)})"
                         )
 
                 if insufficient_stock_products:
