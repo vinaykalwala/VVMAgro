@@ -785,7 +785,7 @@ def create_voucher_with_items(request, voucher_type):
     fy_end = fy_start + 1
     fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
     prefix_code = voucher_type_prefix_map.get(voucher_type, 'UNK')
-    prefix = f"VVMAgro/{fy_str}/{prefix_code}/"
+    prefix = f"VVM/{fy_str}/{prefix_code}/"
     count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
     preview_voucher_number = f"{prefix}{str(count).zfill(3)}"
 
