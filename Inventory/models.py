@@ -246,3 +246,97 @@ class Gallery(models.Model):
     
     def __str__(self):
         return self.title
+
+
+from django.db import models
+from datetime import datetime
+
+class Account(models.Model):
+    ACCOUNT_TYPE_CHOICES = [
+        ('savings', 'Savings'),
+        ('current', 'Current'),
+        ('overdraft', 'Overdraft'),
+        ('cash_credit', 'Cash Credit'),
+        ('other', 'Other'),
+    ]
+
+    bank_name = models.CharField(max_length=100)
+    branch_name = models.CharField(max_length=100)
+    ifsc_code = models.CharField(max_length=20)
+    account_number = models.CharField(max_length=50, unique=True)
+    account_holder_name = models.CharField(max_length=100)
+    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICES)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.bank_name} - {self.account_number}"
+
+
+class Transaction(models.Model):
+    TRANSACTION_VOUCHER_TYPE_CHOICES = [
+        ('payment', 'Payment'),
+        ('receipt', 'Receipt'),
+        ('contra', 'Contra'),
+    ]
+
+    TRANSACTION_TYPE_CHOICES = [
+        ('Cash', 'Cash'),
+        ('Cheque/DD', 'Cheque/DD'),
+        ('Card', 'Card'),
+        ('ECS', 'ECS'),
+        ('E-Fund Transfer', 'E-Fund Transfer'),
+        ('Electronic Cheque', 'Electronic Cheque'),
+        ('Electronic DD/PO', 'Electronic DD/PO'),
+        ('Others', 'Others'),
+    ]
+
+    METHOD_OF_ADJUSTMENT_CHOICES = [
+        ('Advance', 'Advance'),
+        ('Agst Ref', 'Against Reference'),
+        ('New Ref', 'New Reference'),
+        ('On Account', 'On Account'),
+    ]
+
+    transaction_voucher_number = models.CharField(max_length=100, blank=True, unique=True)
+    date = models.DateField(blank=True, null=True)
+
+    transaction_voucher_type = models.CharField(max_length=10, choices=TRANSACTION_VOUCHER_TYPE_CHOICES)
+    transaction_type = models.CharField(max_length=30, choices=TRANSACTION_TYPE_CHOICES)
+    method_of_adjustment = models.CharField(max_length=20, choices=METHOD_OF_ADJUSTMENT_CHOICES)
+
+    account = models.ForeignKey('Account', on_delete=models.CASCADE)
+    party = models.ForeignKey('Party', on_delete=models.SET_NULL, null=True, blank=True)
+
+    contra_details = models.CharField(
+    max_length=100,
+    blank=True,
+    null=True,
+    help_text="Enter details for Contra transactions (e.g., Cash, Bank Transfer, etc.)"
+)
+
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+
+    voucher = models.ForeignKey('Voucher', on_delete=models.SET_NULL, null=True, blank=True)
+
+    remarks = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.transaction_voucher_number:
+            now = datetime.now()
+            fy_start = now.year if now.month >= 4 else now.year - 1
+            fy_end = fy_start + 1
+            fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
+            prefix_map = {
+                'payment': 'PMT',
+                'receipt': 'R',
+                'contra': 'CON',
+            }
+            prefix = f"VVM/{prefix_map.get(self.transaction_voucher_type, 'UNK')}/{fy_str}/"
+            count = Transaction.objects.filter(transaction_voucher_number__startswith=prefix).count() + 1
+            self.transaction_voucher_number = f"{prefix}{count}"  # No zfill to avoid fixed digits
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.transaction_voucher_number} - {self.get_transaction_voucher_type_display()}"

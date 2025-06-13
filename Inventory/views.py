@@ -1122,3 +1122,74 @@ def custom_500_view(request):
     return render(request, '500.html', status=500)
 
 
+from .models import Account, Transaction
+from .forms import AccountForm, TransactionForm
+
+
+def account_list(request):
+    accounts = Account.objects.all()
+    return render(request, 'account_list.html', {'accounts': accounts})
+
+def account_create(request):
+    form = AccountForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('account_list')
+    return render(request, 'account_form.html', {'form': form})
+
+def account_update(request, pk):
+    account = get_object_or_404(Account, pk=pk)
+    form = AccountForm(request.POST or None, instance=account)
+    if form.is_valid():
+        form.save()
+        return redirect('account_list')
+    return render(request, 'account_form.html', {'form': form})
+
+def account_delete(request, pk):
+    account = get_object_or_404(Account, pk=pk)
+    if request.method == 'POST':
+        account.delete()
+        return redirect('account_list')
+    return render(request, 'account_confirm_delete.html', {'account': account})
+
+
+def transaction_list(request):
+    transactions = Transaction.objects.all()
+    return render(request, 'transaction_list.html', {'transactions': transactions})
+
+def select_transaction_type(request):
+    return render(request, 'select_transaction_type.html')
+
+def transaction_create(request, voucher_type):
+    from .forms import TransactionForm
+    from .models import Transaction
+
+    if request.method == 'POST':
+        form = TransactionForm(request.POST, voucher_type=voucher_type)
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            transaction.transaction_voucher_type = voucher_type
+            transaction.save()
+            return redirect('transaction_list')
+    else:
+        form = TransactionForm(initial={'transaction_voucher_type': voucher_type}, voucher_type=voucher_type)
+
+    return render(request, 'transaction_form.html', {
+        'form': form,
+        'voucher_type': voucher_type.capitalize()
+    })
+
+def transaction_update(request, pk):
+    transaction = get_object_or_404(Transaction, pk=pk)
+    form = TransactionForm(request.POST or None, instance=transaction)
+    if form.is_valid():
+        form.save()
+        return redirect('transaction_list')
+    return render(request, 'transaction_form.html', {'form': form})
+
+def transaction_delete(request, pk):
+    transaction = get_object_or_404(Transaction, pk=pk)
+    if request.method == 'POST':
+        transaction.delete()
+        return redirect('transaction_list')
+    return render(request, 'transaction_confirm_delete.html', {'transaction': transaction})

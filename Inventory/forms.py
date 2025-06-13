@@ -238,3 +238,42 @@ class ProductUploadForm(forms.Form):
 
 class PartyUploadForm(forms.Form):
     excel_file = forms.FileField()
+
+
+from django import forms
+from .models import Account, Transaction
+
+class AccountForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = '__all__'
+
+
+from django import forms
+from .models import Transaction
+from datetime import date
+
+from django import forms
+from .models import Transaction
+from datetime import date
+
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = '__all__'
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        voucher_type = kwargs.pop('voucher_type', None)
+        super(TransactionForm, self).__init__(*args, **kwargs)
+        self.fields['transaction_voucher_type'].disabled = True
+
+        # Set default date for new records
+        if not self.instance.pk:
+            self.fields['date'].initial = date.today()
+
+        # Hide contra_details unless it's a contra transaction
+        if voucher_type != 'contra':
+            self.fields.pop('contra_details', None)

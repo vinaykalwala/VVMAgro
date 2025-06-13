@@ -98,6 +98,18 @@ urlpatterns = [
     path('upload-products/', upload_products, name='upload_products'),
     path('upload-parties/', upload_parties, name='upload_parties'),
 
+    path('accounts/', account_list, name='account_list'),
+    path('accounts/create/', account_create, name='account_create'),
+    path('accounts/<int:pk>/edit/', account_update, name='account_update'),
+    path('accounts/<int:pk>/delete/', account_delete, name='account_delete'),
+
+    # Transactions
+    path('transactions/',transaction_list, name='transaction_list'),
+    path('transactions/select-type/', select_transaction_type, name='select_transaction_type'),
+    path('transactions/create/<str:voucher_type>/', transaction_create, name='transaction_create'),
+    path('transactions/<int:pk>/edit/', transaction_update, name='transaction_update'),
+    path('transactions/<int:pk>/delete/', transaction_delete, name='transaction_delete'),
+
 
 
 ]

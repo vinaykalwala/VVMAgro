@@ -1,0 +1,10 @@
+<h2>Accounts</h2>
+<a href="{% url 'account_create' %}">Create Account</a>
+<ul>
+    {% for acc in accounts %}
+        <li>{{ acc }} |
+            <a href="{% url 'account_update' acc.pk %}">Edit</a> |
+            <a href="{% url 'account_delete' acc.pk %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
