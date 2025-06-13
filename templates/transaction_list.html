@@ -2,8 +2,7 @@
 <ul>
     {% for trx in transactions %}
         <li>{{ trx }} |
-            <a href="{% url 'transaction_update' trx.pk %}">Edit</a> |
-            <a href="{% url 'transaction_delete' trx.pk %}">Delete</a>
+            
         </li>
     {% endfor %}
 </ul>

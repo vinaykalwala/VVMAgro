@@ -271,6 +271,8 @@ class Account(models.Model):
     def __str__(self):
         return f"{self.bank_name} - {self.account_number}"
 
+from django.db import models
+from datetime import datetime, date
 
 class Transaction(models.Model):
     TRANSACTION_VOUCHER_TYPE_CHOICES = [
@@ -298,7 +300,7 @@ class Transaction(models.Model):
     ]
 
     transaction_voucher_number = models.CharField(max_length=100, blank=True, unique=True)
-    date = models.DateField(blank=True, null=True)
+    date = models.DateField(default=date.today, blank=True, null=True)
 
     transaction_voucher_type = models.CharField(max_length=10, choices=TRANSACTION_VOUCHER_TYPE_CHOICES)
     transaction_type = models.CharField(max_length=30, choices=TRANSACTION_TYPE_CHOICES)
@@ -308,16 +310,14 @@ class Transaction(models.Model):
     party = models.ForeignKey('Party', on_delete=models.SET_NULL, null=True, blank=True)
 
     contra_details = models.CharField(
-    max_length=100,
-    blank=True,
-    null=True,
-    help_text="Enter details for Contra transactions (e.g., Cash, Bank Transfer, etc.)"
-)
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Enter details for Contra transactions"
+    )
 
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-
     voucher = models.ForeignKey('Voucher', on_delete=models.SET_NULL, null=True, blank=True)
-
     remarks = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -334,8 +334,7 @@ class Transaction(models.Model):
             }
             prefix = f"VVM/{prefix_map.get(self.transaction_voucher_type, 'UNK')}/{fy_str}/"
             count = Transaction.objects.filter(transaction_voucher_number__startswith=prefix).count() + 1
-            self.transaction_voucher_number = f"{prefix}{count}"  # No zfill to avoid fixed digits
-
+            self.transaction_voucher_number = f"{prefix}{count}"
         super().save(*args, **kwargs)
 
     def __str__(self):

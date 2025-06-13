@@ -107,8 +107,10 @@ urlpatterns = [
     path('transactions/',transaction_list, name='transaction_list'),
     path('transactions/select-type/', select_transaction_type, name='select_transaction_type'),
     path('transactions/create/<str:voucher_type>/', transaction_create, name='transaction_create'),
-    path('transactions/<int:pk>/edit/', transaction_update, name='transaction_update'),
-    path('transactions/<int:pk>/delete/', transaction_delete, name='transaction_delete'),
+     path('get_vouchers/', get_vouchers, name='get_vouchers'),
+
+    # path('transactions/<int:pk>/edit/', transaction_update, name='transaction_update'),
+    # path('transactions/<int:pk>/delete/', transaction_delete, name='transaction_delete'),
 
 
 

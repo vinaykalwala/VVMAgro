@@ -1161,35 +1161,31 @@ def select_transaction_type(request):
     return render(request, 'select_transaction_type.html')
 
 def transaction_create(request, voucher_type):
-    from .forms import TransactionForm
-    from .models import Transaction
-
     if request.method == 'POST':
-        form = TransactionForm(request.POST, voucher_type=voucher_type)
+        # Create mutable copy of POST data
+        post_data = request.POST.copy()
+        # Ensure voucher type is set
+        post_data['transaction_voucher_type'] = voucher_type
+        
+        form = TransactionForm(post_data, voucher_type=voucher_type)
         if form.is_valid():
-            transaction = form.save(commit=False)
-            transaction.transaction_voucher_type = voucher_type
-            transaction.save()
+            transaction = form.save()
             return redirect('transaction_list')
     else:
-        form = TransactionForm(initial={'transaction_voucher_type': voucher_type}, voucher_type=voucher_type)
+        form = TransactionForm(voucher_type=voucher_type)
 
     return render(request, 'transaction_form.html', {
         'form': form,
         'voucher_type': voucher_type.capitalize()
     })
 
-def transaction_update(request, pk):
-    transaction = get_object_or_404(Transaction, pk=pk)
-    form = TransactionForm(request.POST or None, instance=transaction)
-    if form.is_valid():
-        form.save()
-        return redirect('transaction_list')
-    return render(request, 'transaction_form.html', {'form': form})
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 
-def transaction_delete(request, pk):
-    transaction = get_object_or_404(Transaction, pk=pk)
-    if request.method == 'POST':
-        transaction.delete()
-        return redirect('transaction_list')
-    return render(request, 'transaction_confirm_delete.html', {'transaction': transaction})
+@require_GET
+def get_vouchers(request):
+    party_id = request.GET.get('party_id')
+    if party_id:
+        vouchers = Voucher.objects.filter(party_id=party_id).values('id', 'voucher_number')
+        return JsonResponse(list(vouchers), safe=False)
+    return JsonResponse([], safe=False)

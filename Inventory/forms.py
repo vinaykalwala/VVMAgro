@@ -250,30 +250,78 @@ class AccountForm(forms.ModelForm):
 
 
 from django import forms
-from .models import Transaction
-from datetime import date
+from .models import Transaction, Voucher
+from datetime import date, datetime
+
+def generate_voucher_number(transaction_type):
+    now = datetime.now()
+    fy_start = now.year if now.month >= 4 else now.year - 1
+    fy_end = fy_start + 1
+    fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
+    prefix_map = {
+        'payment': 'PMT',
+        'receipt': 'R',
+        'contra': 'CON',
+    }
+    prefix = f"VVM/{fy_str}/{prefix_map.get(transaction_type, 'UNK')}/"
+    count = Transaction.objects.filter(transaction_voucher_number__startswith=prefix).count() + 1
+    return f"{prefix}{count}"
 
 from django import forms
-from .models import Transaction
+from .models import Transaction, Voucher
 from datetime import date
-
 class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = '__all__'
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'transaction_voucher_type': forms.HiddenInput(),  # Hide but still submit
+            'transaction_voucher_number': forms.TextInput(attrs={'readonly': 'readonly'}),
         }
 
     def __init__(self, *args, **kwargs):
         voucher_type = kwargs.pop('voucher_type', None)
-        super(TransactionForm, self).__init__(*args, **kwargs)
-        self.fields['transaction_voucher_type'].disabled = True
+        super().__init__(*args, **kwargs)
 
-        # Set default date for new records
-        if not self.instance.pk:
+        # Set initial values
+        if voucher_type:
+            self.fields['transaction_voucher_type'].initial = voucher_type
+            self.fields['transaction_voucher_type'].disabled = True
+            
+            # Generate and set voucher number
+            if not self.instance.pk:  # Only for new transactions
+                now = datetime.now()
+                fy_start = now.year if now.month >= 4 else now.year - 1
+                fy_end = fy_start + 1
+                fy_str = f"{str(fy_start)[-2:]}-{str(fy_end)[-2:]}"
+                prefix_map = {
+                    'payment': 'PMT',
+                    'receipt': 'R',
+                    'contra': 'CON',
+                }
+                prefix = f"VVM/{prefix_map.get(voucher_type, 'UNK')}/{fy_str}/"
+                count = Transaction.objects.filter(
+                    transaction_voucher_number__startswith=prefix
+                ).count() + 1
+                self.fields['transaction_voucher_number'].initial = f"{prefix}{count}"
+
+        # Set today's date as default if not set
+        if not self.is_bound and not self.instance.pk:
             self.fields['date'].initial = date.today()
 
-        # Hide contra_details unless it's a contra transaction
+        # Hide contra_details unless voucher_type is "contra"
         if voucher_type != 'contra':
             self.fields.pop('contra_details', None)
+
+        # Limit voucher queryset if party is selected
+        if 'party' in self.data:
+            try:
+                party_id = int(self.data.get('party'))
+                self.fields['voucher'].queryset = Voucher.objects.filter(party_id=party_id)
+            except (ValueError, TypeError):
+                self.fields['voucher'].queryset = Voucher.objects.none()
+        elif self.instance.pk and self.instance.party:
+            self.fields['voucher'].queryset = Voucher.objects.filter(party=self.instance.party)
+        else:
+            self.fields['voucher'].queryset = Voucher.objects.none()

@@ -1,7 +1,14 @@
-<h2>Transaction Form</h2>
 <form method="post">
     {% csrf_token %}
+    <h2>{{ voucher_type }} Transaction</h2>
+    
+    <!-- Hidden field for transaction type -->
+    {{ form.transaction_voucher_type }}
+    
+    
+    
+    <!-- Other fields -->
     {{ form.as_p }}
-    <button type="submit">Save</button>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-<a href="{% url 'transaction_list' %}">Back to list</a>
