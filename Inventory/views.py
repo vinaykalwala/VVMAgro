@@ -1170,7 +1170,7 @@ def transaction_create(request, voucher_type):
         form = TransactionForm(post_data, voucher_type=voucher_type)
         if form.is_valid():
             transaction = form.save()
-            return redirect('transaction_list')
+            return redirect('transaction_detail', pk=transaction.pk)
     else:
         form = TransactionForm(voucher_type=voucher_type)
 
@@ -1189,3 +1189,30 @@ def get_vouchers(request):
         vouchers = Voucher.objects.filter(party_id=party_id).values('id', 'voucher_number')
         return JsonResponse(list(vouchers), safe=False)
     return JsonResponse([], safe=False)
+
+from django.http import HttpResponse
+from django.views import View
+
+class LoadVouchersView(View):
+    def get(self, request, *args, **kwargs):
+        party_id = request.GET.get('party_id')
+        vouchers = Voucher.objects.none()
+        
+        if party_id:
+            vouchers = Voucher.objects.filter(party_id=party_id)
+        
+        options = ['<option value="">---------</option>']
+        for voucher in vouchers:
+            options.append(f'<option value="{voucher.id}">{voucher.voucher_number}</option>')
+        return HttpResponse(''.join(options))
+    
+    
+def transaction_detail(request, pk):
+    transaction = get_object_or_404(Transaction, pk=pk)
+    context = {
+        'transaction': transaction,
+        'voucher_type_display': transaction.get_transaction_voucher_type_display(),
+        'transaction_type_display': transaction.get_transaction_type_display(),
+        'method_display': transaction.get_method_of_adjustment_display(),
+    }
+    return render(request, 'transaction_detail.html', context)

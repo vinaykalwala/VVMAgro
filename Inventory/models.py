@@ -162,7 +162,7 @@ class Voucher(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.voucher_number} - {self.get_voucher_type_display()}"
+        return f"{self.voucher_number}"
 
 class VoucherProductItem(models.Model):
 
@@ -300,6 +300,7 @@ class Transaction(models.Model):
     ]
 
     transaction_voucher_number = models.CharField(max_length=100, blank=True, unique=True)
+    transaction_id = models.CharField(max_length=100, blank=True)
     date = models.DateField(default=date.today, blank=True, null=True)
 
     transaction_voucher_type = models.CharField(max_length=10, choices=TRANSACTION_VOUCHER_TYPE_CHOICES)

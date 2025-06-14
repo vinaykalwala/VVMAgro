@@ -276,8 +276,10 @@ class TransactionForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'transaction_voucher_type': forms.HiddenInput(),  # Hide but still submit
+            'transaction_voucher_type': forms.HiddenInput(),
             'transaction_voucher_number': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'party': forms.Select(attrs={'class': 'form-control', 'onchange': 'loadVouchers()'}),
+            'voucher': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -290,7 +292,7 @@ class TransactionForm(forms.ModelForm):
             self.fields['transaction_voucher_type'].disabled = True
             
             # Generate and set voucher number
-            if not self.instance.pk:  # Only for new transactions
+            if not self.instance.pk:
                 now = datetime.now()
                 fy_start = now.year if now.month >= 4 else now.year - 1
                 fy_end = fy_start + 1
@@ -314,14 +316,17 @@ class TransactionForm(forms.ModelForm):
         if voucher_type != 'contra':
             self.fields.pop('contra_details', None)
 
-        # Limit voucher queryset if party is selected
+        # Initialize voucher queryset
+        self.fields['voucher'].queryset = Voucher.objects.none()
+
+        # If editing existing transaction
+        if self.instance.pk and self.instance.party:
+            self.fields['voucher'].queryset = Voucher.objects.filter(party=self.instance.party)
+
+        # If form is being submitted
         if 'party' in self.data:
             try:
                 party_id = int(self.data.get('party'))
                 self.fields['voucher'].queryset = Voucher.objects.filter(party_id=party_id)
             except (ValueError, TypeError):
-                self.fields['voucher'].queryset = Voucher.objects.none()
-        elif self.instance.pk and self.instance.party:
-            self.fields['voucher'].queryset = Voucher.objects.filter(party=self.instance.party)
-        else:
-            self.fields['voucher'].queryset = Voucher.objects.none()
+                pass  # Invalid input, keep empty queryset

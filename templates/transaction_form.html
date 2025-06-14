@@ -5,10 +5,36 @@
     <!-- Hidden field for transaction type -->
     {{ form.transaction_voucher_type }}
     
-    
-    
     <!-- Other fields -->
     {{ form.as_p }}
     
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function loadVouchers() {
+    var partyId = $('#id_party').val();
+    if (partyId) {
+        $.ajax({
+            url: '{% url "load_vouchers" %}',
+            data: {
+                'party_id': partyId
+            },
+            success: function(data) {
+                $('#id_voucher').html(data);
+            }
+        });
+    } else {
+        $('#id_voucher').html('<option value="">---------</option>');
+    }
+}
+
+// Load vouchers on page load if party is already selected
+$(document).ready(function() {
+    if ($('#id_party').val()) {
+        loadVouchers();
+    }
+});
+
+</script>
