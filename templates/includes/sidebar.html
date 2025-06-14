@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sidebar Toggle Fix</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
   body {
     margin: 0;
@@ -205,6 +207,16 @@
     <i class="fas fa-chevron-right"></i>
   </a>
 </li>
+<li>
+      <a href="{% url 'account_list' %}"><i class="fa-solid fa-building-columns"></i>Bank Accounts  <i class="fas fa-chevron-right"></i></a>
+    </li>
+ <li>
+  <a href="{% url 'transaction_list' %}"><i class="fas fa-file-invoice-dollar"></i> Transaction List <i class="fas fa-chevron-right"></i></a>
+</li>
+<li>
+  <a href="{% url 'select_transaction_type' %}"><i class="fas fa-exchange-alt"></i> Transaction Types <i class="fas fa-chevron-right"></i></a>
+</li>
+
     <li>
       <a href="{% url 'gallery_list' %}"><i class="fas fa-images"></i> Gallery  <i class="fas fa-chevron-right"></i></a>
     </li>
@@ -290,6 +302,7 @@
     <i class="fas fa-chevron-right"></i>
   </a>
 </li>
+ 
        <li>
       <a href="{% url 'gallery_list' %}"><i class="fas fa-images"></i> Gallery  <i class="fas fa-chevron-right"></i></a>
     </li>

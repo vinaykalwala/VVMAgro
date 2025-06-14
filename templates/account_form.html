@@ -1,7 +1,151 @@
-<h2>Account Form</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
-<a href="{% url 'account_list' %}">Back to list</a>
+{% extends 'backendpages/base.html' %}
+{% block content %}
+<style>
+  body{
+    background: #f5f6f9;
+  }
+  .main-content {
+    padding: 40px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .form-wrapper {
+    background-color: #fff;
+    border: 2px solid #3F5187;
+    border-radius: 16px;
+    padding: 40px 30px;
+    width: 100%;
+    max-width:900px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    transition: 0.3s ease;
+  }
+
+  .form-wrapper h2 {
+    margin-bottom: 35px;
+    font-size: 28px;
+    color:#3F5187;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid #eaeefb;
+    padding-bottom: 12px;
+  }
+
+  .form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
+  .form p {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #3F5187;
+    font-size: 14px;
+  }
+
+  .form input,
+  .form select,
+  .form textarea {
+    padding: 12px 16px;
+    border: 1px solid #d0d5e2;
+    border-radius: 10px;
+    font-size: 15px;
+    background-color: #f1f4ff;
+    transition: border-color 0.3s, background-color 0.3s;
+    height: 46px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form textarea {
+    height: 46px !important;
+  }
+
+  .form input:focus,
+  .form select:focus,
+  .form textarea:focus {
+    border-color: #3F5187;
+    background-color: #fff;
+    outline: none;
+  }
+
+  .form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+
+  .form-actions button,
+  .form-actions a {
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .form-actions button {
+    background-color: #3F5187;
+    color: white;
+  }
+
+  .form-actions button:hover {
+    background-color: #2e3b66;
+  }
+
+  .form-actions a {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+
+  .form-actions a:hover {
+    background-color: #d1d1d1;
+  }
+
+  @media (max-width: 600px) {
+    .form-wrapper {
+      padding: 30px 20px;
+    }
+
+    .form-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .form-actions button,
+    .form-actions a {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="main-content">
+  <div class="form-wrapper">
+    <h2>Account Form</h2>
+    <form method="post" class="form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="form-actions">
+        <button type="submit">Save</button>
+        <a href="{% url 'account_list' %}">Back to List</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

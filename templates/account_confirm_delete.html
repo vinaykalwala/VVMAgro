@@ -1,7 +1,106 @@
-<h2>Confirm Delete</h2>
-<p>Are you sure you want to delete "{{ account }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, Delete</button>
-</form>
-<a href="{% url 'account_list' %}">Cancel</a>
+{% extends 'backendpages/base.html' %}
+{% block content %}
+<style>
+  .main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    padding: 30px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .confirm-box {
+    max-width: 500px;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #e3e7f5;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+
+  .confirm-box h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #3F5187;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .confirm-box p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 30px;
+  }
+
+  .confirm-box form {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+
+  .confirm-box button,
+  .confirm-box a {
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .confirm-box button {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .confirm-box button:hover {
+    background-color: #c82333;
+  }
+
+  .confirm-box a {
+    background-color: #3F5187;
+    color: white;
+    display: inline-block;
+  }
+
+  .confirm-box a:hover {
+    background-color: #2e3b66;
+  }
+
+  @media (max-width: 480px) {
+    .main-content {
+      align-items: flex-start;
+      padding-top: 60px;
+    }
+
+    .confirm-box form {
+      flex-direction: column;
+    }
+
+    .confirm-box button,
+    .confirm-box a {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="main-content">
+  <div class="confirm-box">
+    <h2>Confirm Delete</h2>
+    <p>Are you sure you want to delete <strong>"{{ account }}"</strong>?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit">Yes, Delete</button>
+      <a href="{% url 'account_list' %}">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
