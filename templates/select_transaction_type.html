@@ -1,9 +1,123 @@
+{% extends 'backendpages/base.html' %}
 {% block content %}
-<div style="text-align:center; padding: 40px;">
-    <h2>Select Transaction Voucher Type</h2>
-    <br>
-    <a href="{% url 'transaction_create' 'payment' %}" class="btn btn-primary">Payment</a>
-    <a href="{% url 'transaction_create' 'receipt' %}" class="btn btn-success">Receipt</a>
-    <a href="{% url 'transaction_create' 'contra' %}" class="btn btn-warning">Contra</a>
+{% load static %}
+<style>
+  
+
+  .voucher-wrapper {
+    max-width: 720px;
+    margin: 20px auto 0px;
+    background-color: #f4f6fa;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+    padding: 40px 30px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 1px solid #3F5187;
+  }
+
+  .voucher-wrapper .back-btn {
+    background-color: #3F5187;
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    display: inline-block;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(63, 81, 135, 0.2);
+    transition: 0.3s;
+  }
+
+  .voucher-wrapper .back-btn:hover {
+    background-color: #2e3a65;
+  }
+
+  .voucher-wrapper h2 {
+    color: #3F5187;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
+  }
+
+  .voucher-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .voucher-buttons a {
+    min-width: 140px;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .voucher-buttons .btn-payment {
+    background-color: #3F5187;
+    color: #fff;
+  }
+
+  .voucher-buttons .btn-payment:hover {
+    background-color: #2d3b68;
+  }
+
+  .voucher-buttons .btn-receipt {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .voucher-buttons .btn-receipt:hover {
+    background-color: #1e7e34;
+  }
+
+  .voucher-buttons .btn-contra {
+    background-color: #ffc107;
+    color: #000;
+  }
+
+  .voucher-buttons .btn-contra:hover {
+    background-color: #e0a800;
+  }
+
+  .voucher-image {
+    text-align: center;
+    margin-top:20px;
+  }
+
+  .voucher-image img {
+    max-width: 100%;
+    border-radius: 16px;
+  }
+
+  @media (max-width: 576px) {
+    .voucher-buttons {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+</style>
+<div class="main-content">
+<div class="voucher-wrapper">
+  <a href="{% url 'transaction_list' %}" class="back-btn">← Transaction List</a>
+  <h2>Select Transaction Voucher Type</h2>
+
+  <div class="voucher-buttons">
+    <a href="{% url 'transaction_create' 'payment' %}" class="btn-payment">Payment</a>
+    <a href="{% url 'transaction_create' 'receipt' %}" class="btn-receipt">Receipt</a>
+    <a href="{% url 'transaction_create' 'contra' %}" class="btn-contra">Contra</a>
+  </div>
+</div>
+
+<div class="voucher-image">
+  <img src="{% static 'trans.jpg' %}" alt="Voucher Illustration">
+</div>
 </div>
 {% endblock %}

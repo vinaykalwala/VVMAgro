@@ -152,6 +152,10 @@
         <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
       </a>
     </li>
+    <li>
+  <a href="{% url 'select_transaction_type' %}"><i class="fas fa-exchange-alt"></i>Create Transactions<i class="fas fa-chevron-right"></i></a>
+</li> 
+
       <li>
       <a href="{% url 'stock_report' %}">
         <i class="fas fa-chart-bar"></i> Stock Report <i class="fas fa-chevron-right"></i>
@@ -210,12 +214,7 @@
 <li>
       <a href="{% url 'account_list' %}"><i class="fa-solid fa-building-columns"></i>Bank Accounts  <i class="fas fa-chevron-right"></i></a>
     </li>
- <li>
-  <a href="{% url 'transaction_list' %}"><i class="fas fa-file-invoice-dollar"></i> Transaction List <i class="fas fa-chevron-right"></i></a>
-</li>
-<li>
-  <a href="{% url 'select_transaction_type' %}"><i class="fas fa-exchange-alt"></i> Transaction Types <i class="fas fa-chevron-right"></i></a>
-</li>
+ 
 
     <li>
       <a href="{% url 'gallery_list' %}"><i class="fas fa-images"></i> Gallery  <i class="fas fa-chevron-right"></i></a>

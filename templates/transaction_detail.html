@@ -3,229 +3,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ voucher_type_display }} Voucher - {{ transaction.transaction_voucher_number }}</title>
-    <style>
-        body {
-            font-family: 'Calibri', sans-serif;
-            margin: 0;
-            background: #f9f9f9;
-        }
+  <meta charset="UTF-8">
+  <title>{{ voucher_type_display }} Voucher - {{ transaction.transaction_voucher_number }}</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 15mm;
+    }
 
-        .voucher-container {
-            max-width: 90%;
-            margin: 30px auto;
-            padding: 30px;
-            background: white;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-size: 13px;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+    }
 
-        .voucher-header {
-            text-align: center;
-            border-bottom: 2px solid #222;
-            padding-bottom: 10px;
-        }
+    .voucher-container {
+      width: 100%;
+      max-width: 740px;
+      margin: 0 auto;
+      border: 1px solid #2f3c5c;
+      padding: 20px 25px;
+      box-sizing: border-box;
+      margin-top: 20px;
+    }
 
-        .voucher-header h1 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 1px;
-        }
+    .voucher-header {
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
 
-        .voucher-header p {
-            margin: 5px 0;
-            font-size: 13px;
-            color: #333;
-        }
+    .voucher-header h1 {
+      margin: 0;
+      font-size: 17px;
+      color: #2f3c5c;
+    }
 
-        h2.section-title {
-            margin-top: 30px;
-            font-size: 16px;
-            color: #222;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
-        }
+    .voucher-header p {
+      margin: 2px 0;
+      font-size: 11px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 14px;
-        }
+    h2.section-title {
+      font-size: 13px;
+      margin: 20px 0 6px;
+      color: #2f3c5c;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 3px;
+    }
 
-        table td {
-            padding: 6px 10px;
-            vertical-align: top;
-            border: 1px solid #eee;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+    }
 
-        table th {
-            background: #f2f2f2;
-            padding: 8px 10px;
-            text-align: left;
-            border: 1px solid #eee;
-        }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 5px 7px;
+      vertical-align: top;
+      word-break: break-word;
+    }
 
-        .footer {
-            text-align: right;
-            margin-top: 40px;
-            font-size: 14px;
-        }
+    th {
+      background-color: #f1f3f9;
+      color: #2f3c5c;
+      font-weight: 600;
+      text-align: left;
+    }
 
-        .footer p {
-            margin-bottom: 40px;
-        }
+    .footer {
+      text-align: right;
+      margin-top: 30px;
+    }
 
-        .actions {
-            text-align: right;
-            margin: 20px auto;
-            max-width: 800px;
-        }
+    .footer p {
+      margin: 6px 0;
+    }
 
-        .actions button,
-        .actions a {
-            display: inline-block;
-            padding: 8px 14px;
-            background-color: #005a87;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 4px;
-            font-size: 13px;
-            margin-left: 10px;
-        }
+    .actions {
+      text-align: center;
+      margin: 20px;
+    }
 
-        .actions a {
-            background-color: #555;
-        }
+    .actions button,
+    .actions a {
+      background: #3F5187;
+      color: #fff;
+      padding: 6px 12px;
+      font-size: 13px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin: 5px;
+      border: none;
+      cursor: pointer;
+    }
 
-        @media print {
-            .actions {
-                display: none;
-            }
+    .actions a {
+      background: #666;
+    }
 
-            body {
-                background: white;
-                margin: 0;
-            }
+   @media print {
+  .actions,
+  .actions * {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
 
-            .voucher-container {
-                box-shadow: none;
-                border: none;
-            }
-        }
-    </style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  body, .voucher-container, table, th, td {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .voucher-container {
+    border: 1px solid #2f3c5c;
+    box-shadow: none;
+    padding: 15px 20px;
+    margin: 0 auto;
+    page-break-inside: avoid;
+  }
+
+  table, th, td {
+    font-size: 12px;
+  }
+
+  .footer {
+    margin-top: 25px;
+  }
+}
+
+  </style>
 </head>
 <body>
 
-
 <div class="voucher-container">
-    <div class="voucher-header">
-        <h1>VVM AGRO INDUSTRIES (2020–26)</h1>
-        <p>SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD, BESIDE TSIIC KALLAKAL</p>
-        <p>MUPPYREDDY PALLY, MANOHARABAD MANDAL, MEDAK DIST., Telangana</p>
-        <p>GSTIN/UIN: 36AANFV9684N1ZW | Contact: 9246565834 | Email: vvmotors2011@gmail.com</p>
-        <h2 style="margin-top: 20px;">{{ voucher_type_display|upper }} VOUCHER</h2>
-    </div>
+  <div class="voucher-header">
+    <h1>VVM AGRO INDUSTRIES (2020–26)</h1>
+    <p>SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD, BESIDE TSIIC KALLAKAL</p>
+    <p>MUPPYREDDY PALLY, MANOHARABAD MANDAL, MEDAK DIST., Telangana</p>
+    <p>GSTIN/UIN: 36AANFV9684N1ZW | Contact: 9246565834 | Email: vvmotors2011@gmail.com</p>
+    <h2 style="margin-top: 10px; color: #3F5187;">{{ voucher_type_display|upper }} VOUCHER</h2>
+  </div>
 
-    <h2 class="section-title">Transaction Details</h2>
-    <table>
-        <tr>
-            <td><strong>Voucher No.</strong></td>
-            <td>{{ transaction.transaction_voucher_number }}</td>
-            <td><strong>Date</strong></td>
-            <td>{{ transaction.date }}</td>
-        </tr>
-        <tr>
-            <td><strong>Transaction Type</strong></td>
-            <td>{{ transaction_type_display }}</td>
-            <td><strong>Method of Adjustment</strong></td>
-            <td>{{ method_display }}</td>
-        </tr>
-        <tr>
-            <td><strong>Account</strong></td>
-            <td colspan="3">{{ transaction.account }}</td>
-        </tr>
-        {% if transaction.transaction_voucher_type == "contra" and transaction.contra_details %}
-        <tr>
-            <td><strong>Contra Details</strong></td>
-            <td colspan="3">{{ transaction.contra_details }}</td>
-        </tr>
-        {% endif %}
-        <tr>
-            <td><strong>Amount</strong></td>
-            <td colspan="3">{{ transaction.amount }}</td>
-        </tr>
-        {% if transaction.voucher %}
-        <tr>
-            <td><strong>Associated Voucher</strong></td>
-            <td colspan="3">{{ transaction.voucher.voucher_number }}</td>
-        </tr>
-        {% endif %}
-        
-    </table>
+  <h2 class="section-title">Transaction Details</h2>
+  <table>
+    <tr>
+      <th>Voucher No.</th><td>{{ transaction.transaction_voucher_number }}</td>
+      <th>Date</th><td>{{ transaction.date }}</td>
+    </tr>
+    <tr>
+      <th>Transaction Type</th><td>{{ transaction_type_display }}</td>
+      <th>Method</th><td>{{ method_display }}</td>
+    </tr>
+    <tr>
+      <th>Account</th><td colspan="3">{{ transaction.account }}</td>
+    </tr>
+    {% if transaction.transaction_voucher_type == "contra" and transaction.contra_details %}
+    <tr>
+      <th>Contra Details</th><td colspan="3">{{ transaction.contra_details }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>Amount</th><td colspan="3">₹ {{ transaction.amount }}</td>
+    </tr>
+    {% if transaction.voucher %}
+    <tr>
+      <th>Associated Voucher</th><td colspan="3">{{ transaction.voucher.voucher_number }}</td>
+    </tr>
+    {% endif %}
+  </table>
 
-    <h2 class="section-title">Party Details</h2>
-    <table>
-        <tr>
-            <td><strong>Name</strong></td>
-            <td>{{ transaction.party.name }}</td>
-            <td><strong>GSTIN/UIN</strong></td>
-            <td>{{ transaction.party.gstin_uin_number }}</td>
-        </tr>
-        <tr>
-            <td><strong>State</strong></td>
-            <td>{{ transaction.party.state }}</td>
-            <td><strong>Phone</strong></td>
-            <td>{{ transaction.party.phone|default:"N/A" }}</td>
-        </tr>
-        <tr>
-            <td colspan="4"><strong>Address:</strong> {{ transaction.party.address }}</td>
-        </tr>
-    </table>
+  <h2 class="section-title">Party Details</h2>
+  <table>
+    <tr>
+      <th>Name</th><td>{{ transaction.party.name }}</td>
+      <th>GSTIN</th><td>{{ transaction.party.gstin_uin_number }}</td>
+    </tr>
+    <tr>
+      <th>State</th><td>{{ transaction.party.state }}</td>
+      <th>Phone</th><td>{{ transaction.party.phone|default:"N/A" }}</td>
+    </tr>
+    <tr>
+      <th>Address</th><td colspan="3">{{ transaction.party.address }}</td>
+    </tr>
+  </table>
 
-    <h2 class="section-title">Bank Account Details</h2>
-    <table>
-        <tr>
-            <td><strong>Account Holder</strong></td>
-            <td>{{ transaction.account.account_holder_name }}</td>
-            <td><strong>Bank</strong></td>
-            <td>{{ transaction.account.bank_name }}</td>
-        </tr>
-        <tr>
-            <td><strong>Account No.</strong></td>
-            <td>{{ transaction.account.account_number }}</td>
-            <td><strong>IFSC & Branch</strong></td>
-            <td>{{ transaction.account.ifsc_code }} - {{ transaction.account.branch_name }}</td>
-        </tr>
-    </table>
+  <h2 class="section-title">Bank Details</h2>
+  <table>
+    <tr>
+      <th>Account Holder</th><td>{{ transaction.account.account_holder_name }}</td>
+      <th>Bank</th><td>{{ transaction.account.bank_name }}</td>
+    </tr>
+    <tr>
+      <th>Account No.</th><td>{{ transaction.account.account_number }}</td>
+      <th>IFSC & Branch</th><td>{{ transaction.account.ifsc_code }} - {{ transaction.account.branch_name }}</td>
+    </tr>
+  </table>
 
-    <h2 class="section-title">Amount Summary</h2>
-    <table>
-        <tr>
-            <th>Description</th>
-            <th>Amount (INR)</th>
-        </tr>
-        <tr>
-            <td>{{ voucher_type_display }} towards {{ transaction.party.name }}</td>
-            <td>{{ transaction.amount }}</td>
-        </tr>
-        <tr>
-            <td colspan="2"><strong>Amount in Words:</strong> Rupees {{ transaction.amount|floatformat:0|intcomma|title }} only</td>
-        </tr>
-    </table>
+  <h2 class="section-title">Amount Summary</h2>
+  <table>
+    <tr>
+      <th>Description</th><th>Amount (INR)</th>
+    </tr>
+    <tr>
+      <td>{{ voucher_type_display }} towards {{ transaction.party.name }}</td>
+      <td>₹ {{ transaction.amount }}</td>
+    </tr>
+    <tr>
+      <td colspan="2"><strong>Amount in Words:</strong> Rupees {{ transaction.amount|floatformat:0|intcomma|title }} only</td>
+    </tr>
+  </table>
 
-    <div class="footer">
-        <p>For VVM AGRO INDUSTRIES</p>
-        <p style="margin-top: 20px;">Authorized Signatory</p>
-    </div>
+  <div class="footer">
+    <p>For VVM AGRO INDUSTRIES</p>
+    <p style="margin-top: 25px;">Authorized Signatory</p>
+  </div>
 </div>
+
 <div class="actions">
-    <button onclick="window.print()">🖨️ Print Voucher</button>
-    <a href="{% url 'transaction_list' %}">← Back to Transactions</a>
+  <button onclick="window.print()">🖨️ Print Voucher</button>
+  <a href="{% url 'transaction_list' %}">← Back to Transactions</a>
 </div>
-
 
 </body>
 </html>
