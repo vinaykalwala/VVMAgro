@@ -1153,9 +1153,37 @@ def account_delete(request, pk):
     return render(request, 'account_confirm_delete.html', {'account': account})
 
 
+
 def transaction_list(request):
+    query = request.GET.get('q', '')
+    txn_type = request.GET.get('type', '')
+
     transactions = Transaction.objects.all()
-    return render(request, 'transaction_list.html', {'transactions': transactions})
+
+    if query:
+        transactions = transactions.filter(
+            Q(transaction_voucher_number__icontains=query) |
+            Q(transaction_id__icontains=query) |
+            Q(transaction_voucher_type__icontains=query) |
+            Q(transaction_type__icontains=query) |
+            Q(method_of_adjustment__icontains=query) |
+            Q(account__account_holder_name__icontains=query) |
+            Q(party__name__icontains=query) |
+            Q(voucher__voucher_number__icontains=query) |
+            Q(remarks__icontains=query)
+        )
+
+    if txn_type:
+        transactions = transactions.filter(transaction_voucher_type=txn_type)
+
+    transactions = transactions.order_by('-created_at')
+
+    return render(request, 'transaction_list.html', {
+        'transactions': transactions,
+        'query': query,
+    })
+
+
 
 def select_transaction_type(request):
     return render(request, 'select_transaction_type.html')

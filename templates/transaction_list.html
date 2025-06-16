@@ -103,12 +103,24 @@
       <a href="{% url 'select_transaction_type' %}" class="create-link">Create New Transaction</a>
     </div>
   </div>
+  <form method="get" class="search-form" style="margin-bottom: 20px;">
+    <input type="text" name="q" placeholder="Search by Voucher, Date, Type, Party, Ref, Amount" value="{{ query }}">
+    <button type="submit">Search</button>
+
+    <div class="filter-buttons">
+      <button type="submit" name="type" value="">All</button>
+      <button type="submit" name="type" value="payment">Payment</button>
+      <button type="submit" name="type" value="receipt">Receipt</button>
+      <button type="submit" name="type" value="contra">Contra</button>
+    </div>
+  </form>
 
   <div class="transaction-table">
     <table>
       <thead>
         <tr>
           <th>Voucher Number</th>
+          <th>Transaction Id</th>
           <th>Date</th>
           <th>Type</th>
           <th>Party</th>
@@ -121,6 +133,7 @@
         {% for transaction in transactions %}
         <tr>
           <td>{{ transaction.transaction_voucher_number }}</td>
+          <td>{{transaction.transaction_id}}</td>
           <td>{{ transaction.date }}</td>
           <td>{{ transaction.get_transaction_voucher_type_display }}</td>
           <td>{% if transaction.party %}{{ transaction.party.name }}{% else %}N/A{% endif %}</td>
