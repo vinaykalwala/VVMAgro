@@ -165,12 +165,14 @@
           <div class="account-detail"><span class="label">IFSC:</span> {{ acc.ifsc_code }}</div>
           <div class="account-detail"><span class="label">Account No:</span> {{ acc.account_number }}</div>
           <div class="account-detail"><span class="label">Type:</span> {{ acc.get_account_type_display }}</div>
+          <div class="account-detail"><span class="label">Available Balance:</span> {{ acc.available_balance }}</div>
           {% if acc.description %}
             <div class="account-detail"><span class="label">Description:</span> {{ acc.description }}</div>
           {% endif %}
         </div>
 
         <div class="account-actions">
+          <a href="{% url 'account_transaction_history' acc.pk %}" class="create-link">🔁 View History</a>
           <a href="{% url 'account_update' acc.pk %}" class="edit-btn">Edit</a>
           <a href="{% url 'account_delete' acc.pk %}" class="delete-btn">Delete</a>
         </div>

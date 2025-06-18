@@ -1188,17 +1188,23 @@ def transaction_list(request):
 def select_transaction_type(request):
     return render(request, 'select_transaction_type.html')
 
+from django.core.exceptions import ValidationError
+from django.contrib import messages
+
 def transaction_create(request, voucher_type):
     if request.method == 'POST':
-        # Create mutable copy of POST data
         post_data = request.POST.copy()
-        # Ensure voucher type is set
         post_data['transaction_voucher_type'] = voucher_type
-        
         form = TransactionForm(post_data, voucher_type=voucher_type)
+
         if form.is_valid():
-            transaction = form.save()
-            return redirect('transaction_detail', pk=transaction.pk)
+            try:
+                transaction = form.save()
+                return redirect('transaction_detail', pk=transaction.pk)
+            except ValidationError as e:
+                # Add model clean() errors to form's non-field errors
+                form.add_error(None, e.message)
+
     else:
         form = TransactionForm(voucher_type=voucher_type)
 
@@ -1252,3 +1258,70 @@ def transaction_detail(request, pk):
         'amount_in_words': amount_in_words.title() + " Only",
     }
     return render(request, 'transaction_detail.html', context)
+
+# views.py
+from django.http import JsonResponse
+from .models import Account
+
+def get_account_balance(request):
+    account_id = request.GET.get('account_id')
+    try:
+        account = Account.objects.get(id=account_id)
+        return JsonResponse({'balance': float(account.available_balance)})
+    except Account.DoesNotExist:
+        return JsonResponse({'balance': 0})
+
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
+from .models import Account, Transaction
+
+def account_transaction_history(request, account_id):
+    account = get_object_or_404(Account, id=account_id)
+
+    transactions = Transaction.objects.filter(
+        Q(account=account) | Q(recipient_account=account)
+    ).order_by('-date', '-created_at')
+
+    query = request.GET.get('search', '').lower()
+    date_query = request.GET.get('date', '')
+
+    if date_query:
+        transactions = transactions.filter(date=date_query)
+
+    history = []
+    for txn in transactions:
+        if txn.transaction_voucher_type == 'receipt' and txn.account == account:
+            effect = 'Credit'
+        elif txn.transaction_voucher_type == 'payment' and txn.account == account:
+            effect = 'Debit'
+        elif txn.transaction_voucher_type == 'contra':
+            if txn.account == account:
+                effect = 'Debit'
+            elif txn.recipient_account == account:
+                effect = 'Credit'
+            else:
+                effect = 'N/A'
+        else:
+            effect = 'N/A'
+
+        record = {
+            'date': txn.date,
+            'voucher_number': txn.transaction_voucher_number,
+            'type': txn.get_transaction_voucher_type_display(),
+            'amount': txn.amount,
+            'effect': effect,
+            'party': txn.party.name if txn.party else '',
+            'remarks': txn.remarks,
+        }
+
+        # Unified search filter
+        combined_data = f"{record['date']} {record['voucher_number']} {record['type']} {record['effect']} {record['amount']} {record['party']}".lower()
+        if query in combined_data:
+            history.append(record)
+
+    return render(request, 'account_transaction_history.html', {
+        'account': account,
+        'history': history,
+        'search_query': query,
+        'date_query': date_query,
+    })

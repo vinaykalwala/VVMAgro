@@ -266,6 +266,7 @@ class Account(models.Model):
     account_number = models.CharField(max_length=50, unique=True)
     account_holder_name = models.CharField(max_length=100)
     account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICES)
+    available_balance = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -273,6 +274,7 @@ class Account(models.Model):
 
 from django.db import models
 from datetime import datetime, date
+from django.core.exceptions import ValidationError
 
 class Transaction(models.Model):
     TRANSACTION_VOUCHER_TYPE_CHOICES = [
@@ -308,6 +310,7 @@ class Transaction(models.Model):
     method_of_adjustment = models.CharField(max_length=20, choices=METHOD_OF_ADJUSTMENT_CHOICES)
 
     account = models.ForeignKey('Account', on_delete=models.CASCADE)
+    recipient_account = models.ForeignKey('Account',on_delete=models.SET_NULL,null=True,blank=True,related_name='received_contra_transactions',help_text="Applicable only for Contra transactions")
     party = models.ForeignKey('Party', on_delete=models.SET_NULL, null=True, blank=True)
 
     contra_details = models.CharField(
@@ -322,7 +325,20 @@ class Transaction(models.Model):
     remarks = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def clean(self):
+        # Check if sufficient balance is available before saving
+        if self.pk is None:  # Only validate on new transactions
+            if self.transaction_voucher_type in ['payment', 'contra']:
+                if self.account.available_balance < self.amount:
+                    raise ValidationError("Insufficient balance in the selected account.")
+
+            if self.transaction_voucher_type == 'contra':
+                if not self.recipient_account or self.recipient_account == self.account:
+                    raise ValidationError("For contra transactions, recipient_account must be set and different from account.")
+
+
     def save(self, *args, **kwargs):
+        is_new = self._state.adding
         if not self.transaction_voucher_number:
             now = datetime.now()
             fy_start = now.year if now.month >= 4 else now.year - 1
@@ -336,6 +352,27 @@ class Transaction(models.Model):
             prefix = f"VVM/{prefix_map.get(self.transaction_voucher_type, 'UNK')}/{fy_str}/"
             count = Transaction.objects.filter(transaction_voucher_number__startswith=prefix).count() + 1
             self.transaction_voucher_number = f"{prefix}{count}"
+        if is_new:
+            if self.transaction_voucher_type == 'payment':
+                self.account.available_balance -= self.amount
+                self.account.save()
+
+            elif self.transaction_voucher_type == 'receipt':
+                self.account.available_balance += self.amount
+                self.account.save()
+
+            elif self.transaction_voucher_type == 'contra':
+                if self.recipient_account and self.recipient_account != self.account:
+                    # Deduct from sender account
+                    self.account.available_balance -= self.amount
+                    self.account.save()
+
+                    # Add to recipient account
+                    self.recipient_account.available_balance += self.amount
+                    self.recipient_account.save()
+                else:
+                    raise ValueError("For contra transactions, recipient_account must be set and different from account.")
+
         super().save(*args, **kwargs)
 
     def __str__(self):

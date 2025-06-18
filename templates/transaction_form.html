@@ -172,11 +172,16 @@
       {% csrf_token %}
       {{ form.transaction_voucher_type }}
       {{ form.as_p }}
+      <div id="account-balance" class="balance-info"></div>
+      <div id="recipient-balance" class="balance-info"></div>
+
       <div class="form-actions">
         <button type="submit">Submit</button>
       </div>
     </form>
   </div>
+ 
+
 </div>
 
 <!-- jQuery -->
@@ -220,6 +225,56 @@ $(document).ready(function () {
   // Load vouchers on page load if party is already selected
   if ($('#id_party').val()) {
     loadVouchers();
+  }
+});
+function fetchAccountBalance(accountId, targetElementId) {
+  if (!accountId) {
+    $(`#${targetElementId}`).text('');
+    return;
+  }
+  $.ajax({
+    url: '{% url "get_account_balance" %}',
+    data: { account_id: accountId },
+    success: function (data) {
+      $(`#${targetElementId}`).text('Available Balance: ₹ ' + data.balance.toFixed(2));
+    },
+    error: function () {
+      $(`#${targetElementId}`).text('Unable to fetch balance.');
+    }
+  });
+}
+
+$(document).ready(function () {
+  $('#id_party').select2({ width: '100%', placeholder: 'Select Party' });
+  $('#id_account').select2({ width: '100%', placeholder: 'Select Account' });
+  $('#id_voucher').select2({ width: '100%', placeholder: 'Select Voucher' });
+  $('#id_recipient_account').select2({ width: '100%', placeholder: 'Select Recipient Account' });
+
+  $('#id_party').change(function () {
+    loadVouchers();
+  });
+
+  if ($('#id_party').val()) {
+    loadVouchers();
+  }
+
+  // Trigger account balance display on change
+  $('#id_account').on('change', function () {
+    let accountId = $(this).val();
+    fetchAccountBalance(accountId, 'account-balance');
+  });
+
+  $('#id_recipient_account').on('change', function () {
+    let recipientId = $(this).val();
+    fetchAccountBalance(recipientId, 'recipient-balance');
+  });
+
+  // Load balance on page load if values are pre-selected
+  if ($('#id_account').val()) {
+    fetchAccountBalance($('#id_account').val(), 'account-balance');
+  }
+  if ($('#id_recipient_account').val()) {
+    fetchAccountBalance($('#id_recipient_account').val(), 'recipient-balance');
   }
 });
 </script>

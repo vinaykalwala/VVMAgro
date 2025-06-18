@@ -1,0 +1,57 @@
+<h2>Transaction History - {{ account.account_holder_name }}</h2>
+
+<form method="get" class="no-print" style="margin-bottom: 20px;">
+  <input type="text" name="search" value="{{ search_query }}" placeholder="Search (Voucher, Type, Effect, Amount, Party)" style="padding: 8px; width: 300px; margin-right: 10px;">
+  <input type="date" name="date" value="{{ date_query }}" style="padding: 8px; margin-right: 10px;">
+  <button type="submit" style="padding: 8px 14px;">Search</button>
+  <a href="?" style="margin-left: 10px; text-decoration: none;">Reset</a>
+</form>
+
+<button onclick="window.print()" class="no-print" style="padding: 8px 14px; margin-bottom: 20px;">🖨️ Print</button>
+
+<table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+  <thead>
+    <tr style="background-color: #f1f1f1;">
+      <th>Date</th>
+      <th>Voucher</th>
+      <th>Type</th>
+      <th>Effect</th>
+      <th>Amount</th>
+      <th>Party</th>
+      <th>Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for txn in history %}
+      <tr>
+        <td>{{ txn.date }}</td>
+        <td>{{ txn.voucher_number }}</td>
+        <td>{{ txn.type }}</td>
+        <td>{{ txn.effect }}</td>
+        <td>{{ txn.amount }}</td>
+        <td>{{ txn.party|default:"N/A" }}</td>
+        <td>{{ txn.remarks|default:"N/A" }}</td>
+
+      </tr>
+    {% empty %}
+      <tr><td colspan="7" style="text-align: center;">No transactions found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<style>
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+
+    table {
+      page-break-inside: auto;
+    }
+
+    tr, td, th {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+  }
+</style>

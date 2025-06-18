@@ -315,6 +315,7 @@ class TransactionForm(forms.ModelForm):
         # Hide contra_details unless voucher_type is "contra"
         if voucher_type != 'contra':
             self.fields.pop('contra_details', None)
+            self.fields.pop('recipient_account', None)
 
         # Initialize voucher queryset
         self.fields['voucher'].queryset = Voucher.objects.none()
