@@ -1,48 +1,26 @@
-<h2>Transaction History - {{ account.account_holder_name }}</h2>
-
-<form method="get" class="no-print" style="margin-bottom: 20px;">
-  <input type="text" name="search" value="{{ search_query }}" placeholder="Search (Voucher, Type, Effect, Amount, Party)" style="padding: 8px; width: 300px; margin-right: 10px;">
-  <input type="date" name="date" value="{{ date_query }}" style="padding: 8px; margin-right: 10px;">
-  <button type="submit" style="padding: 8px 14px;">Search</button>
-  <a href="?" style="margin-left: 10px; text-decoration: none;">Reset</a>
-</form>
-
-<button onclick="window.print()" class="no-print" style="padding: 8px 14px; margin-bottom: 20px;">🖨️ Print</button>
-
-<table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-  <thead>
-    <tr style="background-color: #f1f1f1;">
-      <th>Date</th>
-      <th>Voucher</th>
-      <th>Type</th>
-      <th>Effect</th>
-      <th>Amount</th>
-      <th>Party</th>
-      <th>Remarks</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for txn in history %}
-      <tr>
-        <td>{{ txn.date }}</td>
-        <td>{{ txn.voucher_number }}</td>
-        <td>{{ txn.type }}</td>
-        <td>{{ txn.effect }}</td>
-        <td>{{ txn.amount }}</td>
-        <td>{{ txn.party|default:"N/A" }}</td>
-        <td>{{ txn.remarks|default:"N/A" }}</td>
-
-      </tr>
-    {% empty %}
-      <tr><td colspan="7" style="text-align: center;">No transactions found.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+{% extends 'backendpages/base.html' %}
+{% block content %}
 <style>
   @media print {
     .no-print {
       display: none !important;
+    }
+
+    body * {
+      visibility: hidden;
+    }
+
+    .print-area,
+    .print-area * {
+      visibility: visible;
+    }
+
+    .print-area {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      padding: 20px;
     }
 
     table {
@@ -54,4 +32,220 @@
       page-break-after: auto;
     }
   }
+
+  .main-content {
+    padding: 30px 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  .main-content h2 {
+    text-align: center;
+    color: #3F5187;
+    margin-bottom: 20px;
+  }
+
+  .top-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-grow: 1;
+    max-width: 100%;
+  }
+
+  .search-form input[type="text"],
+  .search-form input[type="date"] {
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .search-form button,
+  .search-form a {
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    white-space: nowrap;
+  }
+
+  .search-form button {
+    background-color: #3F5187;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .search-form button:hover {
+    background-color: #2e3b66;
+  }
+
+  .search-form a {
+    background-color: #f0f0f0;
+    color: #3F5187;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .search-form a:hover {
+    background-color: #dcdcdc;
+  }
+
+  .print-button {
+    background-color: #3F5187;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+  }
+
+  .print-button:hover {
+    background-color: #2e3b66;
+  }
+
+  .txn-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-top: 10px;
+  }
+
+  .txn-table th {
+    background-color: #3F5187;
+    color: #fff;
+    padding: 10px;
+    border: 1px solid #ffffff;
+  }
+
+  .txn-table td {
+    padding: 10px;
+    border: 1px solid rgb(191, 193, 218);
+    color: #3F5187;
+  }
+
+  .txn-table tr:nth-child(even) {
+    background-color: rgb(229, 231, 251);
+  }
+
+  @media (max-width: 768px) {
+    .main-content h2 {
+      font-size: 20px;
+    }
+
+    .top-bar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search-form {
+      flex-direction: column;
+    }
+
+    .search-form input,
+    .search-form button,
+    .search-form a {
+      width: 100%;
+    }
+
+    .print-button {
+      width: 100%;
+    }
+
+    .txn-table {
+      font-size: 13px;
+    }
+  }
+  @media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: white; /* Optional */
+  }
+}
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 </style>
+
+<div class="main-content">
+  <div class="print-area">
+    <h2>Transaction History - {{ account.bank_name }}</h2>
+
+    <div class="no-print top-bar">
+      <form method="get" class="search-form">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search (Voucher, Type, Effect, Amount, Party)">
+        <input type="date" name="date" value="{{ date_query }}">
+        <button type="submit">Search</button>
+        <a href="?">Reset</a>
+      </form>
+      <button onclick="window.print()" class="print-button">🖨️ Print</button>
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="txn-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Voucher</th>
+            <th>Type</th>
+            <th>Effect</th>
+            <th>Amount</th>
+            <th>Party</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for txn in history %}
+          <tr>
+            <td>{{ txn.date }}</td>
+            <td>{{ txn.voucher_number }}</td>
+            <td>{{ txn.type }}</td>
+           <td style="color: {% if txn.effect|lower == 'debit' %}red{% elif txn.effect|lower == 'credit' %}green{% else %}black{% endif %};">
+  {{ txn.effect }}
+</td>
+
+            <td>{{ txn.amount }}</td>
+            <td>{{ txn.party|default:"N/A" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="text-align: center;">No transactions found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

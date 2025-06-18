@@ -21,7 +21,6 @@
     width: 100%;
     max-width: 900px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    transition: 0.3s ease;
   }
 
   .form-wrapper h2 {
@@ -61,7 +60,6 @@
     border-radius: 10px;
     font-size: 15px;
     background-color: #f1f4ff;
-    transition: border-color 0.3s, background-color 0.3s;
     height: 46px;
     width: 100%;
     box-sizing: border-box;
@@ -109,15 +107,6 @@
     background-color: #2e3b66;
   }
 
-  .form-actions a {
-    background-color: #e0e0e0;
-    color: #333;
-  }
-
-  .form-actions a:hover {
-    background-color: #d1d1d1;
-  }
-
   @media (max-width: 600px) {
     .form-wrapper {
       padding: 30px 20px;
@@ -128,14 +117,11 @@
       align-items: stretch;
     }
 
-    .form-actions button,
-    .form-actions a {
+    .form-actions button {
       width: 100%;
-      text-align: center;
     }
   }
 
-  /* Select2 Style Overrides to Match Form Inputs */
   .select2-container--default .select2-selection--single {
     background-color: #f1f4ff;
     border: 1px solid #d0d5e2;
@@ -148,12 +134,6 @@
     box-sizing: border-box;
   }
 
-  .select2-selection__rendered {
-    line-height: 32px !important;
-    color: #333;
-    padding-left: 0;
-  }
-
   .select2-selection__arrow {
     height: 46px !important;
     top: 0 !important;
@@ -162,6 +142,28 @@
 
   .select2-container {
     width: 100% !important;
+  }
+
+  .balance-container {
+    margin-bottom: 12px;
+    display: none;
+  }
+
+  .balance-container.visible {
+    display: block;
+  }
+
+  .balance-info {
+    padding: 12px 16px;
+    background-color: #f1f4ff;
+    border: 1px solid #3F5187;
+    border-left: 6px solid #3F5187;
+    border-radius: 8px;
+    color: #1a2b6d;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    box-sizing: border-box;
   }
 </style>
 
@@ -172,110 +174,86 @@
       {% csrf_token %}
       {{ form.transaction_voucher_type }}
       {{ form.as_p }}
-      <div id="account-balance" class="balance-info"></div>
-      <div id="recipient-balance" class="balance-info"></div>
+
+      <div class="balance-container" id="account-balance-container">
+        <div id="account-balance" class="balance-info">Loading...</div>
+      </div>
+
+      <div class="balance-container" id="recipient-balance-container">
+        <div id="recipient-balance" class="balance-info">Loading...</div>
+      </div>
 
       <div class="form-actions">
         <button type="submit">Submit</button>
       </div>
     </form>
   </div>
- 
-
 </div>
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <!-- Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-function loadVouchers() {
-  var partyId = $('#id_party').val();
-  if (partyId) {
+  function loadVouchers() {
+    var partyId = $('#id_party').val();
+    if (partyId) {
+      $.ajax({
+        url: '{% url "load_vouchers" %}',
+        data: { party_id: partyId },
+        success: function (data) {
+          $('#id_voucher').html(data).trigger('change');
+        }
+      });
+    } else {
+      $('#id_voucher').html('<option value="">---------</option>').trigger('change');
+    }
+  }
+
+  function fetchAccountBalance(accountId, elementId, containerId) {
+    const $infoEl = $('#' + elementId);
+    const $container = $('#' + containerId);
+
+    if (!accountId) {
+      $container.removeClass('visible');
+      $infoEl.text('');
+      return;
+    }
+
     $.ajax({
-      url: '{% url "load_vouchers" %}',
-      data: {
-        'party_id': partyId
+      url: '{% url "get_account_balance" %}',
+      data: { account_id: accountId },
+      success: function (data) {
+        $infoEl.html('Available Balance: <strong>₹ ' + parseFloat(data.balance).toFixed(2) + '</strong>');
+        $container.addClass('visible');
       },
-      success: function(data) {
-        $('#id_voucher').html(data);
-        $('#id_voucher').trigger('change'); // Re-init Select2
+      error: function () {
+        $infoEl.html('<span style="color:red;">Unable to fetch balance.</span>');
+        $container.addClass('visible');
       }
     });
-  } else {
-    $('#id_voucher').html('<option value="">---------</option>');
-    $('#id_voucher').trigger('change');
   }
-}
 
-$(document).ready(function () {
-  // Initialize Select2 with consistent width and placeholders
-  $('#id_party').select2({ width: '100%', placeholder: 'Select Party' });
-  $('#id_account').select2({ width: '100%', placeholder: 'Select Account' });
-  $('#id_voucher').select2({ width: '100%', placeholder: 'Select Voucher' });
+  $(document).ready(function () {
+    $('#id_party, #id_account, #id_voucher, #id_recipient_account').select2({ width: '100%' });
 
-  // Load vouchers dynamically when party is changed
-  $('#id_party').change(function () {
-    loadVouchers();
+    $('#id_party').on('change', function () {
+      loadVouchers();
+    });
+
+    $('#id_account').on('change', function () {
+      fetchAccountBalance($(this).val(), 'account-balance', 'account-balance-container');
+    });
+
+    $('#id_recipient_account').on('change', function () {
+      fetchAccountBalance($(this).val(), 'recipient-balance', 'recipient-balance-container');
+    });
+
+    if ($('#id_party').val()) loadVouchers();
+    if ($('#id_account').val()) fetchAccountBalance($('#id_account').val(), 'account-balance', 'account-balance-container');
+    if ($('#id_recipient_account').val()) fetchAccountBalance($('#id_recipient_account').val(), 'recipient-balance', 'recipient-balance-container');
   });
-
-  // Load vouchers on page load if party is already selected
-  if ($('#id_party').val()) {
-    loadVouchers();
-  }
-});
-function fetchAccountBalance(accountId, targetElementId) {
-  if (!accountId) {
-    $(`#${targetElementId}`).text('');
-    return;
-  }
-  $.ajax({
-    url: '{% url "get_account_balance" %}',
-    data: { account_id: accountId },
-    success: function (data) {
-      $(`#${targetElementId}`).text('Available Balance: ₹ ' + data.balance.toFixed(2));
-    },
-    error: function () {
-      $(`#${targetElementId}`).text('Unable to fetch balance.');
-    }
-  });
-}
-
-$(document).ready(function () {
-  $('#id_party').select2({ width: '100%', placeholder: 'Select Party' });
-  $('#id_account').select2({ width: '100%', placeholder: 'Select Account' });
-  $('#id_voucher').select2({ width: '100%', placeholder: 'Select Voucher' });
-  $('#id_recipient_account').select2({ width: '100%', placeholder: 'Select Recipient Account' });
-
-  $('#id_party').change(function () {
-    loadVouchers();
-  });
-
-  if ($('#id_party').val()) {
-    loadVouchers();
-  }
-
-  // Trigger account balance display on change
-  $('#id_account').on('change', function () {
-    let accountId = $(this).val();
-    fetchAccountBalance(accountId, 'account-balance');
-  });
-
-  $('#id_recipient_account').on('change', function () {
-    let recipientId = $(this).val();
-    fetchAccountBalance(recipientId, 'recipient-balance');
-  });
-
-  // Load balance on page load if values are pre-selected
-  if ($('#id_account').val()) {
-    fetchAccountBalance($('#id_account').val(), 'account-balance');
-  }
-  if ($('#id_recipient_account').val()) {
-    fetchAccountBalance($('#id_recipient_account').val(), 'recipient-balance');
-  }
-});
 </script>
 {% endblock %}

@@ -96,6 +96,23 @@
     min-width: 100px;
   }
 
+  .account-balence-detail {
+    display: flex;
+    align-items: start;
+    gap: 8px;
+    font-size: 14px;
+    color: #444;
+    padding: 8px 12px;
+    background-color:lightgreen;
+    border-radius: 6px;
+  }
+
+  .account-balence-detail span.label {
+    font-weight: 600;
+    color: #3F5187;
+    min-width: 100px;
+  }
+
   .account-actions {
     display: flex;
     gap: 12px;
@@ -165,7 +182,7 @@
           <div class="account-detail"><span class="label">IFSC:</span> {{ acc.ifsc_code }}</div>
           <div class="account-detail"><span class="label">Account No:</span> {{ acc.account_number }}</div>
           <div class="account-detail"><span class="label">Type:</span> {{ acc.get_account_type_display }}</div>
-          <div class="account-detail"><span class="label">Available Balance:</span> {{ acc.available_balance }}</div>
+          <div class="account-balence-detail"><span class="label">Available Balance:</span> {{ acc.available_balance }}</div>
           {% if acc.description %}
             <div class="account-detail"><span class="label">Description:</span> {{ acc.description }}</div>
           {% endif %}
