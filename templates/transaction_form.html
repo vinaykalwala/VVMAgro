@@ -134,6 +134,35 @@
       text-align: center;
     }
   }
+
+  /* Select2 Style Overrides to Match Form Inputs */
+  .select2-container--default .select2-selection--single {
+    background-color: #f1f4ff;
+    border: 1px solid #d0d5e2;
+    border-radius: 10px;
+    height: 46px !important;
+    padding: 6px 12px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .select2-selection__rendered {
+    line-height: 32px !important;
+    color: #333;
+    padding-left: 0;
+  }
+
+  .select2-selection__arrow {
+    height: 46px !important;
+    top: 0 !important;
+    right: 10px;
+  }
+
+  .select2-container {
+    width: 100% !important;
+  }
 </style>
 
 <div class="main-content">
@@ -141,13 +170,8 @@
     <h2>{{ voucher_type }} Transaction</h2>
     <form method="post" class="form">
       {% csrf_token %}
-
-      <!-- Hidden field -->
       {{ form.transaction_voucher_type }}
-
-      <!-- All fields -->
       {{ form.as_p }}
-
       <div class="form-actions">
         <button type="submit">Submit</button>
       </div>
@@ -155,7 +179,13 @@
   </div>
 </div>
 
+<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
 function loadVouchers() {
   var partyId = $('#id_party').val();
@@ -167,21 +197,30 @@ function loadVouchers() {
       },
       success: function(data) {
         $('#id_voucher').html(data);
+        $('#id_voucher').trigger('change'); // Re-init Select2
       }
     });
   } else {
     $('#id_voucher').html('<option value="">---------</option>');
+    $('#id_voucher').trigger('change');
   }
 }
 
 $(document).ready(function () {
-  if ($('#id_party').val()) {
-    loadVouchers();
-  }
+  // Initialize Select2 with consistent width and placeholders
+  $('#id_party').select2({ width: '100%', placeholder: 'Select Party' });
+  $('#id_account').select2({ width: '100%', placeholder: 'Select Account' });
+  $('#id_voucher').select2({ width: '100%', placeholder: 'Select Voucher' });
 
+  // Load vouchers dynamically when party is changed
   $('#id_party').change(function () {
     loadVouchers();
   });
+
+  // Load vouchers on page load if party is already selected
+  if ($('#id_party').val()) {
+    loadVouchers();
+  }
 });
 </script>
 {% endblock %}

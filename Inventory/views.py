@@ -1235,12 +1235,20 @@ class LoadVouchersView(View):
         return HttpResponse(''.join(options))
     
     
+from django.shortcuts import render, get_object_or_404
+from num2words import num2words
+from .models import Transaction  # or adjust import as needed
+
 def transaction_detail(request, pk):
     transaction = get_object_or_404(Transaction, pk=pk)
+    
+    amount_in_words = num2words(transaction.amount, to='currency', lang='en_IN').replace("euro", "rupees").replace("cents", "paise")
+
     context = {
         'transaction': transaction,
         'voucher_type_display': transaction.get_transaction_voucher_type_display(),
         'transaction_type_display': transaction.get_transaction_type_display(),
         'method_display': transaction.get_method_of_adjustment_display(),
+        'amount_in_words': amount_in_words.title() + " Only",
     }
     return render(request, 'transaction_detail.html', context)

@@ -149,8 +149,12 @@
 <body>
 
 <div class="voucher-container">
-  <div class="voucher-header">
-    <h1>VVM AGRO INDUSTRIES (2020–26)</h1>
+  <div class="voucher-header" style="margin-bottom:20px;">
+  <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+    <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 40px; width: auto;">
+    <h1 style="color: #3F5187;">VVM AGRO INDUSTRIES</h1>
+  </div>
+
     <p>SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD, BESIDE TSIIC KALLAKAL</p>
     <p>MUPPYREDDY PALLY, MANOHARABAD MANDAL, MEDAK DIST., Telangana</p>
     <p>GSTIN/UIN: 36AANFV9684N1ZW | Contact: 9246565834 | Email: vvmotors2011@gmail.com</p>
@@ -185,20 +189,23 @@
     {% endif %}
   </table>
 
+ {% if transaction.party %}
   <h2 class="section-title">Party Details</h2>
   <table>
     <tr>
       <th>Name</th><td>{{ transaction.party.name }}</td>
-      <th>GSTIN</th><td>{{ transaction.party.gstin_uin_number }}</td>
+      <th>GSTIN</th><td>{{ transaction.party.gstin_uin_number|default:"N/A" }}</td>
     </tr>
     <tr>
-      <th>State</th><td>{{ transaction.party.state }}</td>
+      <th>State</th><td>{{ transaction.party.state|default:"N/A" }}</td>
       <th>Phone</th><td>{{ transaction.party.phone|default:"N/A" }}</td>
     </tr>
     <tr>
-      <th>Address</th><td colspan="3">{{ transaction.party.address }}</td>
+      <th>Address</th><td colspan="3">{{ transaction.party.address|default:"N/A" }}</td>
     </tr>
   </table>
+{% endif %}
+
 
   <h2 class="section-title">Bank Details</h2>
   <table>
@@ -222,7 +229,7 @@
       <td>₹ {{ transaction.amount }}</td>
     </tr>
     <tr>
-      <td colspan="2"><strong>Amount in Words:</strong> Rupees {{ transaction.amount|floatformat:0|intcomma|title }} only</td>
+<td colspan="2"><strong>Amount in Words:</strong> {{ amount_in_words }}</td>
     </tr>
   </table>
 

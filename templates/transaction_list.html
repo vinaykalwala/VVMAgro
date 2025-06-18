@@ -94,6 +94,97 @@
       align-items: flex-start;
     }
   }
+  .search-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.search-input-group {
+  display: flex;
+  max-width: 400px; /* Adjust this value as needed */
+  width: 100%;
+}
+
+
+.search-input-group input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+  flex: 1;
+}
+
+.search-input-group button[type="submit"] {
+  padding: 8px 14px;
+  background-color: #3F5187;
+  color: white;
+  border: 1px solid #3F5187;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-input-group button[type="submit"]:hover {
+  background-color: #2e3b66;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.filter-buttons button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.filter-buttons button[value=""] {
+  background-color: #28a745; /* All - gray */
+}
+
+.filter-buttons button[value="payment"] {
+  background-color: #17a2b8; /* Payment - green */
+}
+
+.filter-buttons button[value="receipt"] {
+  background-color:#28a745; /* Receipt - blue */
+}
+
+.filter-buttons button[value="contra"] {
+  background-color: #17a2b8; /* Contra - red */
+}
+
+.filter-buttons button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input-group,
+  .filter-buttons {
+    width: 100%;
+  }
+
+  .filter-buttons {
+    justify-content: flex-start;
+  }
+}
+
 </style>
 
 <div class="main-content">
@@ -103,17 +194,20 @@
       <a href="{% url 'select_transaction_type' %}" class="create-link">Create New Transaction</a>
     </div>
   </div>
-  <form method="get" class="search-form" style="margin-bottom: 20px;">
+ <form method="get" class="search-form" style="margin-bottom: 20px;">
+  <div class="search-input-group">
     <input type="text" name="q" placeholder="Search by Voucher, Date, Type, Party, Ref, Amount" value="{{ query }}">
     <button type="submit">Search</button>
+  </div>
 
-    <div class="filter-buttons">
-      <button type="submit" name="type" value="">All</button>
-      <button type="submit" name="type" value="payment">Payment</button>
-      <button type="submit" name="type" value="receipt">Receipt</button>
-      <button type="submit" name="type" value="contra">Contra</button>
-    </div>
-  </form>
+  <div class="filter-buttons">
+    <button type="submit" name="type" value="">All</button>
+    <button type="submit" name="type" value="payment">Payment</button>
+    <button type="submit" name="type" value="receipt">Receipt</button>
+    <button type="submit" name="type" value="contra">Contra</button>
+  </div>
+</form>
+
 
   <div class="transaction-table">
     <table>
