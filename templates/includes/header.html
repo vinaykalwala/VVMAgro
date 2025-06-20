@@ -112,7 +112,6 @@
       gap: 10px;
     }
 
-    /* Style for dashboard link to match nav-links */
     .dashboard-link {
       text-decoration: none;
       color: #fff;
@@ -176,8 +175,11 @@
 
 <body>
   <nav class="navbar">
+    <!-- Logo with Login Link -->
     <div class="logo">
-      <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 30px;">
+      <a href="{% url 'login' %}">
+        <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 30px;">
+      </a>
     </div>
 
     {% if request.user.is_authenticated %}
@@ -239,14 +241,9 @@
         <li><a href="{% url 'careers' %}">Careers</a></li>
         <li><a href="{% url 'contact_create' %}">Contact Us</a></li>
       </ul>
-      <div class="logout-container">
-        <form method="POST" action="{% url 'login' %}" style="margin-left: 10px;">
-          {% csrf_token %}
-          <button type="submit" class="logout-button">Login</button>
-        </form>
-      </div>
     {% endif %}
   </nav>
+
   <script>
     function toggleMenu() {
       var menu = document.getElementById("menu");
