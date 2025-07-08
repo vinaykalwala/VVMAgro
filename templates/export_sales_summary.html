@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<div class="main-content">
 <div class="container">
   <h2>Export <span class="highlight">Sales Summary</span> (Excel)</h2>
 
@@ -30,7 +31,7 @@
     </div>
   </form>
 </div>
-
+</div>
 <script>
 function downloadExcel() {
   const year = document.getElementById('year').value;
@@ -104,7 +105,24 @@ a.back-btn {
 }
 
 .button-row {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
 }
+
+@media (max-width: 420px) {
+  .button-row {
+    justify-content: center;
+  }
+
+  button.submit-btn,
+  a.back-btn {
+    width: 100%;
+    margin-right: 0;
+    text-align: center;
+  }
+}
+
 </style>
 {% endblock %}
