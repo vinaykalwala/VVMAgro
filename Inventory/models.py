@@ -144,6 +144,7 @@ class Voucher(models.Model):
     total_cgst = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     total_sgst = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     total_igst = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    round_off_on_sales=models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     grand_total = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
 
     def save(self, *args, **kwargs):
@@ -377,3 +378,12 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.transaction_voucher_number} - {self.get_transaction_voucher_type_display()}"
+
+
+class ProductComponent(models.Model):
+    finished_product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='components')
+    component_product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='used_in')
+    quantity_used = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.component_product.name} in {self.finished_product.name}"

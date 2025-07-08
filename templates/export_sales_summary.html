@@ -1,0 +1,110 @@
+{% extends 'backendpages/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h2>Export <span class="highlight">Sales Summary</span> (Excel)</h2>
+
+  <form method="get" class="stock-form" onsubmit="event.preventDefault(); downloadExcel();">
+    <div class="form-group">
+      <label for="year">Select Year:</label>
+      <select id="year" class="input-field" required>
+        {% for year in years %}
+          <option value="{{ year }}">{{ year }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="month">Select Month:</label>
+      <select id="month" class="input-field" required>
+        {% for value, name in months %}
+          <option value="{{ value }}">{{ name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="button-row">
+      <button type="submit" class="submit-btn">Download Excel</button>
+      <a href="{% url 'home' %}" class="back-btn">← Back</a>
+    </div>
+  </form>
+</div>
+
+<script>
+function downloadExcel() {
+  const year = document.getElementById('year').value;
+  const month = document.getElementById('month').value;
+  if (year && month) {
+    const url = `/export-sales-summary/${year}/${month}/`;
+    window.location.href = url;
+  }
+}
+</script>
+
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+}
+
+.container {
+  width: 90%;
+  max-width: 600px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+.highlight {
+  color: #2980b9;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+button.submit-btn,
+a.back-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  margin-top: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.submit-btn {
+  background: #2980b9;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.back-btn {
+  background: #bdc3c7;
+  color: #2c3e50;
+}
+
+.button-row {
+  text-align: right;
+}
+</style>
+{% endblock %}

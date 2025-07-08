@@ -179,6 +179,8 @@
     <div class="header-flex">
 <h1>Products</h1>
 <a href="{% url 'product_create' %}" class="create-link">Create New Product </a>
+<a href="{% url 'export_products_excel' %}" class="create-link">📤 Export Products to Excel</a>
+
 </div>
 <form method="get" class="search-bar">
   <input type="text" name="q" placeholder="Search products..." value="{{ query }}">
@@ -228,6 +230,10 @@
             <td>
                 <a href="{% url 'product_update' product.id %}" class="action-link edit-link">Edit</a> 
                 <a href="{% url 'product_delete' product.id %}" class="action-link delete-link">Delete</a>
+                {% if product.group.name == "Finished Products" %}
+                  <a href="{% url 'add_finished_product_stock' product.id %}" class="action-link delete-link">Add Stock</a>
+                {% endif %}
+
             </td>
         </tr>
         {% empty %}

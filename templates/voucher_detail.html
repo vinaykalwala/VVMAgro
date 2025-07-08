@@ -175,13 +175,13 @@
                 <td class="text-left">{{ item.product.name }}</td>
                 <td>{{ item.product.hsn_sac }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.price_per_unit|floatformat:2|intcomma }}</td>
+                <td>₹ {{ item.price_per_unit|floatformat:2|intcomma }}</td>
                 <td>{{ item.product.unit_of_measurement }}</td>
-                <td>{{ item.subtotal|floatformat:2|intcomma }}</td>
-                <td>{{ item.cgst_amount }}</td>
-                <td>{{ item.sgst_amount }}</td>
-                <td>{{ item.igst_amount }}</td>
-                <td>{{ item.total_amount }}</td>
+                <td>₹ {{ item.subtotal|floatformat:2|intcomma }}</td>
+                <td>₹ {{ item.cgst_amount }}</td>
+                <td>₹ {{ item.sgst_amount }}</td>
+                <td>₹ {{ item.igst_amount }}</td>
+                <td>₹ {{ item.total_amount }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -190,27 +190,41 @@
     <table>
         <tr>
             <td class="no-border text-right" colspan="6">Total (A)</td>
-            <td>{{ total_subtotal|floatformat:2|intcomma }}</td>
+            <td>₹ {{ total_subtotal|floatformat:2|intcomma }}</td>
         </tr>
         <tr>
             <td class="no-border text-right" colspan="6">Add: CGST</td>
-            <td>{{ total_cgst|floatformat:2|intcomma }}</td>
+            <td>₹ {{ total_cgst|floatformat:2|intcomma }}</td>
         </tr>
         <tr>
             <td class="no-border text-right" colspan="6">Add: SGST</td>
-            <td>{{ total_sgst|floatformat:2|intcomma }}</td>
+            <td>₹ {{ total_sgst|floatformat:2|intcomma }}</td>
         </tr>
         <tr>
             <td class="no-border text-right" colspan="6">Add: IGST</td>
-            <td>{{ total_igst|floatformat:2|intcomma }}</td>
+            <td>₹ {{ total_igst|floatformat:2|intcomma }}</td>
         </tr>
         <tr>
             <td class="no-border text-right" colspan="6">Add: Freight Charges</td>
-            <td>{{ voucher.freight_charge|floatformat:2|intcomma }}</td>
+            <td>₹ {{ voucher.freight_charge|floatformat:2|intcomma }}</td>
         </tr>
         <tr>
+    <td class="no-border text-right" colspan="6">
+        Round Off On Sales
+        {% if voucher.round_off_on_sales > 0 %}
+            <span class="text-success">(Added)</span>
+        {% elif voucher.round_off_on_sales < 0 %}
+            <span class="text-danger">(Subtracted)</span>
+        {% endif %}
+    </td>
+    <td>
+        ₹ {{ voucher.round_off_on_sales|floatformat:2|intcomma }}
+    </td>
+</tr>
+
+        <tr>
             <td class="no-border text-right" colspan="6"><strong>Grand Total</strong></td>
-            <td><strong>{{ voucher.grand_total|floatformat:2|intcomma }}</strong></td>
+            <td><strong>₹ {{ voucher.grand_total|floatformat:2|intcomma }}</strong></td>
         </tr>
     </table>
 

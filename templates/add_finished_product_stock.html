@@ -1,0 +1,171 @@
+{% extends 'backendpages/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <h2>Add Stock for <span class="highlight">{{ finished_product.name }}</span></h2>
+
+  <form method="post" class="stock-form">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="quantity_to_add">Quantity to Add:</label>
+      <input type="number" name="quantity_to_add" min="1" required class="input-field">
+    </div>
+
+    <div id="formset-container">
+      {{ formset.management_form }}
+      {% for form in formset %}
+        <div class="formset-row">
+          <div class="field">
+            {{ form.component_product.label_tag }} {{ form.component_product }}
+          </div>
+          <div class="field">
+            {{ form.quantity_used.label_tag }} {{ form.quantity_used }}
+          </div>
+          <div class="field">
+            {{ form.DELETE }} <button type="button" class="remove-component danger">Remove</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="button-row">
+      <button type="button" id="add-component" class="add-btn">+ Add Component</button>
+    </div>
+
+    <div class="button-row">
+      <button type="submit" class="submit-btn">Submit</button>
+      <a href="{% url 'product_list' %}" class="back-btn">← Back to Product List</a>
+    </div>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const formsetContainer = document.getElementById('formset-container');
+  const addButton = document.getElementById('add-component');
+  let totalForms = document.querySelector('[name="form-TOTAL_FORMS"]');
+
+  // Add component
+  addButton.addEventListener('click', function () {
+    const formCount = parseInt(totalForms.value);
+    const originalForm = document.querySelector('.formset-row');
+    const newForm = originalForm.cloneNode(true);
+
+    newForm.innerHTML = newForm.innerHTML.replace(/form-(\\d+)-/g, `form-${formCount}-`);
+    formsetContainer.appendChild(newForm);
+    totalForms.value = formCount + 1;
+  });
+
+  // Remove component
+  formsetContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-component')) {
+      const row = e.target.closest('.formset-row');
+      const deleteInput = row.querySelector('input[type="checkbox"][name*="DELETE"]');
+      if (deleteInput) {
+        deleteInput.checked = true;
+        row.style.display = 'none';
+      }
+    }
+  });
+});
+</script>
+
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+}
+
+.container {
+  width: 90%;
+  max-width: 850px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+.highlight {
+  color: #2980b9;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+}
+
+.formset-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+  background: #f0f4f8;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-left: 4px solid #3498db;
+  border-radius: 6px;
+}
+
+.field {
+  flex: 1;
+}
+
+button.add-btn,
+button.submit-btn,
+a.back-btn {
+  padding: 10px 18px;
+  font-size: 1rem;
+  margin-top: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.add-btn {
+  background: #27ae60;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background: #2980b9;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.back-btn {
+  background: #bdc3c7;
+  color: #2c3e50;
+}
+
+.danger {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.button-row {
+  text-align: right;
+}
+</style>
+{% endblock %}

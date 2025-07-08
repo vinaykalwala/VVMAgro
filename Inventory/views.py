@@ -752,12 +752,14 @@ def voucher_type_list(request):
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
-from django.db import transaction
 from django.contrib import messages
+from django.utils import timezone
+from decimal import Decimal, ROUND_HALF_UP
+import json
+
 from .models import Voucher, VoucherProductItem, Product
 from .forms import VoucherForm, VoucherProductItemFormSet
-import json
-from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def create_voucher_with_items(request, voucher_type):
@@ -779,7 +781,7 @@ def create_voucher_with_items(request, voucher_type):
 
     initial_movement_type = movement_type_map.get(voucher_type, '')
 
-    # ✅ Always generate preview voucher number for GET and POST
+    # ✅ Always generate preview voucher number
     now = timezone.now()
     fy_start = now.year if now.month >= 4 else now.year - 1
     fy_end = fy_start + 1
@@ -788,6 +790,11 @@ def create_voucher_with_items(request, voucher_type):
     prefix = f"VVM/{fy_str}/{prefix_code}/"
     count = Voucher.objects.filter(voucher_number__startswith=prefix).count() + 1
     preview_voucher_number = f"{prefix}{str(count).zfill(3)}"
+
+    def round_to_nearest_10_with_00(value):
+        value = Decimal(value)
+        rounded = (value / 10).quantize(Decimal('1'), rounding=ROUND_HALF_UP) * 10
+        return rounded.quantize(Decimal('1.00'))
 
     def save_voucher_and_items(form, formset, voucher_type):
         with transaction.atomic():
@@ -816,17 +823,17 @@ def create_voucher_with_items(request, voucher_type):
 
                 if voucher_type == 'Seller_Voucher':
                     voucher.movement_type = 'in'
-                    item.product.stock_quantity += int(item.quantity)  # Cast to int for safe update
+                    item.product.stock_quantity += int(item.quantity)
                     item.product.save()
 
                 elif voucher_type == 'Buyer_Voucher':
                     voucher.movement_type = 'out'
-                    item.product.stock_quantity -= int(item.quantity)  # Cast to int for safe update
+                    item.product.stock_quantity -= int(item.quantity)
                     item.product.save()
 
                 elif voucher_type == 'Job_Work_Voucher':
                     voucher.movement_type = 'job_work'
-                    item.product.stock_quantity += int(item.quantity)  # Cast to int for safe update
+                    item.product.stock_quantity += int(item.quantity)
                     selected_phase = item_form.cleaned_data.get('phase', '')
                     if selected_phase:
                         item.product.phase = selected_phase
@@ -846,11 +853,17 @@ def create_voucher_with_items(request, voucher_type):
             if voucher.freight_applicable and voucher.freight_charge:
                 grand_total += voucher.freight_charge
 
+            # 💡 Round to nearest 10 and calculate round-off
+            rounded_grand_total = round_to_nearest_10_with_00(grand_total)
+            round_off = rounded_grand_total - grand_total
+
+            # 🔄 Save all calculated values
             voucher.total_subtotal = total_subtotal
             voucher.total_cgst = total_cgst
             voucher.total_sgst = total_sgst
             voucher.total_igst = total_igst
-            voucher.grand_total = grand_total
+            voucher.round_off_on_sales = round_off
+            voucher.grand_total = rounded_grand_total
             voucher.save()
 
         return voucher
@@ -886,7 +899,7 @@ def create_voucher_with_items(request, voucher_type):
                         continue
                     product = item_form.cleaned_data.get('product')
                     quantity = item_form.cleaned_data.get('quantity')
-                    if product and quantity and product.stock_quantity < int(quantity):  # Cast to int for comparison
+                    if product and quantity and product.stock_quantity < int(quantity):
                         insufficient_stock_products.append(
                             f"{product.name} (available: {product.stock_quantity}, requested: {int(quantity)})"
                         )
@@ -922,6 +935,7 @@ def create_voucher_with_items(request, voucher_type):
         "product_data": json.dumps(product_data),
         "preview_voucher_number": preview_voucher_number
     })
+
 
 import pandas as pd
 from .forms import ProductUploadForm
@@ -1325,3 +1339,510 @@ def account_transaction_history(request, account_id):
         'search_query': query,
         'date_query': date_query,
     })
+
+
+from django.forms import formset_factory
+from django.contrib import messages
+from django.db import transaction
+from django.core.exceptions import ValidationError
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Product, ProductComponent
+from .forms import ProductComponentForm
+
+@login_required
+def add_finished_product_stock(request, pk):
+    finished_product = get_object_or_404(Product, pk=pk)
+    ProductComponentFormSet = formset_factory(ProductComponentForm, extra=1, can_delete=True)
+
+    if finished_product.group.name.lower() != 'finished products':
+        messages.error(request, "This is not a finished product.")
+        return redirect('product_list')
+
+    if request.method == 'POST':
+        formset = ProductComponentFormSet(request.POST)
+        try:
+            quantity_to_add = int(request.POST.get('quantity_to_add', 0))
+        except ValueError:
+            quantity_to_add = 0
+
+        if formset.is_valid() and quantity_to_add > 0:
+            try:
+                with transaction.atomic():
+                    for form in formset:
+                        if form.cleaned_data.get('DELETE'):
+                            continue
+
+                        component = form.cleaned_data.get('component_product')
+                        qty_used = form.cleaned_data.get('quantity_used')
+
+                        if not component or not qty_used:
+                            continue
+
+                        used_qty = qty_used * quantity_to_add
+
+                        if component.stock_quantity < used_qty:
+                            raise ValidationError(f"Insufficient stock for {component.name}")
+
+                        component.stock_quantity -= used_qty
+                        component.save()
+
+                        ProductComponent.objects.create(
+                            finished_product=finished_product,
+                            component_product=component,
+                            quantity_used=qty_used
+                        )
+
+                    finished_product.stock_quantity += quantity_to_add
+                    finished_product.save()
+
+                    messages.success(request, f"{quantity_to_add} units of {finished_product.name} added.")
+                    return redirect('product_list')
+
+            except ValidationError as e:
+                messages.error(request, str(e))
+
+    else:
+        formset = ProductComponentFormSet()
+
+    return render(request, 'add_finished_product_stock.html', {
+        'finished_product': finished_product,
+        'formset': formset,
+    })
+
+
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+from .models import Voucher
+from decimal import Decimal
+import calendar
+from datetime import datetime
+
+def export_sales_summary_excel(request, year, month):
+    month_name = calendar.month_name[int(month)]
+    vouchers = Voucher.objects.filter(
+        voucher_type='Buyer_Voucher',
+        created_at__year=year,
+        created_at__month=month
+    ).order_by('created_at')
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = f"Sales {month_name} {year}"
+
+    # === Define styles ===
+    title_font = Font(size=16, bold=True)
+    header_font = Font(size=12, bold=True)
+    currency_format = '₹#,##0.00'
+    center_align = Alignment(horizontal='center')
+    left_align = Alignment(horizontal='left')
+    header_fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
+    thin_border = Border(left=Side(style='thin'), right=Side(style='thin'),
+                         top=Side(style='thin'), bottom=Side(style='thin'))
+
+    # === Company Header Section ===
+    company_info = [
+        "VVM AGRO INDUSTRIES (2020-26)",
+        "SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD",
+        "BESIDE TSIIC KALLAKAL, MUPPYREDDY PALLY VILLAGE",
+        "MANOHARABAD MANDAL, MEDAK DIST.",
+        "Contact : 9246565834",
+        "Sales Register",
+        f"1-{month_name[:3]}-{year} to {calendar.monthrange(int(year), int(month))[1]}-{month_name[:3]}-{year}"
+    ]
+
+    for line in company_info:
+        row_idx = ws.max_row + 1
+        ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=10)
+        cell = ws.cell(row=row_idx, column=1, value=line)
+        cell.font = title_font
+        cell.alignment = center_align
+
+    ws.append([])  # Empty row
+
+    # === Table Header ===
+    headers = [
+        "Date", "Particulars", "Buyer", "Buyer Address", "Voucher Type", "Voucher No.",
+        "GSTIN/UIN", "Value", "Gross Total", "INTER STATE SALES", "Output IGST",
+        "SALES", "Output CGST", "Output SGST", "ROUND OFF ON SALES", "FREIGHT"
+    ]
+    ws.append(headers)
+    header_row = ws.max_row
+
+    for col_num, header in enumerate(headers, 1):
+        cell = ws.cell(row=header_row, column=col_num)
+        cell.font = header_font
+        cell.alignment = center_align
+        cell.fill = header_fill
+        cell.border = thin_border
+
+    ws.append([])  # Empty row
+
+    # === Data Rows ===
+    for voucher in vouchers:
+        party = voucher.party
+        cgst = voucher.total_cgst or Decimal('0.00')
+        sgst = voucher.total_sgst or Decimal('0.00')
+        igst = voucher.total_igst or Decimal('0.00')
+        round_off = voucher.round_off_on_sales or Decimal('0.00')
+        freight = voucher.freight_charge or Decimal('0.00')
+        subtotal = voucher.total_subtotal or Decimal('0.00')
+        total = voucher.grand_total or Decimal('0.00')
+        is_inter_state = bool(igst > 0)
+        interstate_sales = subtotal if is_inter_state else ''
+        local_sales = subtotal if not is_inter_state else ''
+
+        row_data = [
+            voucher.created_at.strftime('%d-%m-%Y'),
+            party.name,
+            party.name,
+            party.address,
+            "Sales",
+            voucher.voucher_number,
+            party.gstin_uin_number,
+            subtotal,
+            total,
+            interstate_sales,
+            igst,
+            local_sales,
+            cgst,
+            sgst,
+            round_off,
+            freight
+        ]
+
+        ws.append(row_data)
+        current_row = ws.max_row
+
+        # Apply formatting to each cell
+        for col_index, value in enumerate(row_data, start=1):
+            cell = ws.cell(row=current_row, column=col_index)
+            cell.border = thin_border
+            if isinstance(value, Decimal) or isinstance(value, float):
+                cell.number_format = currency_format
+                cell.alignment = right_align = Alignment(horizontal='right')
+            else:
+                cell.alignment = left_align
+
+    # === Auto-adjust column widths ===
+    for col in ws.columns:
+        max_length = max(len(str(cell.value or '')) for cell in col)
+        col_letter = get_column_letter(col[0].column)
+        ws.column_dimensions[col_letter].width = max(14, max_length + 2)
+
+    # === Freeze header row (after company section) ===
+    ws.freeze_panes = f"A{header_row + 2}"
+
+    # === Return file response ===
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = f"Sales_Summary_{month_name}_{year}.xlsx"
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    wb.save(response)
+    return response
+
+
+import datetime as dt
+import calendar
+from django.shortcuts import render
+
+def download_sales_summary_page(request):
+    current_year = dt.datetime.now().year
+    years = [current_year - i for i in range(100)]  # Last 5 years
+    months = [(i, calendar.month_name[i]) for i in range(1, 13)]
+    return render(request, 'export_sales_summary.html', {'years': years, 'months': months})
+
+
+from django.shortcuts import render
+import datetime
+
+def hsn_summary_form(request):
+    current_year = datetime.datetime.now().year
+    years = list(range(current_year, current_year - 100, -1))  # Last 10 years
+    months = [
+        (1, 'January'), (2, 'February'), (3, 'March'),
+        (4, 'April'), (5, 'May'), (6, 'June'),
+        (7, 'July'), (8, 'August'), (9, 'September'),
+        (10, 'October'), (11, 'November'), (12, 'December')
+    ]
+    return render(request, 'export_hsn_summary.html', {'years': years, 'months': months})
+
+def export_hsn_gst_summary_excel(request, year, month):
+    from django.http import HttpResponse
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
+    from openpyxl.utils import get_column_letter
+    from collections import defaultdict
+    import calendar
+    from .models import VoucherProductItem
+
+    month_name = calendar.month_name[int(month)]
+    start_date = f"1-{month_name[:3]}-{year}"
+    end_day = calendar.monthrange(int(year), int(month))[1]
+    end_date = f"{end_day}-{month_name[:3]}-{year}"
+
+    items = VoucherProductItem.objects.filter(
+        voucher__voucher_type='Buyer_Voucher',
+        voucher__created_at__year=year,
+        voucher__created_at__month=month
+    ).select_related('product')
+
+    summary = defaultdict(lambda: {
+        'description': '',
+        'unit': '',
+        'quantity': 0,
+        'taxable': 0,
+        'igst': 0,
+        'cgst': 0,
+        'sgst': 0,
+        'cess': 'NA',
+        'rate': 0
+    })
+
+    for item in items:
+        key = item.product.hsn_sac
+        summary[key]['description'] = item.product.name
+        summary[key]['unit'] = item.product.unit_of_measurement
+        summary[key]['quantity'] += float(item.quantity)
+        summary[key]['taxable'] += float(item.subtotal)
+        summary[key]['igst'] += float(item.igst_amount)
+        summary[key]['cgst'] += float(item.cgst_amount)
+        summary[key]['sgst'] += float(item.sgst_amount)
+        summary[key]['rate'] = float(item.igst_percent + item.cgst_percent + item.sgst_percent)
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = f"HSN Summary {month_name} {year}"
+
+    # Styles
+    title_font = Font(size=14, bold=True)
+    header_font = Font(size=12, bold=True)
+    border = Border(left=Side(style='thin'), right=Side(style='thin'),
+                    top=Side(style='thin'), bottom=Side(style='thin'))
+    center = Alignment(horizontal='center')
+    left = Alignment(horizontal='left')
+    right = Alignment(horizontal='right')
+    currency_format = '₹#,##0.00'
+    header_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+
+    # Company Info
+    top_lines = [
+        "VVM AGRO INDUSTRIES (2020-26)",
+        "SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD",
+        "BESIDE TSIIC KALLAKAL, MUPPYREDDY PALLY VILLAGE",
+        "MANOHARABAD MANDAL, MEDAK DIST.",
+        "Contact : 9246565834",
+        "GSTR-1 Reconciliation - HSN/SAC Summary",
+        f"{start_date} to {end_date}",
+        "GST Registration:",
+        "36AANFV9684N1ZW (Comparison of Books & Portal Values)",
+        "HSN/SAC Summary - HSN/SAC"
+    ]
+
+    for text in top_lines:
+        row = ws.max_row + 1
+        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=12)
+        cell = ws.cell(row=row, column=1, value=text)
+        cell.font = title_font
+        cell.alignment = center
+
+    ws.append([])
+
+    # Header Row
+    headers = [
+        "HSN/SAC", "Description", "UQC", "Quantity",
+        "Total Amount (₹)", "Tax Rate (%)", "Taxable Amount (₹)",
+        "IGST (₹)", "CGST (₹)", "SGST/UTGST (₹)", "Cess", "Tax Amount (₹)"
+    ]
+    ws.append(headers)
+    r = ws.max_row
+    for c in range(1, 13):
+        cell = ws.cell(row=r, column=c)
+        cell.font = header_font
+        cell.alignment = center
+        cell.fill = header_fill
+        cell.border = border
+
+    # Data Rows
+    for hsn, data in summary.items():
+        total_tax = data['igst'] + data['cgst'] + data['sgst']
+        row = [
+            hsn,
+            data['description'],
+            data['unit'],
+            round(data['quantity'], 2),
+            data['taxable'] + total_tax,
+            data['rate'],
+            data['taxable'],
+            data['igst'],
+            data['cgst'],
+            data['sgst'],
+            data['cess'],  # 'NA'
+            total_tax
+        ]
+        ws.append(row)
+        r = ws.max_row
+        for c in range(1, 13):
+            cell = ws.cell(row=r, column=c)
+            cell.border = border
+
+            # Format numeric ₹ columns
+            if c in [5, 7, 8, 9, 10, 12] and isinstance(cell.value, (int, float)):
+                cell.alignment = right
+                cell.number_format = currency_format
+            elif c == 6:  # Tax Rate (%)
+                cell.alignment = center
+                cell.number_format = '0.00'
+            else:
+                cell.alignment = left
+
+    # Auto column width
+    for col in ws.columns:
+        max_len = max(len(str(cell.value or '')) for cell in col)
+        ws.column_dimensions[get_column_letter(col[0].column)].width = max(15, max_len + 2)
+
+    # Output response
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = f"HSN_GST_Summary_{month_name}_{year}.xlsx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+    return response
+
+
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment, Border, Side
+from .models import Product
+import pytz
+
+def export_products_excel(request):
+    # Create a new workbook and sheet
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Product List"
+
+    # Styling
+    header_font = Font(bold=True)
+    border = Border(
+        left=Side(style='thin'), right=Side(style='thin'),
+        top=Side(style='thin'), bottom=Side(style='thin')
+    )
+    center_align = Alignment(horizontal='center')
+    left_align = Alignment(horizontal='left')
+
+    # Header row
+    headers = [
+        "Name", "Group", "Price per Unit (₹)", "Unit of Measurement", "Stock Quantity",
+        "Warehouse", "Stock Limit", "HSN/SAC", "HSN/SAC Details", "Source of HSN/SAC",
+        "HSN/SAC Description", "Type of Supply", "Phase", "Description", "Created At (IST)"
+    ]
+    ws.append(headers)
+
+    for col_num, col in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.font = header_font
+        cell.border = border
+        cell.alignment = center_align
+
+    # Data rows
+    for product in Product.objects.select_related('group', 'warehouse'):
+        row = [
+            product.name,
+            product.group.name if product.group else '',
+            float(product.price_per_unit),
+            product.unit_of_measurement,
+            product.stock_quantity,
+            product.warehouse.name if product.warehouse else '',
+            product.stock_limit,
+            product.hsn_sac,
+            product.hsn_sac_details,
+            product.hsn_sac_source_of_details,
+            product.hsn_sac_description,
+            product.get_type_of_supply_display(),
+            product.get_phase_display() if product.phase else '',
+            product.description,
+            product.created_at.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S'),
+        ]
+        ws.append(row)
+        r = ws.max_row
+        for c in range(1, len(headers) + 1):
+            cell = ws.cell(row=r, column=c)
+            cell.border = border
+            cell.alignment = left_align
+
+    # Auto column width
+    from openpyxl.utils import get_column_letter
+    for col in ws.columns:
+        max_length = max(len(str(cell.value or '')) for cell in col)
+        ws.column_dimensions[get_column_letter(col[0].column)].width = max(15, max_length + 2)
+
+    # Prepare HTTP response
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = "Product_List.xlsx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+    return response
+
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment, Border, Side
+from .models import Party
+
+def export_party_excel(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Party List"
+
+    # Styling
+    header_font = Font(bold=True)
+    border = Border(
+        left=Side(style='thin'), right=Side(style='thin'),
+        top=Side(style='thin'), bottom=Side(style='thin')
+    )
+    center_align = Alignment(horizontal='center')
+    left_align = Alignment(horizontal='left')
+
+    # Header Row
+    headers = [
+        "Party Group", "Name", "GSTIN/UIN", "Address", "Location",
+        "Pincode", "State", "Phone", "Email"
+    ]
+    ws.append(headers)
+    for col_num, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.font = header_font
+        cell.alignment = center_align
+        cell.border = border
+
+    # Data Rows
+    for party in Party.objects.select_related('group'):
+        row = [
+            party.group.name if party.group else '',
+            party.name,
+            party.gstin_uin_number,
+            party.address,
+            party.location,
+            party.pincode,
+            party.state,
+            party.phone,
+            party.email,
+        ]
+        ws.append(row)
+        r = ws.max_row
+        for c in range(1, len(headers) + 1):
+            cell = ws.cell(row=r, column=c)
+            cell.border = border
+            cell.alignment = left_align
+
+    # Auto column width
+    from openpyxl.utils import get_column_letter
+    for col in ws.columns:
+        max_length = max(len(str(cell.value or '')) for cell in col)
+        ws.column_dimensions[get_column_letter(col[0].column)].width = max(15, max_length + 2)
+
+    # Prepare response
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = "Party_List.xlsx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+    return response

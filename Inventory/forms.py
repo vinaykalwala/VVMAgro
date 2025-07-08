@@ -331,3 +331,23 @@ class TransactionForm(forms.ModelForm):
                 self.fields['voucher'].queryset = Voucher.objects.filter(party_id=party_id)
             except (ValueError, TypeError):
                 pass  # Invalid input, keep empty queryset
+
+
+from django import forms
+from .models import ProductComponent, Product, ProductGroup
+
+class ProductComponentForm(forms.ModelForm):
+    class Meta:
+        model = ProductComponent
+        fields = ['component_product', 'quantity_used']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Exclude 'Finished Products' group from component choices
+        finished_group = ProductGroup.objects.filter(name__iexact='Finished Products').first()
+        if finished_group:
+            self.fields['component_product'].queryset = Product.objects.exclude(group=finished_group)
+        else:
+            # Fallback: allow all if group not found
+            self.fields['component_product'].queryset = Product.objects.all()

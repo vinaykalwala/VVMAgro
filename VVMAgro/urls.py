@@ -111,6 +111,14 @@ urlpatterns = [
     path('ajax/load-vouchers/', LoadVouchersView.as_view(), name='load_vouchers'),
     path('ajax/get-account-balance/', get_account_balance, name='get_account_balance'),
     path('accounts/<int:account_id>/history/', account_transaction_history, name='account_transaction_history'),
+    path('products/<int:pk>/add-stock/', add_finished_product_stock, name='add_finished_product_stock'),
+    path('export-sales-summary/<int:year>/<int:month>/', export_sales_summary_excel, name='export_sales_summary'),
+    path('download-sales-summary/', download_sales_summary_page, name='download_sales_summary_page'),
+    path('export/hsn-summary-form/', hsn_summary_form, name='hsn_summary_form'),
+    path('export/hsn-summary/<int:year>/<int:month>/', export_hsn_gst_summary_excel, name='export_hsn_gst_summary'),
+    path('export/products/', export_products_excel, name='export_products_excel'),
+    path('export/party/', export_party_excel, name='export_party_excel'),
+
 
 
 
