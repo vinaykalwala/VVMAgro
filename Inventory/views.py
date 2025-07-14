@@ -1025,7 +1025,9 @@ def upload_parties(request):
                         pincode=row['pincode'],
                         state=row['state'],
                         phone=row.get('phone', ''),
-                        email=row.get('email', '')
+                        email=row.get('email', ''),
+                        registration_type=row.get('registration_type', '')  # <- Added here
+
                     )
 
                 messages.success(request, "Party data uploaded successfully!")
@@ -1786,6 +1788,7 @@ def export_products_excel(request):
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side
+from openpyxl.utils import get_column_letter
 from .models import Party
 
 def export_party_excel(request):
@@ -1805,7 +1808,7 @@ def export_party_excel(request):
     # Header Row
     headers = [
         "Party Group", "Name", "GSTIN/UIN", "Address", "Location",
-        "Pincode", "State", "Phone", "Email"
+        "Pincode", "State", "Phone", "Email", "Registration Type"
     ]
     ws.append(headers)
     for col_num, header in enumerate(headers, 1):
@@ -1826,6 +1829,7 @@ def export_party_excel(request):
             party.state,
             party.phone,
             party.email,
+            party.registration_type  # <-- Added here
         ]
         ws.append(row)
         r = ws.max_row
@@ -1835,7 +1839,6 @@ def export_party_excel(request):
             cell.alignment = left_align
 
     # Auto column width
-    from openpyxl.utils import get_column_letter
     for col in ws.columns:
         max_length = max(len(str(cell.value or '')) for cell in col)
         ws.column_dimensions[get_column_letter(col[0].column)].width = max(15, max_length + 2)

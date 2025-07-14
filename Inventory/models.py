@@ -101,6 +101,8 @@ class Party(models.Model):
     state=models.CharField(max_length=20)
     phone = models.CharField(max_length=15, blank=True)
     email = models.EmailField(blank=True)
+    registration_type = models.CharField(max_length=50, blank=True)  # Free-text field
+
 
     def __str__(self):
         return self.name
