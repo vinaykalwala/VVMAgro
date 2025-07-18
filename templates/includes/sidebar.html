@@ -254,18 +254,19 @@
   {% elif request.user.role == 'manager' %}
   <h2>Manager Dashboard</h2>
   <ul>
-   <ul>
+    <ul>
     <li>
       <a href="{% url 'voucher_type_list' %}">
         <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
       </a>
     </li>
-     <li>
+    <li>
   <a href="{% url 'select_transaction_type' %}"><i class="fas fa-exchange-alt"></i>Create Transactions<i class="fas fa-chevron-right"></i></a>
 </li> 
  <li>
   <a href="{% url 'transaction_list' %}"><i class="fas fa-money-check-alt"></i>All Transactions<i class="fas fa-chevron-right"></i></a>
 </li> 
+
       <li>
       <a href="{% url 'stock_report' %}">
         <i class="fas fa-chart-bar"></i> Stock Report <i class="fas fa-chevron-right"></i>
@@ -276,6 +277,18 @@
         <i class="fas fa-book"></i> Day Book <i class="fas fa-chevron-right"></i>
       </a>
     </li>
+    <li>
+  <a href="{% url 'download_sales_summary_page' %}">
+    <i class="fas fa-file-invoice-dollar"></i> Sales Register <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+<li>
+  <a href="{% url 'hsn_summary_form' %}">
+    <i class="fas fa-file-alt"></i> HSN Summary <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+
+
      <li>
       <a href="{% url 'product_create' %}">
         <i class="fas fa-plus-circle"></i>Add New Product<i class="fas fa-chevron-right"></i>
@@ -312,7 +325,6 @@
       </a>
     </li>
  <li>
-
   <a href="{% url 'low_stock_products' %}">
     <i class="fas fa-exclamation-triangle" style="color: rgb(243, 105, 105);"></i>
     Stock Alert
@@ -322,8 +334,12 @@
     <i class="fas fa-chevron-right"></i>
   </a>
 </li>
+<li>
+      <a href="{% url 'account_list' %}"><i class="fa-solid fa-building-columns"></i>Bank Accounts  <i class="fas fa-chevron-right"></i></a>
+    </li>
  
-       <li>
+
+    <li>
       <a href="{% url 'gallery_list' %}"><i class="fas fa-images"></i> Gallery  <i class="fas fa-chevron-right"></i></a>
     </li>
     <li>
@@ -343,6 +359,13 @@
         <i class="fas fa-ticket-alt"></i> Create Voucher <i class="fas fa-chevron-right"></i>
       </a>
     </li>
+    <li>
+  <a href="{% url 'select_transaction_type' %}"><i class="fas fa-exchange-alt"></i>Create Transactions<i class="fas fa-chevron-right"></i></a>
+</li> 
+ <li>
+  <a href="{% url 'transaction_list' %}"><i class="fas fa-money-check-alt"></i>All Transactions<i class="fas fa-chevron-right"></i></a>
+</li> 
+
       <li>
       <a href="{% url 'stock_report' %}">
         <i class="fas fa-chart-bar"></i> Stock Report <i class="fas fa-chevron-right"></i>
@@ -353,6 +376,18 @@
         <i class="fas fa-book"></i> Day Book <i class="fas fa-chevron-right"></i>
       </a>
     </li>
+    <li>
+  <a href="{% url 'download_sales_summary_page' %}">
+    <i class="fas fa-file-invoice-dollar"></i> Sales Register <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+<li>
+  <a href="{% url 'hsn_summary_form' %}">
+    <i class="fas fa-file-alt"></i> HSN Summary <i class="fas fa-chevron-right"></i>
+  </a>
+</li>
+
+
      <li>
       <a href="{% url 'product_create' %}">
         <i class="fas fa-plus-circle"></i>Add New Product<i class="fas fa-chevron-right"></i>
@@ -398,10 +433,14 @@
     <i class="fas fa-chevron-right"></i>
   </a>
 </li>
-  <li>
+<li>
+      <a href="{% url 'account_list' %}"><i class="fa-solid fa-building-columns"></i>Bank Accounts  <i class="fas fa-chevron-right"></i></a>
+    </li>
+ 
+
+    <li>
       <a href="{% url 'gallery_list' %}"><i class="fas fa-images"></i> Gallery  <i class="fas fa-chevron-right"></i></a>
     </li>
-    
     <li>
       <a href="{% url 'contact_list' %}"><i class="fas fa-envelope"></i> Contact List <i class="fas fa-chevron-right"></i></a>
     </li>
