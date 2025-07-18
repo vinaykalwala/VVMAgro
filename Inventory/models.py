@@ -342,6 +342,11 @@ class Transaction(models.Model):
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding
+        old_instance = None
+
+        if not is_new:
+            old_instance = Transaction.objects.get(pk=self.pk)
+
         if not self.transaction_voucher_number:
             now = datetime.now()
             fy_start = now.year if now.month >= 4 else now.year - 1
@@ -355,31 +360,50 @@ class Transaction(models.Model):
             prefix = f"VVM/{prefix_map.get(self.transaction_voucher_type, 'UNK')}/{fy_str}/"
             count = Transaction.objects.filter(transaction_voucher_number__startswith=prefix).count() + 1
             self.transaction_voucher_number = f"{prefix}{count}"
-        if is_new:
-            if self.transaction_voucher_type == 'payment':
-                self.account.available_balance -= self.amount
-                self.account.save()
 
-            elif self.transaction_voucher_type == 'receipt':
-                self.account.available_balance += self.amount
-                self.account.save()
+        # ===== REVERSE OLD EFFECTS IF UPDATING =====
+        if old_instance:
+            if old_instance.transaction_voucher_type == 'payment':
+                old_instance.account.available_balance += old_instance.amount
+                old_instance.account.save()
 
-            elif self.transaction_voucher_type == 'contra':
-                if self.recipient_account and self.recipient_account != self.account:
-                    # Deduct from sender account
-                    self.account.available_balance -= self.amount
-                    self.account.save()
+            elif old_instance.transaction_voucher_type == 'receipt':
+                old_instance.account.available_balance -= old_instance.amount
+                old_instance.account.save()
 
-                    # Add to recipient account
-                    self.recipient_account.available_balance += self.amount
-                    self.recipient_account.save()
-                else:
-                    raise ValueError("For contra transactions, recipient_account must be set and different from account.")
+            elif old_instance.transaction_voucher_type == 'contra':
+                # Reverse from both accounts
+                old_instance.account.available_balance += old_instance.amount
+                old_instance.account.save()
+
+                if old_instance.recipient_account:
+                    old_instance.recipient_account.available_balance -= old_instance.amount
+                    old_instance.recipient_account.save()
+
+        # ===== APPLY NEW EFFECTS =====
+        if self.transaction_voucher_type == 'payment':
+            self.account.available_balance -= self.amount
+            self.account.save()
+
+        elif self.transaction_voucher_type == 'receipt':
+            self.account.available_balance += self.amount
+            self.account.save()
+
+        elif self.transaction_voucher_type == 'contra':
+            if not self.recipient_account or self.recipient_account == self.account:
+                raise ValueError("For contra transactions, recipient_account must be set and different from account.")
+
+            self.account.available_balance -= self.amount
+            self.account.save()
+
+            self.recipient_account.available_balance += self.amount
+            self.recipient_account.save()
 
         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"{self.transaction_voucher_number} - {self.get_transaction_voucher_type_display()}"
+
+        def __str__(self):
+            return f"{self.transaction_voucher_number} - {self.get_transaction_voucher_type_display()}"
 
 
 class ProductComponent(models.Model):
