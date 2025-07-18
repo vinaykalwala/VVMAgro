@@ -94,7 +94,7 @@ class PartyGroup(models.Model):
 class Party(models.Model):
     group = models.ForeignKey(PartyGroup, on_delete=models.CASCADE)
     name = models.CharField(max_length=500)
-    gstin_uin_number = models.CharField(max_length=20)
+    gstin_uin_number = models.CharField(max_length=20, blank=True, null=True, default="NA")
     address = models.TextField()
     location = models.CharField(max_length=100)
     pincode = models.CharField(max_length=10)
