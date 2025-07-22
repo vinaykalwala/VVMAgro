@@ -107,6 +107,7 @@ urlpatterns = [
     path('transactions/',transaction_list, name='transaction_list'),
     path('transactions/select-type/', select_transaction_type, name='select_transaction_type'),
     path('transactions/create/<str:voucher_type>/', transaction_create, name='transaction_create'),
+    path('transaction/edit/<int:pk>/', transaction_edit, name='transaction_edit'),
     path('transactions/<int:pk>/', transaction_detail, name='transaction_detail'),
     path('ajax/load-vouchers/', LoadVouchersView.as_view(), name='load_vouchers'),
     path('ajax/get-account-balance/', get_account_balance, name='get_account_balance'),

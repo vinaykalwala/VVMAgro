@@ -1849,3 +1849,26 @@ def export_party_excel(request):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     wb.save(response)
     return response
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import TransactionForm
+from .models import Transaction
+
+def transaction_edit(request, pk):
+    transaction = get_object_or_404(Transaction, pk=pk)
+    voucher_type = transaction.transaction_voucher_type
+
+    if request.method == 'POST':
+        form = TransactionForm(request.POST, instance=transaction, voucher_type=voucher_type)
+        if form.is_valid():
+            form.save()
+            return redirect('transaction_detail', pk=transaction.pk)
+    else:
+        form = TransactionForm(instance=transaction, voucher_type=voucher_type)
+
+    return render(request, 'transaction_form.html', {
+        'form': form,
+        'voucher_type': voucher_type.capitalize()
+    })
