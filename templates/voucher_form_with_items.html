@@ -15,19 +15,20 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    .voucher-container h1
-   {
+    .voucher-container h1 {
         margin-bottom: 20px;
         font-size: 1.8rem;
         color:#3F5187;
         text-align: center;
     }
-  .voucher-container h2 {
+    
+    .voucher-container h2 {
         margin-bottom: 20px;
         font-size: 1.5rem;
         color:#3F5187;
         text-align: center;
     }
+    
     .voucher-section {
         margin-bottom: 40px;
     }
@@ -55,14 +56,37 @@
         font-size: 0.95rem;
     }
 
-    .voucher-form-field input,
-    .voucher-form-field select,
+    /* Standard input fields */
+    .voucher-form-field input:not([type="checkbox"]),
+    .voucher-form-field select {
+        padding: 10px;
+        font-size: 0.95rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        height: 42px;
+        box-sizing: border-box;
+    }
+
+    /* Textarea/remarks field */
     .voucher-form-field textarea {
         padding: 10px;
         font-size: 0.95rem;
         border-radius: 6px;
         border: 1px solid #ccc;
         background-color: #fff;
+        min-height: 42px;
+        height: 42px;
+        resize: vertical;
+        overflow-y: auto;
+        box-sizing: border-box;
+        transition: height 0.2s ease;
+    }
+
+    /* Textarea when focused/expanded */
+    .voucher-form-field textarea:focus {
+        min-height: 80px;
+        height: auto;
     }
 
     .voucher-form-field small {
@@ -77,39 +101,21 @@
         flex-wrap: wrap;
         margin-top: 20px;
     }
-.voucher-form-field textarea {
-    padding: 10px;
-    font-size: 0.95rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    max-height: 120px;
-    min-height: 80px;
-    resize: vertical;
-    overflow-y: auto;
-}
-.voucher-form-field textarea {
-    max-height: 12px;   
-    min-height: 38px;    
-    resize: vertical;     
-    overflow-y: auto;     
-}
 
+    .voucher-form-field input[type="checkbox"] {
+        width: auto;
+        height: auto;
+        margin-right: 8px;
+        vertical-align: middle;
+        transform: scale(1.1);
+    }
 
-.voucher-form-field input[type="checkbox"] {
-    width: auto;
-    height: auto;
-    margin-right: 8px;
-    vertical-align: middle;
-    transform: scale(1.1);
-}
-
-.voucher-form-field label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-}
+    .voucher-form-field label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+    }
 
     .voucher-buttons button {
         padding: 10px 18px;
@@ -120,39 +126,59 @@
         background-color: #3F5187;
         color: #fff;
         transition: 0.3s;
+        height: 42px;
     }
 
     .voucher-buttons button:hover {
         background-color: #003d99;
     }
 
-   .remove-button {
-    background-color: #d9534f;     
-    color: #fff;                  
-    padding: 8px 14px;             
-    border: none;                
-    border-radius: 6px;           
-    font-weight: 600;              
-    font-size: 0.95rem;           
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(217, 83, 79, 0.4);  
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
+    .remove-button {
+        background-color: #d9534f;     
+        color: #fff;                  
+        padding: 8px 14px;             
+        border: none;                
+        border-radius: 6px;           
+        font-weight: 600;              
+        font-size: 0.95rem;           
+        position: absolute;
+        right: 15px;
+        bottom: 15px;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(217, 83, 79, 0.4);  
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        height: auto;
+    }
 
-.remove-button:hover,
-.remove-button:focus {
-    background-color: #c9302c;     
-    box-shadow: 0 4px 10px rgba(201, 48, 44, 0.6);
-    outline: none;
-}
+    /* Select2 customization to match field heights */
+    .select2-container--default .select2-selection--single {
+        height: 42px !important;
+        border: 1px solid #ccc !important;
+        border-radius: 6px !important;
+    }
 
-.remove-button:active {
-    background-color: #ac2925;    
-    box-shadow: 0 2px 4px rgba(172, 41, 37, 0.8);
-}
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 40px !important;
+        padding-left: 12px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 40px !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #3F5187;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 36px;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: #e2e2e2;
+    }
 
     .alert-info {
         background-color: #e9f5ff;
@@ -187,13 +213,19 @@
             margin-top: 15px;
             width: 100%;
         }
+        
+        .select2-container {
+            width: 100% !important;
+        }
     }
 </style>
+
+<!-- Add Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
 <div class="main-content">
     <div class="voucher-container">
         <h1>{% if is_edit %} Edit Voucher - {{ voucher_type }} {% else %} Create Voucher - {{ voucher_type }} {% endif %}</h1>
-
 
         {% if messages %}
             <div>
@@ -292,6 +324,8 @@
             </div>
         </form>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
         <script>
             const prefix = 'items';
             const productData = {{ product_data|safe }};
@@ -299,26 +333,35 @@
             const totalFormsInput = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
             const voucherType = "{{ voucher_type }}";
 
+            // Initialize Select2 for all select elements
+            function initializeSelect2() {
+                $('select').select2({
+                    width: '100%',
+                    dropdownParent: $('.voucher-container'),
+                    minimumResultsForSearch: 10 // Show search only if more than 10 options
+                });
+            }
+
             function updateWarehouse(selectElement) {
-                const selectedProductId = selectElement.value;
-                const formRow = selectElement.closest('.voucher-form-row');
-                const warehouseSelect = formRow.querySelector('select[name$="warehouse"]');
+                const selectedProductId = $(selectElement).val();
+                const formRow = $(selectElement).closest('.voucher-form-row');
+                const warehouseSelect = formRow.find('select[name$="warehouse"]')[0];
 
                 if (warehouseSelect && productData[selectedProductId]) {
                     const targetWarehouseId = productData[selectedProductId].warehouse_id;
-                    for (let option of warehouseSelect.options) {
-                        option.selected = (option.value === String(targetWarehouseId));
-                    }
+                    $(warehouseSelect).val(String(targetWarehouseId)).trigger('change');
                 } else if (warehouseSelect) {
-                    warehouseSelect.selectedIndex = 0;
+                    $(warehouseSelect).val('').trigger('change');
                 }
             }
 
             function bindChangeListeners() {
-                document.querySelectorAll('select[name$="product"]').forEach(select => {
-                    select.removeEventListener('change', onProductChange);
-                    select.addEventListener('change', onProductChange);
-                    updateWarehouse(select);
+                $('select[name$="product"]').off('change', onProductChange);
+                $('select[name$="product"]').on('change', onProductChange);
+                
+                // Initialize warehouse for existing product selects
+                $('select[name$="product"]').each(function() {
+                    updateWarehouse(this);
                 });
             }
 
@@ -335,9 +378,9 @@
                 formRow.innerHTML = newFormHtml + `<button type="button" class="remove-button" onclick="removeForm(this)">Remove</button>`;
 
                 if (voucherType !== 'Job_Work_Voucher') {
-                    formRow.querySelectorAll('div.voucher-form-field').forEach(field => {
-                        if (field.innerHTML.includes('id_phase')) {
-                            field.classList.add('hidden');
+                    $(formRow).find('div.voucher-form-field').each(function() {
+                        if ($(this).html().includes('id_phase')) {
+                            $(this).addClass('hidden');
                         }
                     });
                 }
@@ -346,15 +389,23 @@
                 formCount++;
                 totalFormsInput.value = formCount;
 
-                const newProductSelect = formRow.querySelector('select[name$="product"]');
+                // Initialize Select2 for new form fields
+                $(formRow).find('select').select2({
+                    width: '100%',
+                    dropdownParent: $('.voucher-container'),
+                    minimumResultsForSearch: 10
+                });
+
+                // Bind change listener for new product select
+                const newProductSelect = $(formRow).find('select[name$="product"]')[0];
                 if (newProductSelect) {
-                    newProductSelect.addEventListener('change', onProductChange);
+                    $(newProductSelect).on('change', onProductChange);
                 }
             }
 
             function updateMovementType() {
-                const movementSelect = document.querySelector('select[name="movement_type"]');
-                if (!movementSelect) return;
+                const movementSelect = $('select[name="movement_type"]');
+                if (!movementSelect.length) return;
                 let selectedValue = '';
 
                 switch (voucherType) {
@@ -363,33 +414,39 @@
                     case 'Job_Work_Voucher': selectedValue = 'job_work'; break;
                 }
 
-                for (const option of movementSelect.options) {
-                    option.selected = (option.value === selectedValue);
-                }
+                movementSelect.val(selectedValue).trigger('change');
             }
 
             function removeForm(button) {
-                const formRow = button.parentElement;
-                const deleteInput = formRow.querySelector('input[name$="-DELETE"]');
-                if (deleteInput) {
-                    deleteInput.value = 'on';
-                    formRow.style.display = 'none';
+                const formRow = $(button).parent();
+                const deleteInput = formRow.find('input[name$="-DELETE"]');
+                if (deleteInput.length) {
+                    deleteInput.val('on');
+                    formRow.hide();
                 } else {
+                    // Destroy Select2 instances before removing
+                    formRow.find('select').each(function() {
+                        $(this).select2('destroy');
+                    });
                     formRow.remove();
                     formCount--;
                     totalFormsInput.value = formCount;
-                    const forms = document.querySelectorAll('#formset-container .voucher-form-row:not([style*="display: none"])');
-                    forms.forEach((form, index) => {
-                        form.querySelectorAll('input, select, textarea, label').forEach(el => {
-                            if (el.name) el.name = el.name.replace(/items-\d+-/, `items-${index}-`);
-                            if (el.id) el.id = el.id.replace(/id_items-\d+-/, `id_items-${index}-`);
-                            if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/id_items-\d+-/, `id_items-${index}-`);
+                    const forms = $('#formset-container .voucher-form-row:visible');
+                    forms.each(function(index) {
+                        $(this).find('input, select, textarea, label').each(function() {
+                            if (this.name) this.name = this.name.replace(/items-\d+-/, `items-${index}-`);
+                            if (this.id) this.id = this.id.replace(/id_items-\d+-/, `id_items-${index}-`);
+                            if (this.htmlFor) this.htmlFor = this.htmlFor.replace(/id_items-\d+-/, `id_items-${index}-`);
                         });
                     });
+                    
+                    // Reinitialize Select2 for remaining forms
+                    initializeSelect2();
                 }
             }
 
-            document.addEventListener('DOMContentLoaded', () => {
+            $(document).ready(function() {
+                initializeSelect2();
                 bindChangeListeners();
                 updateMovementType();
             });
