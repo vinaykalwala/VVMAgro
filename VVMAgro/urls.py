@@ -121,6 +121,7 @@ urlpatterns = [
     path('export/hsn-summary/<int:year>/<int:month>/', export_hsn_gst_summary_excel, name='export_hsn_gst_summary'),
     path('export/products/', export_products_excel, name='export_products_excel'),
     path('export/party/', export_party_excel, name='export_party_excel'),
+    path('profit-loss/', profit_loss_report, name='profit_loss_report'),
 
 
 

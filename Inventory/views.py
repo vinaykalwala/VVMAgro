@@ -2143,3 +2143,160 @@ def delete_voucher(request, voucher_id):
 
     messages.success(request, "Voucher and associated items deleted successfully.")
     return redirect('voucher_type_list') 
+
+from calendar import month_name
+from django.db.models import Sum
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import openpyxl
+from io import BytesIO
+from .models import Voucher
+
+def get_profit_loss_details(year=None, month=None):
+    vouchers = Voucher.objects.all()
+    
+    if year:
+        vouchers = vouchers.filter(created_at__year=year)
+    if month:
+        vouchers = vouchers.filter(created_at__month=month)
+
+    # Summary data
+    sales_total = vouchers.filter(voucher_type='Buyer_Voucher') \
+                         .aggregate(total_sales=Sum('grand_total'))['total_sales'] or 0
+    purchase_total = vouchers.filter(voucher_type__in=['Seller_Voucher', 'Job_Work_Voucher']) \
+                            .aggregate(total_purchases=Sum('grand_total'))['total_purchases'] or 0
+    profit_loss = sales_total - purchase_total
+
+    # Detailed transactions
+    sales_vouchers = vouchers.filter(voucher_type='Buyer_Voucher').order_by('-created_at')
+    purchase_vouchers = vouchers.filter(voucher_type__in=['Seller_Voucher', 'Job_Work_Voucher']).order_by('-created_at')
+
+    return {
+        'summary': {
+            'sales_amount': sales_total,
+            'purchase_amount': purchase_total,
+            'profit_loss': abs(profit_loss),
+            'is_profit': profit_loss >= 0,
+            'year': year,
+            'month': month_name[int(month)] if month else None
+        },
+        'sales_vouchers': sales_vouchers,
+        'purchase_vouchers': purchase_vouchers
+    }
+
+def export_to_excel(data):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Profit & Loss Report"
+
+    # Add company header
+    ws.merge_cells('A1:E1')
+    ws['A1'] = "VVM AGRO INDUSTRIES"
+    ws['A1'].font = openpyxl.styles.Font(size=14, bold=True, color="3F5187")
+    ws['A1'].alignment = openpyxl.styles.Alignment(horizontal='center')
+
+    ws.append(["SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD, BESIDE TSIIC KALLAKAL"])
+    ws.append(["MUPPYREDDY PALLY, MANOHARABAD MANDAL, MEDAK DIST., Telangana"])
+    ws.append(["GSTIN/UIN: 36AANFV9684N1ZW | Contact: 9246565834 | Email: vvmotors2011@gmail.com"])
+    
+    # Add empty row
+    ws.append([])
+
+    # Write report title
+    ws.merge_cells('A5:E5')
+    ws['A5'] = "PROFIT & LOSS REPORT"
+    ws['A5'].font = openpyxl.styles.Font(size=12, bold=True, color="3F5187")
+    ws['A5'].alignment = openpyxl.styles.Alignment(horizontal='center')
+
+    # Write period
+    if data['summary']['year']:
+        period = data['summary']['year']
+        if data['summary']['month']:
+            period = f"{data['summary']['month']} {period}"
+        ws.append([f"Period: {period}"])
+    
+    # Write summary
+    ws.append([])
+    ws.append(["Summary"])
+    ws.append(["Total Sales", f"₹{data['summary']['sales_amount']}"])
+    ws.append(["Total Purchases", f"₹{data['summary']['purchase_amount']}"])
+    ws.append(["Profit/Loss", f"₹{data['summary']['profit_loss']} ({'Profit' if data['summary']['is_profit'] else 'Loss'})"])
+    
+    # Formatting
+    for column in ['A', 'B', 'C', 'D', 'E']:
+        ws.column_dimensions[column].width = 20
+
+    # Write sales details
+    ws.append([])
+    ws.append(["Sales Details"])
+    ws.append(["Date", "Voucher No", "Party", "Amount"])
+    for voucher in data['sales_vouchers']:
+        ws.append([
+            voucher.created_at.strftime("%d-%m-%Y"),
+            voucher.voucher_number,
+            voucher.party.name if voucher.party else "",
+            f"₹{voucher.grand_total}"
+        ])
+    
+    # Write purchase details
+    ws.append([])
+    ws.append(["Purchase Details"])
+    ws.append(["Date", "Voucher No", "Party", "Type", "Amount"])
+    for voucher in data['purchase_vouchers']:
+        ws.append([
+            voucher.created_at.strftime("%d-%m-%Y"),
+            voucher.voucher_number,
+            voucher.party.name if voucher.party else "",
+            voucher.get_voucher_type_display(),
+            f"₹{voucher.grand_total}"
+        ])
+
+    # Save to response
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    
+    response = HttpResponse(
+        buffer,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response['Content-Disposition'] = 'attachment; filename=profit_loss_report.xlsx'
+    return response
+
+def export_to_pdf(data):
+    template = get_template('profit_loss_pdf.html')
+    html = template.render({'data': data})
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="profit_loss_report.pdf"'
+    
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Error generating PDF')
+    return response
+
+def profit_loss_report(request):
+    year = request.GET.get('year')
+    month = request.GET.get('month')
+    export_format = request.GET.get('export')
+
+    data = get_profit_loss_details(year, month)
+
+    month_list = [(i, month_name[i]) for i in range(1, 13)]
+    voucher_years = Voucher.objects.dates('created_at', 'year')
+    year_list = sorted(set(v.year for v in voucher_years), reverse=True)
+
+    if export_format == 'excel':
+        return export_to_excel(data)
+    elif export_format == 'pdf':
+        return export_to_pdf(data)
+
+    return render(request, 'profit_loss_report.html', {
+        'data': data,
+        'selected_year': year,
+        'selected_month': month,
+        'month_list': month_list,
+        'year_list': year_list
+    })

@@ -1,0 +1,113 @@
+{% load static %}
+<div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;">
+    <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 40px; width: auto;">
+    <h1 style="color: #3F5187; margin: 0;">VVM AGRO INDUSTRIES</h1>
+</div>
+
+<div style="text-align: center; margin-bottom: 20px;">
+    <p style="margin: 5px 0;">SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD, BESIDE TSIIC KALLAKAL</p>
+    <p style="margin: 5px 0;">MUPPYREDDY PALLY, MANOHARABAD MANDAL, MEDAK DIST., Telangana</p>
+    <p style="margin: 5px 0;">GSTIN/UIN: 36AANFV9684N1ZW | Contact: 9246565834 | Email: vvmotors2011@gmail.com</p>
+</div>
+
+<h2 style="text-align: center; color: #3F5187; margin-bottom: 20px;">PROFIT & LOSS REPORT</h2>
+
+<form method="get" style="margin-bottom: 20px;">
+    <label>Year:
+        <select name="year">
+            <option value="">All</option>
+            {% for y in year_list %}
+                <option value="{{ y }}" {% if selected_year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <label>Month:
+        <select name="month">
+            <option value="">All</option>
+            {% for num, name in month_list %}
+                <option value="{{ num }}" {% if selected_month == num|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <button type="submit">Filter</button>
+    <button type="submit" name="export" value="excel">Export Excel</button>
+    <button type="submit" name="export" value="pdf">Export PDF</button>
+</form>
+
+<hr>
+
+<h3>Summary</h3>
+<p><strong>Period:</strong> 
+    {% if data.summary.month %}{{ data.summary.month }}{% endif %}
+    {% if data.summary.year %}{{ data.summary.year }}{% else %}All Time{% endif %}
+</p>
+<p><strong>Total Sales:</strong> ₹{{ data.summary.sales_amount }}</p>
+<p><strong>Total Purchases:</strong> ₹{{ data.summary.purchase_amount }}</p>
+<p><strong>Net Result:</strong> 
+    ₹{{ data.summary.profit_loss }} 
+    <span style="color: {% if data.summary.is_profit %}green{% else %}red{% endif %}">
+        ({{ data.summary.is_profit|yesno:"Profit,Loss" }})
+    </span>
+</p>
+
+<hr>
+
+<h3>Sales Details</h3>
+<table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Voucher No</th>
+            <th>Party</th>
+            <th>Type</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for voucher in data.sales_vouchers %}
+        <tr>
+            <td>{{ voucher.created_at|date:"d-m-Y" }}</td>
+            <td>{{ voucher.voucher_number }}</td>
+            <td>{{ voucher.party.name|default:"" }}</td>
+             <td>{{ voucher.get_voucher_type_display }}</td>
+            <td>₹{{ voucher.grand_total }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No sales found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h3>Purchase Details</h3>
+<table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Voucher No</th>
+            <th>Party</th>
+            <th>Type</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for voucher in data.purchase_vouchers %}
+        <tr>
+            <td>{{ voucher.created_at|date:"d-m-Y" }}</td>
+            <td>{{ voucher.voucher_number }}</td>
+            <td>{{ voucher.party.name|default:"" }}</td>
+            <td>{{ voucher.get_voucher_type_display }}</td>
+            <td>₹{{ voucher.grand_total }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No purchases found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
