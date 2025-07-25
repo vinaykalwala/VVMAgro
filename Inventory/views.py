@@ -1040,10 +1040,20 @@ def upload_parties(request):
     
     return render(request, 'upload_parties.html', {'form': form})
 
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.contrib import messages
+from decimal import Decimal, ROUND_HALF_UP
+import json
+from .models import Voucher, VoucherProductItem, Product
+from .forms import VoucherForm, VoucherProductItemFormSet
+
 @login_required
 def edit_voucher_with_items(request, voucher_id):
     voucher = get_object_or_404(Voucher, id=voucher_id)
     voucher_type = voucher.voucher_type
+    
     movement_type_map = {
         'Seller_Voucher': 'in',
         'Buyer_Voucher': 'out',
@@ -1052,35 +1062,91 @@ def edit_voucher_with_items(request, voucher_id):
         'Delivery_Challan': '',
     }
 
-    def save_voucher_and_items(form, formset):
+    def round_to_nearest_10_with_00(value):
+        value = Decimal(value)
+        rounded = (value / 10).quantize(Decimal('1'), rounding=ROUND_HALF_UP) * 10
+        return rounded.quantize(Decimal('1.00'))
+
+    def save_voucher_and_items(form, formset, voucher):
         with transaction.atomic():
-            voucher = form.save(commit=False)
-            voucher.movement_type = movement_type_map.get(voucher.voucher_type, '')
-            voucher.save()
+            # Store original quantities for stock adjustment
+            original_items = {}
+            for item in voucher.items.all():
+                original_items[item.id] = {
+                    'quantity': item.quantity,
+                    'product_id': item.product.id,
+                    'phase': item.product.phase if hasattr(item.product, 'phase') else None
+                }
+
+            # Save the voucher form
+            updated_voucher = form.save(commit=False)
+            updated_voucher.save()
 
             total_subtotal = total_cgst = total_sgst = total_igst = grand_total = 0
+            processed_items = set()
 
-            formset.save(commit=False)
-
-            # Delete marked items first
-            for item_form in formset.deleted_forms:
-                if item_form.instance.pk:
-                    item_form.instance.delete()
-
-            # Update existing items or add new
             for item_form in formset:
                 if item_form.cleaned_data.get('DELETE', False):
+                    # Handle deleted items - reverse stock changes
+                    if item_form.instance.id:
+                        original_item = original_items.get(item_form.instance.id)
+                        if original_item:
+                            product = Product.objects.get(id=original_item['product_id'])
+                            if voucher_type == 'Seller_Voucher':
+                                product.stock_quantity -= int(original_item['quantity'])
+                            elif voucher_type == 'Buyer_Voucher':
+                                product.stock_quantity += int(original_item['quantity'])
+                            elif voucher_type == 'Job_Work_Voucher':
+                                product.stock_quantity -= int(original_item['quantity'])
+                                if original_item['phase']:
+                                    product.phase = None
+                            product.save()
+                        item_form.instance.delete()
                     continue
-                item = item_form.save(commit=False)
-                item.voucher = voucher
 
+                item = item_form.save(commit=False)
+                item.voucher = updated_voucher
+
+                # Calculate amounts
                 item.subtotal = item.quantity * item.price_per_unit
                 item.cgst_amount = (item.subtotal * item.cgst_percent) / 100
                 item.sgst_amount = (item.subtotal * item.sgst_percent) / 100
                 item.igst_amount = (item.subtotal * item.igst_percent) / 100
                 item.total_amount = item.subtotal + item.cgst_amount + item.sgst_amount + item.igst_amount
 
+                # Handle stock adjustments
+                if item.id in original_items:
+                    # Existing item - adjust stock based on difference
+                    original_quantity = original_items[item.id]['quantity']
+                    quantity_diff = int(item.quantity) - int(original_quantity)
+                    
+                    if voucher_type == 'Seller_Voucher':
+                        item.product.stock_quantity += quantity_diff
+                    elif voucher_type == 'Buyer_Voucher':
+                        item.product.stock_quantity -= quantity_diff
+                    elif voucher_type == 'Job_Work_Voucher':
+                        item.product.stock_quantity += quantity_diff
+                        selected_phase = item_form.cleaned_data.get('phase', '')
+                        if selected_phase:
+                            item.product.phase = selected_phase
+                    
+                    item.product.save()
+                else:
+                    # New item - full stock adjustment
+                    if voucher_type == 'Seller_Voucher':
+                        item.product.stock_quantity += int(item.quantity)
+                    elif voucher_type == 'Buyer_Voucher':
+                        item.product.stock_quantity -= int(item.quantity)
+                    elif voucher_type == 'Job_Work_Voucher':
+                        item.product.stock_quantity += int(item.quantity)
+                        selected_phase = item_form.cleaned_data.get('phase', '')
+                        if selected_phase:
+                            item.product.phase = selected_phase
+                    
+                    item.product.save()
+
                 item.save()
+                processed_items.add(item.id)
 
                 total_subtotal += item.subtotal
                 total_cgst += item.cgst_amount
@@ -1088,25 +1154,92 @@ def edit_voucher_with_items(request, voucher_id):
                 total_igst += item.igst_amount
                 grand_total += item.total_amount
 
-            if voucher.freight_applicable and voucher.freight_charge:
-                grand_total += voucher.freight_charge
+            # Handle items that were removed from the formset
+            for item_id, original_item in original_items.items():
+                if item_id not in processed_items:
+                    product = Product.objects.get(id=original_item['product_id'])
+                    if voucher_type == 'Seller_Voucher':
+                        product.stock_quantity -= int(original_item['quantity'])
+                    elif voucher_type == 'Buyer_Voucher':
+                        product.stock_quantity += int(original_item['quantity'])
+                    elif voucher_type == 'Job_Work_Voucher':
+                        product.stock_quantity -= int(original_item['quantity'])
+                        if original_item['phase']:
+                            product.phase = None
+                    product.save()
 
-            voucher.total_subtotal = total_subtotal
-            voucher.total_cgst = total_cgst
-            voucher.total_sgst = total_sgst
-            voucher.total_igst = total_igst
-            voucher.grand_total = grand_total
-            voucher.save()
+            if updated_voucher.freight_applicable and updated_voucher.freight_charge:
+                grand_total += updated_voucher.freight_charge
 
-        return voucher
+            # Round to nearest 10 and calculate round-off
+            rounded_grand_total = round_to_nearest_10_with_00(grand_total)
+            round_off = rounded_grand_total - grand_total
+
+            # Save all calculated values
+            updated_voucher.total_subtotal = total_subtotal
+            updated_voucher.total_cgst = total_cgst
+            updated_voucher.total_sgst = total_sgst
+            updated_voucher.total_igst = total_igst
+            updated_voucher.round_off_on_sales = round_off
+            updated_voucher.grand_total = rounded_grand_total
+            updated_voucher.save()
+
+        return updated_voucher
 
     if request.method == 'POST':
-        form = VoucherForm(request.POST, instance=voucher, voucher_type=voucher_type)
+        form = VoucherForm(request.POST or None, instance=voucher, voucher_type=voucher_type)
         formset = VoucherProductItemFormSetNoExtra(request.POST, instance=voucher)
 
         if form.is_valid() and formset.is_valid():
-            voucher = save_voucher_and_items(form, formset)
-            return redirect('voucher_detail', voucher_id=voucher.id)
+            if voucher_type == 'Job_Work_Voucher':
+                invalid_products = []
+                for item_form in formset:
+                    if item_form.cleaned_data.get('DELETE', False):
+                        continue
+                    product = item_form.cleaned_data.get('product')
+                    if product and product.type_of_supply != 'raw_material':
+                        invalid_products.append(product.name)
+
+                if invalid_products:
+                    messages.error(request,
+                        "For Job Work Voucher, only products with type_of_supply as 'raw_material' are allowed. "
+                        "Invalid products: " + ", ".join(invalid_products)
+                    )
+                else:
+                    updated_voucher = save_voucher_and_items(form, formset, voucher)
+                    return redirect('voucher_detail', voucher_id=updated_voucher.id)
+
+            elif voucher_type == 'Buyer_Voucher':
+                insufficient_stock_products = []
+                for item_form in formset:
+                    if item_form.cleaned_data.get('DELETE', False):
+                        continue
+                    product = item_form.cleaned_data.get('product')
+                    quantity = item_form.cleaned_data.get('quantity')
+                    
+                    # Calculate net change in quantity
+                    if item_form.instance.id:
+                        original_quantity = item_form.instance.quantity
+                        quantity_diff = int(quantity) - int(original_quantity)
+                    else:
+                        quantity_diff = int(quantity)
+                    
+                    if product and quantity_diff > 0 and product.stock_quantity < quantity_diff:
+                        insufficient_stock_products.append(
+                            f"{product.name} (available: {product.stock_quantity}, requested change: {quantity_diff})"
+                        )
+
+                if insufficient_stock_products:
+                    messages.error(request,
+                        "Insufficient stock for the following products: " + ", ".join(insufficient_stock_products)
+                    )
+                else:
+                    updated_voucher = save_voucher_and_items(form, formset, voucher)
+                    return redirect('voucher_detail', voucher_id=updated_voucher.id)
+
+            else:
+                updated_voucher = save_voucher_and_items(form, formset, voucher)
+                return redirect('voucher_detail', voucher_id=updated_voucher.id)
 
     else:
         form = VoucherForm(instance=voucher, voucher_type=voucher_type)
@@ -1124,12 +1257,11 @@ def edit_voucher_with_items(request, voucher_id):
         'form': form,
         'formset': formset,
         'voucher_type': voucher_type,
-        "product_data": json.dumps(product_data),
-        "preview_voucher_number": voucher.voucher_number,
+        'product_data': json.dumps(product_data),
+        'preview_voucher_number': voucher.voucher_number,
         'is_edit': True,
+        'voucher': voucher
     })
-
-
 
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)

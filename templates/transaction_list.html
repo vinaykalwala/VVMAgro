@@ -235,6 +235,8 @@
           <td>{{ transaction.amount }}</td>
           <td>
             <a href="{% url 'transaction_detail' transaction.pk %}" class="view-btn">View</a>
+            <a href="{% url 'transaction_edit' transaction.pk %}" class="btn btn-primary">Edit</a>
+
           </td>
         </tr>
         {% empty %}

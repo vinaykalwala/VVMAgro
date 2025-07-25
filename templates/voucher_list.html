@@ -204,7 +204,11 @@
           <td>{{ voucher.party.name }}</td>
           <td>{{ voucher.created_at|date:"d M Y H:i" }}</td>
           <td>{{ voucher.grand_total }}</td>
-          <td><a href="{% url 'voucher_detail' voucher.id %}" class="link">View Details</a></td>
+          <td><a href="{% url 'voucher_detail' voucher.id %}" class="link">View Details</a>
+          <a href="{% url 'edit_voucher_with_items' voucher.id %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+          </td>
         </tr>
         {% empty %}
         <tr><td colspan="6">No vouchers found.</td></tr>
