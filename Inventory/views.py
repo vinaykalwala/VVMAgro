@@ -1982,25 +1982,103 @@ def export_party_excel(request):
     wb.save(response)
     return response
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ValidationError
+from django.db import transaction
 
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .forms import TransactionForm
-from .models import Transaction
-
+@transaction.atomic
 def transaction_edit(request, pk):
-    transaction = get_object_or_404(Transaction, pk=pk)
-    voucher_type = transaction.transaction_voucher_type
-
+    transaction_obj = get_object_or_404(Transaction, pk=pk)
+    original_data = {
+        'amount': transaction_obj.amount,
+        'account': transaction_obj.account,
+        'recipient_account': getattr(transaction_obj, 'recipient_account', None),
+        'voucher_type': transaction_obj.transaction_voucher_type
+    }
+    
     if request.method == 'POST':
-        form = TransactionForm(request.POST, instance=transaction, voucher_type=voucher_type)
+        form = TransactionForm(request.POST, instance=transaction_obj, 
+                             voucher_type=transaction_obj.transaction_voucher_type)
+        
         if form.is_valid():
-            form.save()
-            return redirect('transaction_detail', pk=transaction.pk)
+            try:
+                modified_transaction = form.save(commit=False)
+                
+                # Calculate the net difference
+                amount_diff = modified_transaction.amount - original_data['amount']
+                
+                # 1. Handle account changes (if any)
+                account_changed = modified_transaction.account != original_data['account']
+                recipient_changed = (
+                    getattr(modified_transaction, 'recipient_account', None) != 
+                    original_data['recipient_account']
+                )
+                
+                # 2. Apply net changes to balances
+                if modified_transaction.transaction_voucher_type == 'payment':
+                    if account_changed:
+                        # Full reversal from old account
+                        original_data['account'].available_balance += original_data['amount']
+                        # Full application to new account
+                        modified_transaction.account.available_balance -= modified_transaction.amount
+                    else:
+                        # Just apply the difference to the same account
+                        modified_transaction.account.available_balance -= amount_diff
+                    
+                elif modified_transaction.transaction_voucher_type == 'receipt':
+                    if account_changed:
+                        original_data['account'].available_balance -= original_data['amount']
+                        modified_transaction.account.available_balance += modified_transaction.amount
+                    else:
+                        modified_transaction.account.available_balance += amount_diff
+                    
+                elif modified_transaction.transaction_voucher_type == 'contra':
+                    if not modified_transaction.recipient_account:
+                        raise ValidationError("Recipient account is required for contra transactions")
+                    
+                    if account_changed or recipient_changed:
+                        # Full reversal from original accounts
+                        original_data['account'].available_balance += original_data['amount']
+                        if original_data['recipient_account']:
+                            original_data['recipient_account'].available_balance -= original_data['amount']
+                        
+                        # Full application to new accounts
+                        modified_transaction.account.available_balance -= modified_transaction.amount
+                        modified_transaction.recipient_account.available_balance += modified_transaction.amount
+                    else:
+                        # Just apply the difference to same accounts
+                        modified_transaction.account.available_balance -= amount_diff
+                        modified_transaction.recipient_account.available_balance += amount_diff
+                
+                # 3. Save all affected accounts
+                accounts_to_save = set()
+                accounts_to_save.add(modified_transaction.account)
+                
+                if original_data['account'] != modified_transaction.account:
+                    accounts_to_save.add(original_data['account'])
+                
+                if modified_transaction.transaction_voucher_type == 'contra':
+                    accounts_to_save.add(modified_transaction.recipient_account)
+                    if (original_data['recipient_account'] and 
+                        original_data['recipient_account'] != modified_transaction.recipient_account):
+                        accounts_to_save.add(original_data['recipient_account'])
+                
+                for account in accounts_to_save:
+                    account.save()
+                
+                # 4. Save the transaction
+                modified_transaction.save()
+                
+                return redirect('transaction_detail', pk=modified_transaction.pk)
+                
+            except (ValidationError, ValueError) as e:
+                form.add_error(None, str(e))
     else:
-        form = TransactionForm(instance=transaction, voucher_type=voucher_type)
-
+        form = TransactionForm(instance=transaction_obj, 
+                             voucher_type=transaction_obj.transaction_voucher_type)
+    
     return render(request, 'transaction_form.html', {
         'form': form,
-        'voucher_type': voucher_type.capitalize()
+        'voucher_type': transaction_obj.get_transaction_voucher_type_display(),
+        'is_edit': True
     })

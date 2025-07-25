@@ -24,13 +24,25 @@
   }
 
   .form-wrapper h2 {
-    margin-bottom: 35px;
+    margin-bottom: 20px;
     font-size: 28px;
     color: #3F5187;
     font-weight: 700;
     text-align: center;
     border-bottom: 1px solid #eaeefb;
     padding-bottom: 12px;
+  }
+
+  .voucher-type-display {
+    background-color: #3F5187;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
   }
 
   .form {
@@ -66,7 +78,8 @@
   }
 
   .form textarea {
-    height: 46px !important;
+    height: auto !important;
+    min-height: 100px;
   }
 
   .form input:focus,
@@ -105,6 +118,18 @@
 
   .form-actions button:hover {
     background-color: #2e3b66;
+  }
+
+  .edit-info {
+    background-color: #f8f9fa;
+    border-left: 4px solid #3F5187;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+  }
+
+  .edit-info strong {
+    color: #3F5187;
   }
 
   @media (max-width: 600px) {
@@ -169,19 +194,41 @@
 
 <div class="main-content">
   <div class="form-wrapper">
-    <h2>{{ voucher_type }} Transaction</h2>
+    <h2>{{ voucher_type }} Transaction {% if is_edit %}(Edit Mode){% endif %}</h2>
+    
+    <div class="voucher-type-display">
+      Transaction Type: {{ form.instance.get_transaction_voucher_type_display|default:voucher_type|upper }}
+    </div>
+    
     <form method="post" class="form">
       {% csrf_token %}
       {{ form.transaction_voucher_type }}
-      {{ form.as_p }}
+      
+      {% for field in form %}
+        {% if field.name != 'transaction_voucher_type' %}
+        <p>
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            <span class="error" style="color:red;">{{ field.errors|join:", " }}</span>
+          {% endif %}
+        </p>
+        {% endif %}
+      {% endfor %}
 
       <div class="balance-container" id="account-balance-container">
-        <div id="account-balance" class="balance-info">Loading...</div>
+        <div id="account-balance" class="balance-info">
+          Available Balance: <strong>₹ {{ form.instance.account.available_balance|default:0 }}</strong>
+        </div>
       </div>
 
+      {% if form.instance.transaction_voucher_type == 'contra' %}
       <div class="balance-container" id="recipient-balance-container">
-        <div id="recipient-balance" class="balance-info">Loading...</div>
+        <div id="recipient-balance" class="balance-info">
+          Recipient Balance: <strong>₹ {{ form.instance.recipient_account.available_balance|default:0 }}</strong>
+        </div>
       </div>
+      {% endif %}
 
       <div class="form-actions">
         <button type="submit">Submit</button>
@@ -205,6 +252,10 @@
         data: { party_id: partyId },
         success: function (data) {
           $('#id_voucher').html(data).trigger('change');
+          // Set the selected voucher in edit mode
+          {% if is_edit and form.instance.voucher %}
+            $('#id_voucher').val('{{ form.instance.voucher.id }}').trigger('change');
+          {% endif %}
         }
       });
     } else {
@@ -237,7 +288,36 @@
   }
 
   $(document).ready(function () {
-    $('#id_party, #id_account, #id_voucher, #id_recipient_account').select2({ width: '100%' });
+    // Initialize all select2 fields
+    $('select').select2({ width: '100%' });
+    
+    // Show account balance immediately in edit mode
+    $('#account-balance-container').addClass('visible');
+    {% if form.instance.transaction_voucher_type == 'contra' %}
+      $('#recipient-balance-container').addClass('visible');
+    {% endif %}
+
+    // Set initial values for all fields
+    {% if is_edit %}
+      // Set account
+      $('#id_account').val('{{ form.instance.account.id }}').trigger('change');
+      
+      // Set recipient account if contra
+      {% if form.instance.transaction_voucher_type == 'contra' and form.instance.recipient_account %}
+        $('#id_recipient_account').val('{{ form.instance.recipient_account.id }}').trigger('change');
+      {% endif %}
+      
+      // Set party if exists
+      {% if form.instance.party %}
+        $('#id_party').val('{{ form.instance.party.id }}').trigger('change');
+      {% endif %}
+      
+      // Set transaction type
+      $('#id_transaction_type').val('{{ form.instance.transaction_type }}').trigger('change');
+      
+      // Set method of adjustment
+      $('#id_method_of_adjustment').val('{{ form.instance.method_of_adjustment }}').trigger('change');
+    {% endif %}
 
     $('#id_party').on('change', function () {
       loadVouchers();
@@ -252,8 +332,6 @@
     });
 
     if ($('#id_party').val()) loadVouchers();
-    if ($('#id_account').val()) fetchAccountBalance($('#id_account').val(), 'account-balance', 'account-balance-container');
-    if ($('#id_recipient_account').val()) fetchAccountBalance($('#id_recipient_account').val(), 'recipient-balance', 'recipient-balance-container');
   });
 </script>
 {% endblock %}
