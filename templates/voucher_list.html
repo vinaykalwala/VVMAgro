@@ -208,6 +208,13 @@
           <a href="{% url 'edit_voucher_with_items' voucher.id %}" class="btn btn-sm btn-primary">
                     <i class="fas fa-edit"></i> Edit
                 </a>
+            <form action="{% url 'delete_voucher' voucher.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this voucher?');">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Delete
+    </button>
+</form>
+
           </td>
         </tr>
         {% empty %}

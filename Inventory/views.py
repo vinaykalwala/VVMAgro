@@ -2082,3 +2082,64 @@ def transaction_edit(request, pk):
         'voucher_type': transaction_obj.get_transaction_voucher_type_display(),
         'is_edit': True
     })
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Transaction
+
+def delete_transaction(request, pk):
+    transaction = get_object_or_404(Transaction, pk=pk)
+    
+    # Restore balance before deleting if it was a new transaction
+    if transaction.transaction_voucher_type == 'payment':
+        transaction.account.available_balance += transaction.amount
+        transaction.account.save()
+    elif transaction.transaction_voucher_type == 'receipt':
+        transaction.account.available_balance -= transaction.amount
+        transaction.account.save()
+    elif transaction.transaction_voucher_type == 'contra':
+        if transaction.recipient_account:
+            transaction.account.available_balance += transaction.amount
+            transaction.account.save()
+            transaction.recipient_account.available_balance -= transaction.amount
+            transaction.recipient_account.save()
+
+    transaction.delete()
+    messages.success(request, "Transaction deleted successfully.")
+    return redirect('transaction_list')  
+
+
+from django.shortcuts import get_object_or_404
+from django.db import transaction
+from django.contrib import messages
+from .models import Voucher, VoucherProductItem
+
+@login_required
+@transaction.atomic
+def delete_voucher(request, voucher_id):
+    voucher = get_object_or_404(Voucher, id=voucher_id)
+    voucher_type = voucher.voucher_type
+
+    # Restore stock levels before deleting items
+    for item in voucher.voucherproductitem_set.all():
+        product = item.product
+        quantity = int(item.quantity)
+
+        if voucher_type == 'Seller_Voucher':
+            product.stock_quantity -= quantity  # reverse previous addition
+            product.save()
+
+        elif voucher_type == 'Buyer_Voucher':
+            product.stock_quantity += quantity  # reverse previous reduction
+            product.save()
+
+        elif voucher_type == 'Job_Work_Voucher':
+            product.stock_quantity -= quantity
+            product.save()
+
+    # Delete all product items and then the voucher
+    voucher.voucherproductitem_set.all().delete()
+    voucher.delete()
+
+    messages.success(request, "Voucher and associated items deleted successfully.")
+    return redirect('voucher_type_list') 

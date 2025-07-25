@@ -95,6 +95,7 @@ urlpatterns = [
     path('voucher-types/', voucher_type_list, name='voucher_type_list'),
     path('voucher/create/<str:voucher_type>/', create_voucher_with_items, name='create_voucher_with_items'),
     path('voucher/<int:voucher_id>/edit/', edit_voucher_with_items, name='edit_voucher_with_items'),
+    path('voucher/delete/<int:voucher_id>/', delete_voucher, name='delete_voucher'),
     path('upload-products/', upload_products, name='upload_products'),
     path('upload-parties/', upload_parties, name='upload_parties'),
 
@@ -109,6 +110,7 @@ urlpatterns = [
     path('transactions/create/<str:voucher_type>/', transaction_create, name='transaction_create'),
     path('transaction/edit/<int:pk>/', transaction_edit, name='transaction_edit'),
     path('transactions/<int:pk>/', transaction_detail, name='transaction_detail'),
+    path('transaction/delete/<int:pk>/', delete_transaction, name='delete_transaction'),
     path('ajax/load-vouchers/', LoadVouchersView.as_view(), name='load_vouchers'),
     path('ajax/get-account-balance/', get_account_balance, name='get_account_balance'),
     path('accounts/<int:account_id>/history/', account_transaction_history, name='account_transaction_history'),
