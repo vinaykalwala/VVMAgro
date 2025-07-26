@@ -229,275 +229,241 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
 <div class="main-content">
-    <div class="voucher-container">
-        <h1>{% if is_edit %} Edit Voucher - {{ voucher_type }} {% else %} Create Voucher - {{ voucher_type }} {% endif %}</h1>
+  <div class="voucher-container">
+    <h1>{% if is_edit %} Edit Voucher - {{ voucher_type }} {% else %} Create Voucher - {{ voucher_type }} {% endif %}</h1>
 
-        {% if messages %}
-            <div>
-                {% for message in messages %}
-                    <div class="alert-info">{{ message }}</div>
-                {% endfor %}
-            </div>
+    {% if messages %}
+      <div>
+        {% for message in messages %}
+          <div class="alert-info">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="voucher-section">
+        <h2>Please Fill The Voucher </h2>
+
+        {% if preview_voucher_number %}
+          <div class="alert-info">
+            <strong>Voucher Number:</strong> {{ preview_voucher_number }}
+          </div>
         {% endif %}
 
-        <form method="post">
-            {% csrf_token %}
-
-            <div class="voucher-section">
-                <h2>Please Fill The Voucher </h2>
-
-                {% if preview_voucher_number %}
-                    <div class="alert-info">
-                        <strong>Voucher Number:</strong> {{ preview_voucher_number }}
-                    </div>
-                {% endif %}
-
-                {% if form.non_field_errors %}
-                    <ul class="voucher-errorlist">
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
-                <div class="voucher-form-row">
-                    {% for field in form.visible_fields %}
-                        <div class="voucher-form-field">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% if field.help_text %}
-                                <small>{{ field.help_text }}</small>
-                            {% endif %}
-                            {% if field.errors %}
-                                <ul class="voucher-errorlist">
-                                    {% for error in field.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="voucher-section">
-                <h2>Voucher Products</h2>
-                <div id="formset-container">
-                    {{ formset.management_form }}
-                    
-                    {% for form in formset %}
-                        {% if not is_edit or form.instance.pk %}  <!-- Only show existing items in edit mode -->
-                        <div class="voucher-form-row" id="form-{{ forloop.counter0 }}">
-                            {% if form.non_field_errors %}
-                                <ul class="voucher-errorlist">
-                                    {% for error in form.non_field_errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-
-                            {% for hidden in form.hidden_fields %}
-                                {% if not is_edit or hidden.name != 'DELETE' %}  <!-- Hide DELETE field in edit mode -->
-                                    {{ hidden }}
-                                {% endif %}
-                            {% endfor %}
-
-                            {% for field in form.visible_fields %}
-                                <div class="voucher-form-field {% if field.name == 'phase' and voucher_type != 'Job_Work_Voucher' %}hidden{% endif %}">
-                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                    {{ field }}
-                                    {% if field.help_text %}
-                                        <small>{{ field.help_text }}</small>
-                                    {% endif %}
-                                    {% if field.errors %}
-                                        <ul class="voucher-errorlist">
-                                            {% for error in field.errors %}
-                                                <li>{{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-
-                            <button type="button" class="remove-button" onclick="removeForm(this)">
-                                <i class="fas fa-trash"></i> Remove
-                            </button>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="voucher-buttons">
-                <button type="button" onclick="addForm()" class="btn btn-secondary">
-    <i class="fas fa-plus"></i> Add Product
-</button>
-
-<button type="submit" class="btn btn-primary">
-    <i class="fas fa-save"></i> {% if is_edit %}Update{% else %}Submit{% endif %} Voucher
-</button>
-
-            </div>
-        </form>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-       <script>
-    const prefix = 'items';
-    const productData = {{ product_data|safe }};
-    let formCount = {{ formset.total_form_count }};
-    const totalFormsInput = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
-    const voucherType = "{{ voucher_type }}";
-
-    // Initialize Select2 for all select elements
-    function initializeSelect2() {
-        $('select').select2({
-            width: '100%',
-            dropdownParent: $('.voucher-container'),
-            minimumResultsForSearch: 10
-        });
-    }
-
-    function updateWarehouse(selectElement) {
-        const selectedProductId = $(selectElement).val();
-        const formRow = $(selectElement).closest('.voucher-form-row');
-        const warehouseSelect = formRow.find('select[name$="warehouse"]')[0];
-
-        if (warehouseSelect && productData[selectedProductId]) {
-            const targetWarehouseId = productData[selectedProductId].warehouse_id;
-            $(warehouseSelect).val(String(targetWarehouseId)).trigger('change');
-        } else if (warehouseSelect) {
-            $(warehouseSelect).val('').trigger('change');
-        }
-    }
-
-    function bindChangeListeners() {
-        $('select[name$="product"]').off('change', onProductChange);
-        $('select[name$="product"]').on('change', onProductChange);
-        
-        $('select[name$="product"]').each(function() {
-            updateWarehouse(this);
-        });
-    }
-
-    function onProductChange(event) {
-        updateWarehouse(event.target);
-    }
-
-    function addForm() {
-        const container = document.getElementById('formset-container');
-        const emptyFormHtml = document.getElementById('empty-form-template').innerHTML;
-        const newFormHtml = emptyFormHtml.replace(/__prefix__/g, formCount);
-        const formRow = document.createElement('div');
-        formRow.className = 'voucher-form-row';
-        formRow.id = `form-${formCount}`;
-        formRow.innerHTML = newFormHtml + `
-            <button type="button" class="remove-button" onclick="removeForm(this)">
-                <i class="fas fa-trash"></i> Remove
-            </button>
-        `;
-
-        if (voucherType !== 'Job_Work_Voucher') {
-            $(formRow).find('div.voucher-form-field').each(function() {
-                if ($(this).html().includes('id_phase')) {
-                    $(this).addClass('hidden');
-                }
-            });
-        }
-
-        container.appendChild(formRow);
-        formCount++;
-        totalFormsInput.value = formCount;
-
-        $(formRow).find('select').select2({
-            width: '100%',
-            dropdownParent: $('.voucher-container'),
-            minimumResultsForSearch: 10
-        });
-
-        const newProductSelect = $(formRow).find('select[name$="product"]')[0];
-        if (newProductSelect) {
-            $(newProductSelect).on('change', onProductChange);
-        }
-    }
-
-    function removeForm(button) {
-        const formRow = $(button).closest('.voucher-form-row');
-        const deleteInput = formRow.find('input[name$="-DELETE"]');
-
-        if (deleteInput.length) {
-            deleteInput.val('on');
-            formRow.hide();
-        } else {
-            formRow.find('select').select2('destroy');
-            formRow.remove();
-            formCount--;
-            totalFormsInput.value = formCount;
-            updateFormIndices();
-        }
-    }
-
-    function updateFormIndices() {
-        $('#formset-container .voucher-form-row:visible').each(function(index) {
-            $(this).attr('id', `form-${index}`);
-            $(this).find('input, select, textarea').each(function() {
-                const name = $(this).attr('name').replace(/items-\d+-/, `items-${index}-`);
-                $(this).attr('name', name);
-                
-                if ($(this).attr('id')) {
-                    const id = $(this).attr('id').replace(/id_items-\d+-/, `id_items-${index}-`);
-                    $(this).attr('id', id);
-                }
-            });
-        });
-    }
-
-    function updateMovementType() {
-        const movementSelect = $('select[name="movement_type"]');
-        if (!movementSelect.length) return;
-        
-        let selectedValue = '';
-        switch (voucherType) {
-            case 'Buyer_Voucher': selectedValue = 'out'; break;
-            case 'Seller_Voucher': selectedValue = 'in'; break;
-            case 'Job_Work_Voucher': selectedValue = 'job_work'; break;
-        }
-
-        movementSelect.val(selectedValue).trigger('change');
-    }
-
-    $(document).ready(function() {
-        initializeSelect2();
-        bindChangeListeners();
-        updateMovementType();
-
-        // Update warehouse field for pre-filled forms
-        $('select[name$="product"]').each(function() {
-            const productId = $(this).val();
-            if (productId) {
-                updateWarehouse(this);
-            }
-        });
-    });
-</script>
-
-
-        <div id="empty-form-template" style="display: none;">
-            {% for hidden_field in formset.empty_form.hidden_fields %}
-                {% if not is_edit or hidden_field.name != 'DELETE' %}  <!-- Hide DELETE field in edit mode -->
-                    {{ hidden_field }}
-                {% endif %}
+        {% if form.non_field_errors %}
+          <ul class="voucher-errorlist">
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
             {% endfor %}
-            {% for field in formset.empty_form.visible_fields %}
-                <div class="voucher-form-field {% if field.name == 'phase' and voucher_type != 'Job_Work_Voucher' %}hidden{% endif %}">
+          </ul>
+        {% endif %}
+
+        <div class="voucher-form-row">
+          {% for field in form.visible_fields %}
+            <div class="voucher-form-field">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <small>{{ field.help_text }}</small>
+              {% endif %}
+              {% if field.errors %}
+                <ul class="voucher-errorlist">
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="voucher-section">
+        <h2>Voucher Products</h2>
+        <div id="formset-container">
+          {{ formset.management_form }}
+
+          {% for form in formset %}
+            {% if not is_edit or form.instance.pk %}
+              <div class="voucher-form-row" id="form-{{ forloop.counter0 }}">
+                {% for hidden in form.hidden_fields %}
+                  {% if not is_edit or hidden.name != 'DELETE' %}
+                    {{ hidden }}
+                  {% endif %}
+                {% endfor %}
+
+                {% for field in form.visible_fields %}
+                  <div class="voucher-form-field {% if field.name == 'phase' and voucher_type != 'Job_Work_Voucher' %}hidden{% endif %}">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
                     {% if field.help_text %}
-                        <small>{{ field.help_text }}</small>
+                      <small>{{ field.help_text }}</small>
                     {% endif %}
-                </div>
-            {% endfor %}
+                    {% if field.errors %}
+                      <ul class="voucher-errorlist">
+                        {% for error in field.errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+
+                <button type="button" class="remove-button" onclick="removeForm(this)">
+                  <i class="fas fa-trash"></i> Remove
+                </button>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
-    </div>
+      </div>
+
+      <div class="voucher-buttons">
+        <button type="button" onclick="addForm()" class="btn btn-secondary">
+          <i class="fas fa-plus"></i> Add Product
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i> {% if is_edit %}Update{% else %}Submit{% endif %} Voucher
+        </button>
+      </div>
+    </form>
+
+    <!-- HIDDEN EMPTY FORM TEMPLATE -->
+    <script type="text/template" id="empty-form-template">
+      <div class="voucher-form-row" id="form-__prefix__">
+        {% for hidden_field in formset.empty_form.hidden_fields %}
+          {{ hidden_field }}
+        {% endfor %}
+        {% for field in formset.empty_form.visible_fields %}
+          <div class="voucher-form-field {% if field.name == 'phase' and voucher_type != 'Job_Work_Voucher' %}hidden{% endif %}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <small>{{ field.help_text }}</small>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <button type="button" class="remove-button" onclick="removeForm(this)">
+          <i class="fas fa-trash"></i> Remove
+        </button>
+      </div>
+    </script>
+
+  </div>
 </div>
+
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+  const prefix = 'items';
+  const productData = {{ product_data|safe }};
+  let formCount = {{ formset.total_form_count }};
+  const totalFormsInput = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+  const voucherType = "{{ voucher_type }}";
+
+  function initializeSelect2() {
+    $('select').select2({
+      width: '100%',
+      dropdownParent: $('.voucher-container'),
+      minimumResultsForSearch: 10
+    });
+  }
+
+  function updateWarehouse(selectElement) {
+    const selectedProductId = $(selectElement).val();
+    const formRow = $(selectElement).closest('.voucher-form-row');
+    const warehouseSelect = formRow.find('select[name$="warehouse"]')[0];
+
+    if (warehouseSelect && productData[selectedProductId]) {
+      const targetWarehouseId = productData[selectedProductId].warehouse_id;
+      $(warehouseSelect).val(String(targetWarehouseId)).trigger('change');
+    } else if (warehouseSelect) {
+      $(warehouseSelect).val('').trigger('change');
+    }
+  }
+
+  function bindChangeListeners() {
+    $('select[name$="product"]').off('change', onProductChange);
+    $('select[name$="product"]').on('change', onProductChange);
+    $('select[name$="product"]').each(function () {
+      updateWarehouse(this);
+    });
+  }
+
+  function onProductChange(event) {
+    updateWarehouse(event.target);
+  }
+
+  function addForm() {
+    const container = document.getElementById('formset-container');
+    const template = document.getElementById('empty-form-template').innerHTML;
+    const newFormHtml = template.replace(/__prefix__/g, formCount);
+    container.insertAdjacentHTML('beforeend', newFormHtml);
+    formCount++;
+    totalFormsInput.value = formCount;
+
+    initializeSelect2();
+    bindChangeListeners();
+  }
+
+  function removeForm(button) {
+    const formRow = $(button).closest('.voucher-form-row');
+    const deleteInput = formRow.find('input[name$="-DELETE"]');
+
+    if (deleteInput.length) {
+      deleteInput.val('on');
+      formRow.hide();
+    } else {
+      formRow.find('select').select2('destroy');
+      formRow.remove();
+      formCount--;
+      totalFormsInput.value = formCount;
+      updateFormIndices();
+    }
+  }
+
+  function updateFormIndices() {
+    $('#formset-container .voucher-form-row:visible').each(function (index) {
+      $(this).attr('id', `form-${index}`);
+      $(this).find('input, select, textarea').each(function () {
+        const name = $(this).attr('name').replace(/items-\d+-/, `items-${index}-`);
+        $(this).attr('name', name);
+
+        if ($(this).attr('id')) {
+          const id = $(this).attr('id').replace(/id_items-\d+-/, `id_items-${index}-`);
+          $(this).attr('id', id);
+        }
+      });
+    });
+  }
+
+  function updateMovementType() {
+    const movementSelect = $('select[name="movement_type"]');
+    if (!movementSelect.length) return;
+
+    let selectedValue = '';
+    switch (voucherType) {
+      case 'Buyer_Voucher': selectedValue = 'out'; break;
+      case 'Seller_Voucher': selectedValue = 'in'; break;
+      case 'Job_Work_Voucher': selectedValue = 'job_work'; break;
+    }
+
+    movementSelect.val(selectedValue).trigger('change');
+  }
+
+  $(document).ready(function () {
+    initializeSelect2();
+    bindChangeListeners();
+    updateMovementType();
+
+    $('select[name$="product"]').each(function () {
+      const productId = $(this).val();
+      if (productId) updateWarehouse(this);
+    });
+  });
+</script>
 {% endblock %}

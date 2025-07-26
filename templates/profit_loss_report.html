@@ -1,113 +1,263 @@
+{% extends 'backendpages/base.html' %}
+{% block content %}
 {% load static %}
-<div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;">
-    <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 40px; width: auto;">
-    <h1 style="color: #3F5187; margin: 0;">VVM AGRO INDUSTRIES</h1>
-</div>
+<style>
+    .report-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        margin-top: 15px;
+    }
 
-<div style="text-align: center; margin-bottom: 20px;">
-    <p style="margin: 5px 0;">SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD, BESIDE TSIIC KALLAKAL</p>
-    <p style="margin: 5px 0;">MUPPYREDDY PALLY, MANOHARABAD MANDAL, MEDAK DIST., Telangana</p>
-    <p style="margin: 5px 0;">GSTIN/UIN: 36AANFV9684N1ZW | Contact: 9246565834 | Email: vvmotors2011@gmail.com</p>
-</div>
+    .report-header img {
+        height: 40px;
+        width: auto;
+    }
 
-<h2 style="text-align: center; color: #3F5187; margin-bottom: 20px;">PROFIT & LOSS REPORT</h2>
+    .report-header h1 {
+        color: #3F5187;
+        margin: 0;
+    }
 
-<form method="get" style="margin-bottom: 20px;">
+    .report-contact {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #3F5187;
+        font-size: 14px;
+    }
+
+    .report-title {
+        text-align: center;
+        color: #3F5187;
+        margin-bottom: 30px;
+        font-size: 1.6rem;
+        font-weight: 600;
+    }
+
+    .report-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+        margin-bottom: 30px;
+    }
+
+    .report-filters label {
+        display: flex;
+        flex-direction: column;
+        font-weight: 500;
+        color: #3F5187;
+        font-size: 14px;
+    }
+
+    .report-filters select,
+    .report-filters button {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    .report-filters button {
+        background-color: #3F5187;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .report-filters button:hover {
+        background-color: #2d3b66;
+    }
+
+    .report-section h3 {
+        color: #3F5187;
+        margin-top: 30px;
+    }
+     .report-section h3 {
+        color: #3F5187;
+        margin-top: 30px;
+    }
+    .summary-details p {
+        margin: 5px 0;
+        font-size: 15px;
+        color: #3F5187;
+    }
+ .summary-details  {
+       padding: 10px 20px;
+        color: #fff;
+        background-color: rgb(229, 231, 251);
+        margin-top: 20px;
+    }
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .styled-table th {
+        background-color: #3F5187;
+        color: white;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .styled-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .styled-table tr:nth-child(even) {
+        background-color: #f1f3fb;
+    }
+
+    @media screen and (max-width: 768px) {
+        .report-filters {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+    @media (max-width: 768px) {
+  .responsive-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+  .responsive-table-wrapper table {
+    min-width: 600px; /* or more depending on your columns */
+    border-collapse: collapse;
+  }
+}
+
+</style>
+
+<div class="main-content">
+  <div class="report-header">
+    <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo">
+    <h1>VVM AGRO INDUSTRIES</h1>
+  </div>
+
+  <div class="report-contact">
+    <p>SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD, BESIDE TSIIC KALLAKAL</p>
+    <p>MUPPYREDDY PALLY, MANOHARABAD MANDAL, MEDAK DIST., Telangana</p>
+    <p>GSTIN/UIN: 36AANFV9684N1ZW | Contact: 9246565834 | Email: vvmotors2011@gmail.com</p>
+  </div>
+
+  <h2 class="report-title">PROFIT & LOSS REPORT</h2>
+
+  <form method="get" class="report-filters">
     <label>Year:
-        <select name="year">
-            <option value="">All</option>
-            {% for y in year_list %}
-                <option value="{{ y }}" {% if selected_year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
-            {% endfor %}
-        </select>
+      <select name="year">
+        <option value="">All</option>
+        {% for y in year_list %}
+        <option value="{{ y }}" {% if selected_year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
     </label>
 
     <label>Month:
-        <select name="month">
-            <option value="">All</option>
-            {% for num, name in month_list %}
-                <option value="{{ num }}" {% if selected_month == num|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-        </select>
+      <select name="month">
+        <option value="">All</option>
+        {% for num, name in month_list %}
+        <option value="{{ num }}" {% if selected_month == num|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
     </label>
 
     <button type="submit">Filter</button>
     <button type="submit" name="export" value="excel">Export Excel</button>
     <button type="submit" name="export" value="pdf">Export PDF</button>
-</form>
+  </form>
 
-<hr>
+  <hr>
 
-<h3>Summary</h3>
-<p><strong>Period:</strong> 
-    {% if data.summary.month %}{{ data.summary.month }}{% endif %}
-    {% if data.summary.year %}{{ data.summary.year }}{% else %}All Time{% endif %}
-</p>
-<p><strong>Total Sales:</strong> ₹{{ data.summary.sales_amount }}</p>
-<p><strong>Total Purchases:</strong> ₹{{ data.summary.purchase_amount }}</p>
-<p><strong>Net Result:</strong> 
-    ₹{{ data.summary.profit_loss }} 
-    <span style="color: {% if data.summary.is_profit %}green{% else %}red{% endif %}">
-        ({{ data.summary.is_profit|yesno:"Profit,Loss" }})
-    </span>
-</p>
+  <div class="report-section">
+    <h3>Summary</h3>
+    <div class="summary-details">
+      <p><strong>Period:</strong>
+        {% if data.summary.month %}{{ data.summary.month }} {% endif %}
+        {% if data.summary.year %}{{ data.summary.year }}{% else %}All Time{% endif %}
+      </p>
+      <p><strong>Total Sales:</strong> ₹{{ data.summary.sales_amount }}</p>
+      <p><strong>Total Purchases:</strong> ₹{{ data.summary.purchase_amount }}</p>
+      <p><strong>Net Result:</strong>
+        ₹{{ data.summary.profit_loss }}
+        <span style="color: {% if data.summary.is_profit %}green{% else %}red{% endif %}">
+          ({{ data.summary.is_profit|yesno:"Profit,Loss" }})
+        </span>
+      </p>
+    </div>
+  </div>
 
-<hr>
+  <div class="report-section">
+    <h3>Sales Details</h3>
+    <div class="responsive-table-wrapper">
 
-<h3>Sales Details</h3>
-<table border="1" cellpadding="5" cellspacing="0" width="100%">
-    <thead>
+    <table class="styled-table">
+      <thead>
         <tr>
-            <th>Date</th>
-            <th>Voucher No</th>
-            <th>Party</th>
-            <th>Type</th>
-            <th>Amount</th>
+          <th>Date</th>
+          <th>Voucher No</th>
+          <th>Party</th>
+          <th>Type</th>
+          <th>Amount</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for voucher in data.sales_vouchers %}
         <tr>
-            <td>{{ voucher.created_at|date:"d-m-Y" }}</td>
-            <td>{{ voucher.voucher_number }}</td>
-            <td>{{ voucher.party.name|default:"" }}</td>
-             <td>{{ voucher.get_voucher_type_display }}</td>
-            <td>₹{{ voucher.grand_total }}</td>
+          <td>{{ voucher.created_at|date:"d-m-Y" }}</td>
+          <td>{{ voucher.voucher_number }}</td>
+          <td>{{ voucher.party.name|default:"" }}</td>
+          <td>{{ voucher.get_voucher_type_display }}</td>
+          <td>₹{{ voucher.grand_total }}</td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="4">No sales found</td>
+          <td colspan="5">No sales found</td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+  </div>
 
-<hr>
+  <div class="report-section">
+    <h3>Purchase Details</h3>
+    <div class="responsive-table-wrapper">
 
-<h3>Purchase Details</h3>
-<table border="1" cellpadding="5" cellspacing="0" width="100%">
-    <thead>
+    <table class="styled-table">
+      <thead>
         <tr>
-            <th>Date</th>
-            <th>Voucher No</th>
-            <th>Party</th>
-            <th>Type</th>
-            <th>Amount</th>
+          <th>Date</th>
+          <th>Voucher No</th>
+          <th>Party</th>
+          <th>Type</th>
+          <th>Amount</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for voucher in data.purchase_vouchers %}
         <tr>
-            <td>{{ voucher.created_at|date:"d-m-Y" }}</td>
-            <td>{{ voucher.voucher_number }}</td>
-            <td>{{ voucher.party.name|default:"" }}</td>
-            <td>{{ voucher.get_voucher_type_display }}</td>
-            <td>₹{{ voucher.grand_total }}</td>
+          <td>{{ voucher.created_at|date:"d-m-Y" }}</td>
+          <td>{{ voucher.voucher_number }}</td>
+          <td>{{ voucher.party.name|default:"" }}</td>
+          <td>{{ voucher.get_voucher_type_display }}</td>
+          <td>₹{{ voucher.grand_total }}</td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="5">No purchases found</td>
+          <td colspan="5">No purchases found</td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</div>
+{% endblock %}

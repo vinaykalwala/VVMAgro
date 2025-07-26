@@ -8,7 +8,7 @@
             font-family: 'Arial Unicode';
             src: local('Arial Unicode MS'), local('Arial');
         }
-        body { 
+        body {
             font-family: 'Arial Unicode', Arial, sans-serif;
         }
         .header {
@@ -23,14 +23,12 @@
             font-size: 18px;
             font-weight: bold;
         }
-        .address {
-            text-align: center;
+        .address, .contact {
+        
             font-size: 12px;
             margin-bottom: 5px;
         }
         .contact {
-            text-align: center;
-            font-size: 12px;
             margin-bottom: 15px;
         }
         .report-title {
@@ -39,90 +37,131 @@
             margin-top: 10px;
             margin-bottom: 15px;
         }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .summary { margin-bottom: 30px; }
+
+        /* ✨ FIX: Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: fixed; /* Important: avoid overflow */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 13px;
+            word-break: break-word;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .voucher-cell {
+            width: 40%;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        .party-cell {
+            width: 20%;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        .amount-cell {
+            width: 15%;
+            text-align: right;
+        }
+
+        .summary {
+            margin-bottom: 30px;
+        }
+
         .profit { color: green; }
         .loss { color: red; }
-        .currency { font-family: 'Arial Unicode', Arial, sans-serif; }
+        .currency {
+            font-family: 'Arial Unicode', Arial, sans-serif;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 40px; width: auto;">
+        <img src="{% static 'vvmlogo.jpg' %}" alt="VVM Logo" style="height: 40px; width: auto;text-align: center;">
         <h1 class="company-name">VVM AGRO INDUSTRIES</h1>
     </div>
-    
+
     <p class="address">SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD, BESIDE TSIIC KALLAKAL</p>
     <p class="address">MUPPYREDDY PALLY, MANOHARABAD MANDAL, MEDAK DIST., Telangana</p>
     <p class="contact">GSTIN/UIN: 36AANFV9684N1ZW | Contact: 9246565834 | Email: vvmotors2011@gmail.com</p>
-    
-    <h1>Profit & Loss Report</h1>
-    
+
+    <h1 class="report-title">Profit & Loss Report</h1>
+
     <div class="summary">
         <h2>Summary</h2>
-        <p><strong>Period:</strong> 
+        <p><strong>Period:</strong>
             {% if data.summary.month %}{{ data.summary.month }}{% endif %}
             {% if data.summary.year %}{{ data.summary.year }}{% else %}All Time{% endif %}
         </p>
         <p><strong>Total Sales:</strong> ₹{{ data.summary.sales_amount }}</p>
         <p><strong>Total Purchases:</strong> ₹{{ data.summary.purchase_amount }}</p>
-        <p><strong>Net Result:</strong> 
-            ₹{{ data.summary.profit_loss }} 
+        <p><strong>Net Result:</strong>
+            ₹{{ data.summary.profit_loss }}
             <span class="{% if data.summary.is_profit %}profit{% else %}loss{% endif %}">
                 ({{ data.summary.is_profit|yesno:"Profit,Loss" }})
             </span>
         </p>
     </div>
-    
+
     <h2>Sales Details</h2>
     <table>
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Voucher No</th>
-                <th>Party</th>
+                <th class="voucher-cell">Voucher No</th>
+                <th class="party-cell">Party</th>
                 <th>Type</th>
-                <th>Amount</th>
+                <th class="amount-cell">Amount</th>
             </tr>
         </thead>
         <tbody>
             {% for voucher in data.sales_vouchers %}
             <tr>
                 <td>{{ voucher.created_at|date:"d-m-Y" }}</td>
-                <td>{{ voucher.voucher_number }}</td>
-                <td>{{ voucher.party.name|default:"" }}</td>
-                 <td>{{ voucher.get_voucher_type_display }}</td>
-                <td>₹{{ voucher.grand_total }}</td>
+                <td class="voucher-cell">{{ voucher.voucher_number }}</td>
+                <td class="party-cell">{{ voucher.party.name|default:"" }}</td>
+                <td>{{ voucher.get_voucher_type_display }}</td>
+                <td class="amount-cell">₹{{ voucher.grand_total }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4">No sales found</td>
+                <td colspan="5">No sales found</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    
+
     <h2>Purchase Details</h2>
     <table>
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Voucher No</th>
-                <th>Party</th>
+                <th class="voucher-cell">Voucher No</th>
+                <th class="party-cell">Party</th>
                 <th>Type</th>
-                <th>Amount</th>
+                <th class="amount-cell">Amount</th>
             </tr>
         </thead>
         <tbody>
             {% for voucher in data.purchase_vouchers %}
             <tr>
                 <td>{{ voucher.created_at|date:"d-m-Y" }}</td>
-                <td>{{ voucher.voucher_number }}</td>
-                <td>{{ voucher.party.name|default:"" }}</td>
+                <td class="voucher-cell">{{ voucher.voucher_number }}</td>
+                <td class="party-cell">{{ voucher.party.name|default:"" }}</td>
                 <td>{{ voucher.get_voucher_type_display }}</td>
-                <td>₹{{ voucher.grand_total }}</td>
+                <td class="amount-cell">₹{{ voucher.grand_total }}</td>
             </tr>
             {% empty %}
             <tr>
