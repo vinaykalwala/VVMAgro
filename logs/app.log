@@ -1,0 +1,24 @@
+2025-07-28 16:44:43,617 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: / | GET: {} | POST: None | Status: 200
+2025-07-28 16:44:45,807 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /admin_dashboard/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:44:47,820 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /transactions/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:44:53,244 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /transaction/edit/13/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:44:55,031 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /ajax/load-vouchers/ | GET: {'party_id': ['1']} | POST: None | Status: 200
+2025-07-28 16:44:55,042 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /ajax/load-vouchers/ | GET: {'party_id': ['1']} | POST: None | Status: 200
+2025-07-28 16:45:01,797 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: POST | Path: /transaction/edit/13/ | GET: {} | POST: {'csrfmiddlewaretoken': ['xdUD2dSxvD1sbIz8gE0UJHEJbO0FXXXZNQk8vIbPKTgGXRUdOf4JHimGadWC9xvK'], 'transaction_voucher_number': ['VVM/PMT/25-26/8'], 'transaction_id': ['jbefebkvk'], 'date': ['2025-07-25'], 'initial-date': ['2025-07-25'], 'transaction_type': ['Cash'], 'method_of_adjustment': ['Advance'], 'account': ['1'], 'party': ['1'], 'amount': ['4000.00'], 'voucher': ['5'], 'remarks': ['']} | Status: 302
+2025-07-28 16:45:01,842 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /transactions/13/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:45:04,218 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /transactions/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:45:11,313 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /accounts/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:50:38,546 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /accounts/ | GET: {} | POST: None | Status: 500
+2025-07-28 16:50:38,735 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /favicon.ico | GET: {} | POST: None | Status: 404
+2025-07-28 16:51:11,786 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /accounts/ | GET: {} | POST: None | Status: 500
+2025-07-28 16:51:11,903 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /favicon.ico | GET: {} | POST: None | Status: 404
+2025-07-28 16:52:57,368 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /accounts/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:52:59,889 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /admin/logs/ | GET: {} | POST: None | Status: 404
+2025-07-28 16:53:00,056 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /favicon.ico | GET: {} | POST: None | Status: 404
+2025-07-28 16:54:18,279 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /accounts/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:54:26,454 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:54:28,526 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /favicon.ico | GET: {} | POST: None | Status: 404
+2025-07-28 16:55:51,161 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:55:51,616 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:56:06,251 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
+2025-07-28 16:57:28,789 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
