@@ -2300,3 +2300,36 @@ def profit_loss_report(request):
         'month_list': month_list,
         'year_list': year_list
     })
+
+
+import os
+from django.conf import settings
+from django.http import HttpResponse, FileResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+
+LOG_FILE_PATH = os.path.join(settings.BASE_DIR, 'logs', 'app.log')
+
+def is_admin(user):
+    return user.is_authenticated and user.is_superuser
+
+@user_passes_test(is_admin)
+def view_logs(request):
+    log_content = ''
+    if os.path.exists(LOG_FILE_PATH):
+        with open(LOG_FILE_PATH, 'r', encoding='utf-8') as file:
+            log_content = file.read()
+    return render(request, 'view_logs.html', {'log_content': log_content})
+
+@user_passes_test(is_admin)
+def clear_logs(request):
+    if os.path.exists(LOG_FILE_PATH):
+        with open(LOG_FILE_PATH, 'w', encoding='utf-8') as file:
+            file.write('')  # clear file content
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+@user_passes_test(is_admin)
+def download_logs(request):
+    if os.path.exists(LOG_FILE_PATH):
+        return FileResponse(open(LOG_FILE_PATH, 'rb'), as_attachment=True, filename='app.log')
+    return HttpResponse("Log file not found.", status=404)
