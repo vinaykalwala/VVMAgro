@@ -122,6 +122,9 @@ urlpatterns = [
     path('export/products/', export_products_excel, name='export_products_excel'),
     path('export/party/', export_party_excel, name='export_party_excel'),
     path('profit-loss/', profit_loss_report, name='profit_loss_report'),
+    path('logs/', view_logs, name='view_logs'),
+    path('logs/clear/', clear_logs, name='clear_logs'),
+    path('logs/download/', download_logs, name='download_logs'),
 
 
 
