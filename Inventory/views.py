@@ -2318,7 +2318,8 @@ import os, re
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 
-LOG_FILE_PATH = "logs/app.log"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_FILE_PATH = os.path.join(BASE_DIR, 'logs', 'app.log')
 
 LINE_RE = re.compile(
     r"""^
