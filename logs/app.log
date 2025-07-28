@@ -21,4 +21,4 @@
 2025-07-28 16:55:51,161 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
 2025-07-28 16:55:51,616 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
 2025-07-28 16:56:06,251 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
-2025-07-28 16:57:28,789 [INFO] app_logger User: admin | IP: 127.0.0.1 | Method: GET | Path: /logs/ | GET: {} | POST: None | Status: 200
+
