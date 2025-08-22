@@ -167,6 +167,7 @@ class VoucherForm(forms.ModelForm):
             'freight_charge',
             'reference_number',
             'reference_date',
+            'account'
         ]
         widgets = {
             'created_at': forms.DateInput(attrs={'type': 'date'}),
@@ -351,3 +352,14 @@ class ProductComponentForm(forms.ModelForm):
         else:
             # Fallback: allow all if group not found
             self.fields['component_product'].queryset = Product.objects.all()
+
+
+# forms.py
+from django import forms
+from .models import Product, Warehouse
+
+class StockTransferForm(forms.Form):
+    product = forms.ModelChoiceField(queryset=Product.objects.all())
+    from_warehouse = forms.ModelChoiceField(queryset=Warehouse.objects.all(), required=False)
+    to_warehouse = forms.ModelChoiceField(queryset=Warehouse.objects.all())
+    quantity = forms.IntegerField(min_value=1)

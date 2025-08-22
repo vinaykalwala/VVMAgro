@@ -258,13 +258,25 @@
 
     <p class="text-right"><strong>For VVM AGRO INDUSTRIES</strong><br><br>Authorized Signatory</p>
 
-    <div class="section">
-        <strong>Bank Details:</strong><br>
-        A/c Holder's Name: V V M AGRO INDUSTRIES<br>
-        Bank Name: STATE BANK OF INDIA (SBI) - 6903<br>
-        A/c No: 62478216903<br>
-        Branch & IFSC: QUTUBULLAPUR, SBIN0012947
-    </div>
+    {% if voucher.account %}
+<div class="section">
+    <strong>Bank Details:</strong><br>
+    A/c Holder's Name: {{ voucher.account.account_holder_name }}<br>
+    Bank Name: {{ voucher.account.bank_name }}<br>
+    A/c No: {{ voucher.account.account_number }}<br>
+    Branch & IFSC: {{ voucher.account.branch_name }}, {{ voucher.account.ifsc_code }}<br>
+    Account Type: {{ voucher.account.get_account_type_display }}
+</div>
+{% else %}
+<div class="section">
+    <strong>Bank Details:</strong><br>
+    A/c Holder's Name: V V M AGRO INDUSTRIES<br>
+    Bank Name: STATE BANK OF INDIA (SBI) - 6903<br>
+    A/c No: 62478216903<br>
+    Branch & IFSC: QUTUBULLAPUR, SBIN0012947
+</div>
+{% endif %}
+
 </div>
 
 <div class="voucher-actions">

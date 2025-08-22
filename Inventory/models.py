@@ -132,6 +132,13 @@ class Voucher(models.Model):
 
     party = models.ForeignKey('Party', on_delete=models.CASCADE)
     place_of_supply = models.CharField(max_length=100, blank=True, null=True)
+    account = models.ForeignKey(
+        'Account',
+        on_delete=models.SET_NULL,  # So that voucher remains even if bank is deleted
+        null=True,
+        blank=True,
+        related_name='vouchers'
+    )
 
     remarks = models.TextField(blank=True, null=True)
 

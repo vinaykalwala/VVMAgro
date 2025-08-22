@@ -125,6 +125,8 @@ urlpatterns = [
     path('logs/', view_logs, name='view_logs'),
     path('logs/clear/', clear_logs, name='clear_logs'),
     path('logs/download/', download_logs, name='download_logs'),
+    path('stock-transfer/', stock_transfer, name='stock_transfer'),
+    path('ajax/get_warehouse/<int:product_id>/',get_product_warehouse, name='get_product_warehouse'),
 
 
 

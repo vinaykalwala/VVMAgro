@@ -1,0 +1,43 @@
+<!-- stock_transfer.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Transfer</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h2>Stock Transfer</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Transfer Stock</button>
+</form>
+
+<script>
+$(document).ready(function(){
+    $('#id_product').change(function(){
+        var productId = $(this).val();
+        if(productId){
+            $.ajax({
+                url: '/ajax/get_warehouse/' + productId + '/',
+                type: 'GET',
+                success: function(data){
+                    if(data.warehouse_id){
+                        $('#id_from_warehouse').val(data.warehouse_id);
+                        $('#id_from_warehouse').prop('readonly', true);
+                    } else {
+                        $('#id_from_warehouse').val('');
+                        $('#id_from_warehouse').prop('readonly', false);
+                    }
+                }
+            });
+        } else {
+            $('#id_from_warehouse').val('');
+            $('#id_from_warehouse').prop('readonly', false);
+        }
+    });
+});
+</script>
+</body>
+</html>

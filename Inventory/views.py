@@ -206,6 +206,7 @@ def voucher_detail_view(request, voucher_id):
         'total_igst': total_igst,
         'grand_total': grand_total,
         'amount_in_words': amount_in_words,
+        'account': voucher.account
     }
     return render(request, 'voucher_detail.html', context)
 
@@ -801,6 +802,7 @@ def create_voucher_with_items(request, voucher_type):
             voucher = form.save(commit=False)
             voucher.voucher_type = voucher_type
             voucher.movement_type = movement_type_map.get(voucher_type, '')
+            voucher.account = form.cleaned_data.get('account')
 
             if not voucher.voucher_number:
                 voucher.voucher_number = f"{prefix}{str(count).zfill(3)}"
@@ -1619,6 +1621,9 @@ def export_sales_summary_excel(request, year, month):
         cgst = voucher.total_cgst or Decimal('0.00')
         sgst = voucher.total_sgst or Decimal('0.00')
         igst = voucher.total_igst or Decimal('0.00')
+        if cgst == 0 and sgst == 0 and igst == 0:
+            continue
+
         round_off = voucher.round_off_on_sales or Decimal('0.00')
         freight = voucher.freight_charge or Decimal('0.00')
         subtotal = voucher.total_subtotal or Decimal('0.00')
@@ -1800,6 +1805,9 @@ def export_hsn_gst_summary_excel(request, year, month):
     # Data Rows
     for hsn, data in summary.items():
         total_tax = data['igst'] + data['cgst'] + data['sgst']
+
+        if total_tax == 0:
+            continue  
         row = [
             hsn,
             data['description'],
@@ -2374,3 +2382,76 @@ def download_logs(request):
     if os.path.exists(LOG_FILE_PATH):
         return FileResponse(open(LOG_FILE_PATH, 'rb'), as_attachment=True, filename='app.log')
     return HttpResponse("Log file not found.", status=404)
+
+
+# views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from .models import Product, Warehouse
+from .forms import StockTransferForm
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def stock_transfer(request):
+    if request.method == "POST":
+        form = StockTransferForm(request.POST)
+        if form.is_valid():
+            product = form.cleaned_data['product']
+            from_warehouse = form.cleaned_data['from_warehouse']
+            to_warehouse = form.cleaned_data['to_warehouse']
+            quantity = form.cleaned_data['quantity']
+
+            # Ensure there is enough stock in source warehouse
+            if product.stock_quantity < quantity:
+                form.add_error('quantity', 'Insufficient stock in source warehouse.')
+            else:
+                # Reduce stock from source warehouse
+                product.stock_quantity -= quantity
+                product.save()
+
+                # Check if product exists in destination warehouse
+                product_to = Product.objects.filter(name=product.name, warehouse=to_warehouse).first()
+
+                if product_to:
+                    # Product exists, only add stock
+                    product_to.stock_quantity += quantity
+                    product_to.save()
+                else:
+                    # Product doesn't exist, create with all fields copied
+                    Product.objects.create(
+                        name=product.name,
+                        group=product.group,
+                        price_per_unit=product.price_per_unit,
+                        unit_of_measurement=product.unit_of_measurement,
+                        type_of_supply=product.type_of_supply,
+                        phase=product.phase,
+                        description=product.description,
+                        warehouse=to_warehouse,
+                        stock_quantity=quantity,  # Initial stock is transferred quantity
+                        stock_limit=product.stock_limit,
+                        hsn_sac=product.hsn_sac,
+                        hsn_sac_details=product.hsn_sac_details,
+                        hsn_sac_source_of_details=product.hsn_sac_source_of_details,
+                        hsn_sac_description=product.hsn_sac_description,
+                        created_at=product.created_at
+                    )
+
+                return redirect('stock_transfer')
+    else:
+        form = StockTransferForm()
+
+    return render(request, 'stock_transfer.html', {'form': form})
+
+
+# AJAX view to get warehouse for selected product
+@login_required
+def get_product_warehouse(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        data = {
+            'warehouse_id': product.warehouse.id if product.warehouse else None,
+            'warehouse_name': product.warehouse.name if product.warehouse else ''
+        }
+    except Product.DoesNotExist:
+        data = {'warehouse_id': None, 'warehouse_name': ''}
+    return JsonResponse(data)
