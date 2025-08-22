@@ -2121,7 +2121,7 @@ def delete_voucher(request, voucher_id):
     voucher_type = voucher.voucher_type
 
     # Restore stock levels before deleting items
-    for item in voucher.voucherproductitem_set.all():
+    for item in voucher.items.all():  # <-- Use 'items' instead of voucherproductitem_set
         product = item.product
         quantity = int(item.quantity)
 
@@ -2138,11 +2138,12 @@ def delete_voucher(request, voucher_id):
             product.save()
 
     # Delete all product items and then the voucher
-    voucher.voucherproductitem_set.all().delete()
+    voucher.items.all().delete()
     voucher.delete()
 
     messages.success(request, "Voucher and associated items deleted successfully.")
-    return redirect('voucher_type_list') 
+    return redirect('voucher_list')
+
 
 from calendar import month_name
 from django.db.models import Sum

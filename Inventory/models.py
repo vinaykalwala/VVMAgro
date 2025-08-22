@@ -42,6 +42,7 @@ class Product(models.Model):
     SUPPLY_TYPE_CHOICES = [
         ('goods', 'Goods'),
         ('raw_material', 'Raw Material'),
+        ('services', 'Services'),
     ]
     PHASE_CHOICES = [
         ('phase_1', 'Phase 1'),

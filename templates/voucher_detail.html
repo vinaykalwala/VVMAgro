@@ -140,7 +140,19 @@
                 State: {{ voucher.party.state }} Code: {{ voucher.party.pincode }}
             </td>
             <td class="text-left" colspan="2">
-                <strong>Invoice No:</strong> {{ voucher.voucher_number }}<br>
+                <strong>
+    {% if voucher.voucher_type == "Buyer_Voucher" or voucher.voucher_type == "Seller_Voucher" %}
+        Invoice No:
+    {% elif voucher.voucher_type == "Quotation" %}
+        Quotation No:
+    {% elif voucher.voucher_type == "Job_Work_Voucher" %}
+        Job Work Voucher No:
+    {% elif voucher.voucher_type == "Delivery_Challan" %}
+        Delivery Challan No:
+    {% else %}
+        Document No:
+    {% endif %}
+</strong> {{ voucher.voucher_number }}<br>
                 <strong>Date:</strong> {{ voucher.created_at|date:"d M Y" }}<br>
                 <strong>Place of Supply:</strong> {{ voucher.place_of_supply }} <br>
                 <strong>Reference Number:</strong> {{ voucher.reference_number }} <br>
@@ -150,7 +162,19 @@
         </tr>
     </table>
 
-    <h3>TAX INVOICE</h3>
+    <h3>
+    {% if voucher.voucher_type == "Buyer_Voucher" or voucher.voucher_type == "Seller_Voucher" %}
+        TAX INVOICE
+    {% elif voucher.voucher_type == "Quotation" %}
+        QUOTATION
+    {% elif voucher.voucher_type == "Job_Work_Voucher" %}
+        JOB WORK VOUCHER
+    {% elif voucher.voucher_type == "Delivery_Challan" %}
+        DELIVERY CHALLAN
+    {% else %}
+        DOCUMENT
+    {% endif %}
+</h3>
 
     <table>
         <thead>
