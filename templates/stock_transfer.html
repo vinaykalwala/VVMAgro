@@ -1,21 +1,207 @@
-<!-- stock_transfer.html -->
+{% extends 'backendpages/base.html' %}
+{% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Stock Transfer</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-<h2>Stock Transfer</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Transfer Stock</button>
-</form>
+
+<style>
+    /* --- Existing form styles --- */
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        padding: 20px;
+        flex-wrap: wrap;
+        gap: 40px;
+    }
+
+    .form-wrapper {
+        flex: 1;
+        max-width: 900px;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border: 5px solid #3F5187;
+    }
+
+    .form-wrapper h2 {
+        text-align: center;
+        font-size: 28px;
+        color: #3F5187;
+        margin-bottom: 30px;
+    }
+
+    .form-wrapper form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-wrapper form p {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+
+    .form-wrapper label {
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #3F5187;
+    }
+
+    .form-wrapper input,
+    .form-wrapper select,
+    .form-wrapper textarea {
+        padding: 10px;
+        border: 1px solid #3F5187;
+        border-radius: 6px;
+        font-size: 16px;
+        background-color: rgb(229, 231, 251);
+        width: 100%;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-wrapper input:focus,
+    .form-wrapper select:focus,
+    .form-wrapper textarea:focus {
+        border-color: #4CAF50;
+        outline: none;
+    }
+
+    .form-wrapper button {
+        margin-top: 10px;
+        padding: 14px 16px;
+        background-color: #3F5187;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+        width: 100%;
+        max-width: 150px;
+        align-self: flex-start;
+    }
+
+    .form-wrapper button:hover {
+        background-color: #2e3c6f;
+    }
+
+    @media (max-width: 1024px) {
+        .form-container {
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-wrapper {
+            max-width: 100%;
+        }
+        .form-wrapper button {
+            align-self: center;
+        }
+    }
+
+    /* --- Select2 styling to match inputs and align properly --- */
+    .select2-container--default .select2-selection--single {
+        height: 38px;
+        padding: 6px 12px;
+        border: 1px solid #3F5187;
+        border-radius: 6px;
+        background-color: rgb(229, 231, 251);
+        display: flex;
+        align-items: center;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 24px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px;
+        right: 10px;
+    }
+
+    /* Make select2 container fill parent width */
+    .form-wrapper .select2-container {
+        width: 100% !important;
+    }
+
+    /* Proper alignment with label and margin */
+    .form-wrapper p .select2-container {
+        margin-top: 0px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="form-container">
+        <div class="form-wrapper">
+            <h2>Stock Transfer</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Transfer Stock</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+/* --- Select2 to perfectly match your form fields --- */
+.select2-container--default .select2-selection--single {
+    height: 42px; /* match your input height + padding */
+    padding: 10px;
+    border: 1px solid #3F5187;
+    border-radius: 6px;
+    background-color: rgb(229, 231, 251);
+    font-size: 16px;
+    line-height: 1.5;
+   
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: normal;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+    right: 10px;
+}
+
+.form-wrapper .select2-container {
+    width: 100% !important;
+    margin-top: 0px; /* aligns with input fields */
+}
+</style>
 
 <script>
 $(document).ready(function(){
+    // Apply Select2 to all selects
+    $('select').select2({
+        placeholder: "Select an option",
+        allowClear: true,
+        width: 'resolve'
+    });
+});
+</script>
+
+<script>
+$(document).ready(function(){
+    // Make all <select> dropdowns searchable
+    $('select').select2({
+        placeholder: "Select an option",
+        allowClear: true,
+        width: 'resolve'
+    });
+
+    // AJAX to update warehouse based on product
     $('#id_product').change(function(){
         var productId = $(this).val();
         if(productId){
@@ -24,20 +210,23 @@ $(document).ready(function(){
                 type: 'GET',
                 success: function(data){
                     if(data.warehouse_id){
-                        $('#id_from_warehouse').val(data.warehouse_id);
-                        $('#id_from_warehouse').prop('readonly', true);
+                        $('#id_from_warehouse').val(data.warehouse_id).trigger('change');
+                        $('#id_from_warehouse').prop('disabled', true);
                     } else {
-                        $('#id_from_warehouse').val('');
-                        $('#id_from_warehouse').prop('readonly', false);
+                        $('#id_from_warehouse').val(null).trigger('change');
+                        $('#id_from_warehouse').prop('disabled', false);
                     }
+                },
+                error: function(){
+                    $('#id_from_warehouse').val(null).trigger('change');
+                    $('#id_from_warehouse').prop('disabled', false);
                 }
             });
         } else {
-            $('#id_from_warehouse').val('');
-            $('#id_from_warehouse').prop('readonly', false);
+            $('#id_from_warehouse').val(null).trigger('change');
+            $('#id_from_warehouse').prop('disabled', false);
         }
     });
 });
 </script>
-</body>
-</html>
+{% endblock %}
