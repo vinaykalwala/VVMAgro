@@ -109,11 +109,16 @@
     background-color: #dc3545; /* Red */
     color: white;
   }
-
+   
   .party-group-table .delete-link:hover {
     background-color: #c82333;
   }
-
+    .party-group-table .add-link {
+    background-color: #2e3b66; /* Red */
+    color: white;
+    text-decoration: none;
+    margin-top: 5px;
+  }
   @media (max-width: 1200px) {
     .header-flex {
       flex-direction: row;
@@ -231,7 +236,7 @@
                 <a href="{% url 'product_update' product.id %}" class="action-link edit-link">Edit</a> 
                 <a href="{% url 'product_delete' product.id %}" class="action-link delete-link">Delete</a>
                 {% if product.group.name == "Finished Products" %}
-                  <a href="{% url 'add_finished_product_stock' product.id %}" class="action-link delete-link">Add Stock</a>
+                  <a href="{% url 'add_finished_product_stock' product.id %}" class="action-link add-link">Add Stock</a>
                 {% endif %}
 
             </td>

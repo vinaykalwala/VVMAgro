@@ -1,66 +1,95 @@
 {% extends 'backendpages/base.html' %}
 {% load static %}
 {% block content %}
-<div class="container">
-  <h2>Add Stock for <span class="highlight">{{ finished_product.name }}</span></h2>
+<div class="main-content">
+<div class="add-stock-page">
+  <div class="add-stock-container">
+    <h2 class="add-stock-title">
+      Add Stock for <span class="highlight">{{ finished_product.name }}</span>
+    </h2>
 
-  <form method="post" class="stock-form">
-    {% csrf_token %}
+    <form method="post" class="add-stock-form">
+      {% csrf_token %}
 
-    <div class="form-group">
-      <label for="quantity_to_add">Quantity to Add:</label>
-      <input type="number" name="quantity_to_add" min="1" required class="input-field">
-    </div>
+      <!-- Quantity -->
+      <div class="add-stock-group">
+        <label for="quantity_to_add">Quantity to Add:</label>
+        <input type="number" name="quantity_to_add" min="1" required class="add-stock-input">
+      </div>
 
-    <div id="formset-container">
-      {{ formset.management_form }}
-      {% for form in formset %}
-        <div class="formset-row">
-          <div class="field">
-            {{ form.component_product.label_tag }} {{ form.component_product }}
+      <!-- Formset -->
+      <div id="add-stock-formset-container">
+        {{ formset.management_form }}
+        {% for form in formset %}
+          <div class="add-stock-formset-row">
+            <div class="add-stock-field">
+              {{ form.component_product.label_tag }} 
+              {{ form.component_product }}
+            </div>
+            <div class="add-stock-field">
+              {{ form.quantity_used.label_tag }} 
+              {{ form.quantity_used }}
+            </div>
+            <div class="add-stock-field">
+              {{ form.DELETE }} 
+              <button type="button" class="add-stock-remove danger">Remove</button>
+            </div>
           </div>
-          <div class="field">
-            {{ form.quantity_used.label_tag }} {{ form.quantity_used }}
-          </div>
-          <div class="field">
-            {{ form.DELETE }} <button type="button" class="remove-component danger">Remove</button>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+        {% endfor %}
+      </div>
 
-    <div class="button-row">
-      <button type="button" id="add-component" class="add-btn">+ Add Component</button>
-    </div>
+      <!-- Add component -->
+      <div class="add-stock-button-row">
+        <button type="button" id="add-stock-add-component" class="add-btn">+ Add Component</button>
+      </div>
 
-    <div class="button-row">
-      <button type="submit" class="submit-btn">Submit</button>
-      <a href="{% url 'product_list' %}" class="back-btn">← Back to Product List</a>
-    </div>
-  </form>
+      <!-- Submit -->
+      <div class="add-stock-button-row">
+        <button type="submit" class="submit-btn">Submit</button>
+        <a href="{% url 'product_list' %}" class="back-btn">← Back to Product List</a>
+      </div>
+    </form>
+  </div>
 </div>
+</div>
+<!-- jQuery + Select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  const formsetContainer = document.getElementById('formset-container');
-  const addButton = document.getElementById('add-component');
+  const formsetContainer = document.getElementById('add-stock-formset-container');
+  const addButton = document.getElementById('add-stock-add-component');
   let totalForms = document.querySelector('[name="form-TOTAL_FORMS"]');
 
-  // Add component
+  function initSelect2() {
+    $(formsetContainer).find('select').select2({
+      placeholder: "Search component...",
+      width: '100%'
+    });
+  }
+
+  // Initialize on load
+  initSelect2();
+
+  // Add new component row
   addButton.addEventListener('click', function () {
     const formCount = parseInt(totalForms.value);
-    const originalForm = document.querySelector('.formset-row');
+    const originalForm = document.querySelector('.add-stock-formset-row');
     const newForm = originalForm.cloneNode(true);
 
-    newForm.innerHTML = newForm.innerHTML.replace(/form-(\\d+)-/g, `form-${formCount}-`);
+    newForm.innerHTML = newForm.innerHTML.replace(/form-(\d+)-/g, `form-${formCount}-`);
     formsetContainer.appendChild(newForm);
     totalForms.value = formCount + 1;
+
+    initSelect2();
   });
 
   // Remove component
   formsetContainer.addEventListener('click', function (e) {
-    if (e.target.classList.contains('remove-component')) {
-      const row = e.target.closest('.formset-row');
+    if (e.target.classList.contains('add-stock-remove')) {
+      const row = e.target.closest('.add-stock-formset-row');
       const deleteInput = row.querySelector('input[type="checkbox"][name*="DELETE"]');
       if (deleteInput) {
         deleteInput.checked = true;
@@ -72,36 +101,37 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <style>
-body {
+.add-stock-page {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f7fa;
+  padding: 30px 0;
 }
 
-.container {
+.add-stock-container {
   width: 90%;
   max-width: 850px;
-  margin: 40px auto;
+  margin: auto;
   background: #ffffff;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-h2 {
+.add-stock-title {
   text-align: center;
   color: #2c3e50;
   margin-bottom: 25px;
 }
 
-.highlight {
+.add-stock-title .highlight {
   color: #2980b9;
 }
 
-.form-group {
+.add-stock-group {
   margin-bottom: 20px;
 }
 
-.input-field {
+.add-stock-input {
   width: 100%;
   padding: 8px 12px;
   font-size: 1rem;
@@ -109,7 +139,7 @@ h2 {
   border-radius: 5px;
 }
 
-.formset-row {
+.add-stock-formset-row {
   display: flex;
   align-items: flex-end;
   gap: 15px;
@@ -120,7 +150,7 @@ h2 {
   border-radius: 6px;
 }
 
-.field {
+.add-stock-field {
   flex: 1;
 }
 
@@ -164,7 +194,7 @@ a.back-btn {
   border-radius: 4px;
 }
 
-.button-row {
+.add-stock-button-row {
   text-align: right;
 }
 </style>
