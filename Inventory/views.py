@@ -496,12 +496,18 @@ def application_detail_view(request, application_id):
 
 from django.db.models import Q
 
+import openpyxl
+from django.http import HttpResponse
+from django.utils.encoding import escape_uri_path
+from django.contrib.auth.decorators import login_required
+
 @login_required
 def stock_report_view(request):
     query = request.GET.get('q', '')
     warehouse_id = request.GET.get('warehouse', '')
     phase = request.GET.get('phase', '')
     supply_type = request.GET.get('type_of_supply', '')
+    export = request.GET.get('export', '')  # NEW
 
     products = Product.objects.select_related('warehouse').all()
 
@@ -529,6 +535,27 @@ def stock_report_view(request):
             "warehouse_location": product.warehouse.location if product.warehouse and hasattr(product.warehouse, 'location') else "Location Not Available",
             "phase": product.get_phase_display() if product.type_of_supply == 'goods' else "N/A"
         })
+
+    # --- Excel Export (Only if requested) ---
+    if export == 'excel' and stock_data:
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Stock Report"
+
+        # Header from keys
+        headers = list(stock_data[0].keys())
+        ws.append(headers)
+
+        # Rows from values
+        for row in stock_data:
+            ws.append(list(row.values()))
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        filename = escape_uri_path("Stock_Report.xlsx")
+        response['Content-Disposition'] = f'attachment; filename={filename}'
+        wb.save(response)
+        return response
+    # --- End Excel Export ---
 
     warehouses = Warehouse.objects.all()
 
