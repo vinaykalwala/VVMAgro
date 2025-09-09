@@ -109,7 +109,7 @@ class Party(models.Model):
         return self.name
 
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 
 class Voucher(models.Model):
     VOUCHER_TYPES = [
@@ -127,7 +127,7 @@ class Voucher(models.Model):
 
     voucher_number = models.CharField(max_length=50, blank=True)
     voucher_type = models.CharField(max_length=20, choices=VOUCHER_TYPES)
-    created_at = models.DateTimeField(default=datetime.now)  # Editable manually
+    created_at = models.DateTimeField(default=timezone.now)  # Editable manually
     movement_type = models.CharField(max_length=10, choices=MOVEMENT_TYPE_CHOICES, default='in')
 
     party = models.ForeignKey('Party', on_delete=models.CASCADE)
@@ -281,7 +281,7 @@ class Account(models.Model):
     description = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.bank_name} - {self.account_number}"
+        return f"{self.account_holder_name} - {self.account_number}"
 
 from django.db import models
 from datetime import datetime, date
