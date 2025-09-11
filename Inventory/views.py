@@ -1878,18 +1878,6 @@ def hsn_summary_form(request):
 #     wb.save(response)
 #     return response
 
-from django.http import HttpResponse
-from openpyxl import Workbook
-from openpyxl.utils import get_column_letter
-from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
-from .models import Voucher, VoucherProductItem
-from decimal import Decimal
-import calendar
-from datetime import datetime
-from collections import defaultdict
-
-# ... (keep all your other functions as they are) ...
-
 def export_hsn_gst_summary_excel(request, year, month):
     month_name = calendar.month_name[int(month)]
     start_date = f"1-{month_name[:3]}-{year}"
@@ -1918,7 +1906,8 @@ def export_hsn_gst_summary_excel(request, year, month):
         'cgst': Decimal('0.00'),
         'sgst': Decimal('0.00'),
         'cess': 'NA',
-        'rate': Decimal('0.00')
+        'rate': Decimal('0.00'),
+        'items_count': 0  # Track how many items contribute to this HSN
     })
 
     for item in items:
@@ -1930,15 +1919,26 @@ def export_hsn_gst_summary_excel(request, year, month):
         summary[key]['igst'] += Decimal(item.igst_amount)
         summary[key]['cgst'] += Decimal(item.cgst_amount)
         summary[key]['sgst'] += Decimal(item.sgst_amount)
+        summary[key]['items_count'] += 1
         
-        # Calculate the tax rate correctly
+        # Calculate the tax rate for this individual item
         if Decimal(item.subtotal) > 0:
             # Calculate the effective tax rate based on actual tax amounts
             total_tax = Decimal(item.igst_amount) + Decimal(item.cgst_amount) + Decimal(item.sgst_amount)
-            summary[key]['rate'] = (total_tax / Decimal(item.subtotal)) * 100
+            item_tax_rate = (total_tax / Decimal(item.subtotal)) * 100
         else:
             # If subtotal is 0, use the sum of tax percentages
-            summary[key]['rate'] = Decimal(item.igst_percent + item.cgst_percent + item.sgst_percent)
+            item_tax_rate = Decimal(item.igst_percent + item.cgst_percent + item.sgst_percent)
+        
+        # Accumulate the tax rate (we'll average it later)
+        summary[key]['rate'] += item_tax_rate
+
+    # Calculate average tax rate for each HSN
+    for hsn in summary:
+        if summary[hsn]['items_count'] > 0:
+            summary[hsn]['rate'] = summary[hsn]['rate'] / summary[hsn]['items_count']
+        else:
+            summary[hsn]['rate'] = Decimal('0.00')
 
     wb = Workbook()
     ws = wb.active
@@ -2002,14 +2002,14 @@ def export_hsn_gst_summary_excel(request, year, month):
             hsn,
             data['description'],
             data['unit'],
-            float(data['quantity']),  # Convert to float for Excel compatibility
+            float(data['quantity']),
             float(total_amount),
-            float(data['rate']),  # Convert to float for Excel compatibility
+            float(data['rate']),
             float(data['taxable']),
             float(data['igst']),
             float(data['cgst']),
             float(data['sgst']),
-            data['cess'],  # 'NA'
+            data['cess'],
             float(total_tax)
         ]
         ws.append(row)
