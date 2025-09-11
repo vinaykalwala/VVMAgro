@@ -1919,7 +1919,7 @@ def export_hsn_gst_summary_excel(request, year, month):
         'items_count': 0
     })
 
-    # helper to safely convert percent-like values to Decimal
+    # helper to safely convert percent values to Decimal
     def to_dec_pct(val):
         if val is None or val == '':
             return Decimal('0.00')
@@ -1939,32 +1939,27 @@ def export_hsn_gst_summary_excel(request, year, month):
         summary[key]['sgst'] += Decimal(item.sgst_amount)
         summary[key]['items_count'] += 1
 
-        # --- NEW: compute tax rate as SUM of GST PERCENTAGES (IGST% + CGST% + SGST%)
+        # --- Tax rate = sum of GST percentages ---
         igst_p = to_dec_pct(item.igst_percent)
         cgst_p = to_dec_pct(item.cgst_percent)
         sgst_p = to_dec_pct(item.sgst_percent)
 
-        # If your model stores percents as decimals (e.g. 0.09 for 9%), multiply by 100:
-        # igst_p *= 100; cgst_p *= 100; sgst_p *= 100
-
         item_tax_rate = igst_p + cgst_p + sgst_p
-
-        # Accumulate the tax-rate sums (we'll average across items later)
         summary[key]['rate'] += item_tax_rate
 
-    # Calculate average tax rate (simple average of item percent-sums per HSN)
+    # average tax rate (simple average across items per HSN)
     for hsn, data in summary.items():
         if data['items_count'] > 0:
             data['rate'] = (data['rate'] / Decimal(data['items_count']))
         else:
             data['rate'] = Decimal('0.00')
 
-    # --- rest of your workbook creation and writing remains the same ---
+    # --- Excel Workbook ---
     wb = Workbook()
     ws = wb.active
     ws.title = f"HSN Summary {month_name} {year}"
 
-    # Styles (unchanged)...
+    # Styles
     title_font = Font(size=14, bold=True)
     header_font = Font(size=12, bold=True)
     border = Border(left=Side(style='thin'), right=Side(style='thin'),
@@ -1998,6 +1993,7 @@ def export_hsn_gst_summary_excel(request, year, month):
 
     ws.append([])
 
+    # Header
     headers = [
         "HSN/SAC", "Description", "UQC", "Quantity",
         "Total Amount (₹)", "Tax Rate (%)", "Taxable Amount (₹)",
@@ -2012,10 +2008,10 @@ def export_hsn_gst_summary_excel(request, year, month):
         cell.fill = header_fill
         cell.border = border
 
-    # Write rows, skipping HSNs with tax rate == 0 (as you requested earlier)
+    # Data Rows - skip 0% tax rate HSNs
     for hsn, data in summary.items():
         if data['rate'] == Decimal('0.00'):
-            continue  # skip 0% tax-rate rows
+            continue
 
         total_tax = data['igst'] + data['cgst'] + data['sgst']
         total_amount = data['taxable'] + total_tax
@@ -2026,7 +2022,7 @@ def export_hsn_gst_summary_excel(request, year, month):
             data['unit'],
             float(data['quantity']),
             float(total_amount),
-            float(data['rate']),       # percent-sum (e.g. 18.0 for 18%)
+            float(data['rate']),   # sum of GST percentages
             float(data['taxable']),
             float(data['igst']),
             float(data['cgst']),
@@ -2042,15 +2038,16 @@ def export_hsn_gst_summary_excel(request, year, month):
             if c in [5, 7, 8, 9, 10, 12] and isinstance(cell.value, (int, float)):
                 cell.alignment = right
                 cell.number_format = currency_format
-            elif c == 6:
+            elif c == 6:  # Tax Rate (%)
                 cell.alignment = center
                 cell.number_format = '0.00'
-            elif c == 4:
+            elif c == 4:  # Quantity
                 cell.alignment = right
                 cell.number_format = '0.00'
             else:
                 cell.alignment = left
 
+    # Auto column width
     for col in ws.columns:
         max_len = max(len(str(cell.value or '')) for cell in col)
         ws.column_dimensions[get_column_letter(col[0].column)].width = max(15, max_len + 2)
