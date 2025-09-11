@@ -1888,25 +1888,24 @@ import calendar
 from datetime import datetime
 from collections import defaultdict
 
+from decimal import Decimal
+
 def export_hsn_gst_summary_excel(request, year, month):
     month_name = calendar.month_name[int(month)]
     start_date = f"1-{month_name[:3]}-{year}"
     end_day = calendar.monthrange(int(year), int(month))[1]
     end_date = f"{end_day}-{month_name[:3]}-{year}"
 
-    # Get all sales vouchers for the period (same as sales register)
     vouchers = Voucher.objects.filter(
         voucher_type='Buyer_Voucher',
         created_at__year=year,
         created_at__month=month
     ).order_by('created_at')
 
-    # Get all product items for these vouchers
     items = VoucherProductItem.objects.filter(
         voucher__in=vouchers
     ).select_related('product', 'voucher')
 
-    # Create HSN summary based on sales register data
     summary = defaultdict(lambda: {
         'description': '',
         'unit': '',
@@ -1917,8 +1916,17 @@ def export_hsn_gst_summary_excel(request, year, month):
         'sgst': Decimal('0.00'),
         'cess': 'NA',
         'rate': Decimal('0.00'),
-        'items_count': 0  # Track how many items contribute to this HSN
+        'items_count': 0
     })
+
+    # helper to safely convert percent-like values to Decimal
+    def to_dec_pct(val):
+        if val is None or val == '':
+            return Decimal('0.00')
+        try:
+            return Decimal(str(val))
+        except Exception:
+            return Decimal('0.00')
 
     for item in items:
         key = item.product.hsn_sac
@@ -1930,31 +1938,33 @@ def export_hsn_gst_summary_excel(request, year, month):
         summary[key]['cgst'] += Decimal(item.cgst_amount)
         summary[key]['sgst'] += Decimal(item.sgst_amount)
         summary[key]['items_count'] += 1
-        
-        # Calculate the tax rate for this individual item
-        if Decimal(item.subtotal) > 0:
-            # Calculate the effective tax rate based on actual tax amounts
-            total_tax = Decimal(item.igst_amount) + Decimal(item.cgst_amount) + Decimal(item.sgst_amount)
-            item_tax_rate = (total_tax / Decimal(item.subtotal)) * 100
-        else:
-            # If subtotal is 0, use the sum of tax percentages
-            item_tax_rate = Decimal(item.igst_percent + item.cgst_percent + item.sgst_percent)
-        
-        # Accumulate the tax rate (we'll average it later)
+
+        # --- NEW: compute tax rate as SUM of GST PERCENTAGES (IGST% + CGST% + SGST%)
+        igst_p = to_dec_pct(item.igst_percent)
+        cgst_p = to_dec_pct(item.cgst_percent)
+        sgst_p = to_dec_pct(item.sgst_percent)
+
+        # If your model stores percents as decimals (e.g. 0.09 for 9%), multiply by 100:
+        # igst_p *= 100; cgst_p *= 100; sgst_p *= 100
+
+        item_tax_rate = igst_p + cgst_p + sgst_p
+
+        # Accumulate the tax-rate sums (we'll average across items later)
         summary[key]['rate'] += item_tax_rate
 
-    # Calculate average tax rate for each HSN
-    for hsn in summary:
-        if summary[hsn]['items_count'] > 0:
-            summary[hsn]['rate'] = summary[hsn]['rate'] / summary[hsn]['items_count']
+    # Calculate average tax rate (simple average of item percent-sums per HSN)
+    for hsn, data in summary.items():
+        if data['items_count'] > 0:
+            data['rate'] = (data['rate'] / Decimal(data['items_count']))
         else:
-            summary[hsn]['rate'] = Decimal('0.00')
+            data['rate'] = Decimal('0.00')
 
+    # --- rest of your workbook creation and writing remains the same ---
     wb = Workbook()
     ws = wb.active
     ws.title = f"HSN Summary {month_name} {year}"
 
-    # Styles
+    # Styles (unchanged)...
     title_font = Font(size=14, bold=True)
     header_font = Font(size=12, bold=True)
     border = Border(left=Side(style='thin'), right=Side(style='thin'),
@@ -1988,7 +1998,6 @@ def export_hsn_gst_summary_excel(request, year, month):
 
     ws.append([])
 
-    # Header Row
     headers = [
         "HSN/SAC", "Description", "UQC", "Quantity",
         "Total Amount (₹)", "Tax Rate (%)", "Taxable Amount (₹)",
@@ -2003,18 +2012,21 @@ def export_hsn_gst_summary_excel(request, year, month):
         cell.fill = header_fill
         cell.border = border
 
-    # Data Rows - Include ALL HSN codes regardless of tax rate
+    # Write rows, skipping HSNs with tax rate == 0 (as you requested earlier)
     for hsn, data in summary.items():
+        if data['rate'] == Decimal('0.00'):
+            continue  # skip 0% tax-rate rows
+
         total_tax = data['igst'] + data['cgst'] + data['sgst']
         total_amount = data['taxable'] + total_tax
-        
+
         row = [
             hsn,
             data['description'],
             data['unit'],
             float(data['quantity']),
             float(total_amount),
-            float(data['rate']),
+            float(data['rate']),       # percent-sum (e.g. 18.0 for 18%)
             float(data['taxable']),
             float(data['igst']),
             float(data['cgst']),
@@ -2027,26 +2039,22 @@ def export_hsn_gst_summary_excel(request, year, month):
         for c in range(1, 13):
             cell = ws.cell(row=r, column=c)
             cell.border = border
-
-            # Format numeric ₹ columns
             if c in [5, 7, 8, 9, 10, 12] and isinstance(cell.value, (int, float)):
                 cell.alignment = right
                 cell.number_format = currency_format
-            elif c == 6:  # Tax Rate (%)
+            elif c == 6:
                 cell.alignment = center
                 cell.number_format = '0.00'
-            elif c == 4:  # Quantity
+            elif c == 4:
                 cell.alignment = right
                 cell.number_format = '0.00'
             else:
                 cell.alignment = left
 
-    # Auto column width
     for col in ws.columns:
         max_len = max(len(str(cell.value or '')) for cell in col)
         ws.column_dimensions[get_column_letter(col[0].column)].width = max(15, max_len + 2)
 
-    # Output response
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     filename = f"HSN_GST_Summary_{month_name}_{year}.xlsx"
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
