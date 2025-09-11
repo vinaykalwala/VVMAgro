@@ -1915,11 +1915,9 @@ def export_hsn_gst_summary_excel(request, year, month):
         'cgst': Decimal('0.00'),
         'sgst': Decimal('0.00'),
         'cess': 'NA',
-        'rate': Decimal('0.00'),
-        'items_count': 0
+        'rate': Decimal('0.00')
     })
 
-    # helper to safely convert percent values to Decimal
     def to_dec_pct(val):
         if val is None or val == '':
             return Decimal('0.00')
@@ -1937,29 +1935,18 @@ def export_hsn_gst_summary_excel(request, year, month):
         summary[key]['igst'] += Decimal(item.igst_amount)
         summary[key]['cgst'] += Decimal(item.cgst_amount)
         summary[key]['sgst'] += Decimal(item.sgst_amount)
-        summary[key]['items_count'] += 1
 
-        # --- Tax rate = sum of GST percentages ---
+        # --- Tax rate = sum of GST percentages (NO averaging) ---
         igst_p = to_dec_pct(item.igst_percent)
         cgst_p = to_dec_pct(item.cgst_percent)
         sgst_p = to_dec_pct(item.sgst_percent)
-
-        item_tax_rate = igst_p + cgst_p + sgst_p
-        summary[key]['rate'] += item_tax_rate
-
-    # average tax rate (simple average across items per HSN)
-    for hsn, data in summary.items():
-        if data['items_count'] > 0:
-            data['rate'] = (data['rate'] / Decimal(data['items_count']))
-        else:
-            data['rate'] = Decimal('0.00')
+        summary[key]['rate'] = igst_p + cgst_p + sgst_p  # overwrite directly
 
     # --- Excel Workbook ---
     wb = Workbook()
     ws = wb.active
     ws.title = f"HSN Summary {month_name} {year}"
 
-    # Styles
     title_font = Font(size=14, bold=True)
     header_font = Font(size=12, bold=True)
     border = Border(left=Side(style='thin'), right=Side(style='thin'),
@@ -1993,7 +1980,6 @@ def export_hsn_gst_summary_excel(request, year, month):
 
     ws.append([])
 
-    # Header
     headers = [
         "HSN/SAC", "Description", "UQC", "Quantity",
         "Total Amount (₹)", "Tax Rate (%)", "Taxable Amount (₹)",
@@ -2022,7 +2008,7 @@ def export_hsn_gst_summary_excel(request, year, month):
             data['unit'],
             float(data['quantity']),
             float(total_amount),
-            float(data['rate']),   # sum of GST percentages
+            float(data['rate']),   # direct GST % sum
             float(data['taxable']),
             float(data['igst']),
             float(data['cgst']),
@@ -2047,7 +2033,6 @@ def export_hsn_gst_summary_excel(request, year, month):
             else:
                 cell.alignment = left
 
-    # Auto column width
     for col in ws.columns:
         max_len = max(len(str(cell.value or '')) for cell in col)
         ws.column_dimensions[get_column_letter(col[0].column)].width = max(15, max_len + 2)
@@ -2057,6 +2042,7 @@ def export_hsn_gst_summary_excel(request, year, month):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     wb.save(response)
     return response
+
 
 from django.http import HttpResponse
 from openpyxl import Workbook
