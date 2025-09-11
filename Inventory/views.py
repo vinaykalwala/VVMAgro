@@ -1733,48 +1733,211 @@ def hsn_summary_form(request):
     ]
     return render(request, 'export_hsn_summary.html', {'years': years, 'months': months})
 
-def export_hsn_gst_summary_excel(request, year, month):
-    from django.http import HttpResponse
-    from openpyxl import Workbook
-    from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
-    from openpyxl.utils import get_column_letter
-    from collections import defaultdict
-    import calendar
-    from .models import VoucherProductItem
+# def export_hsn_gst_summary_excel(request, year, month):
+#     from django.http import HttpResponse
+#     from openpyxl import Workbook
+#     from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
+#     from openpyxl.utils import get_column_letter
+#     from collections import defaultdict
+#     import calendar
+#     from .models import VoucherProductItem
 
+#     month_name = calendar.month_name[int(month)]
+#     start_date = f"1-{month_name[:3]}-{year}"
+#     end_day = calendar.monthrange(int(year), int(month))[1]
+#     end_date = f"{end_day}-{month_name[:3]}-{year}"
+
+#     items = VoucherProductItem.objects.filter(
+#         voucher__voucher_type='Buyer_Voucher',
+#         voucher__created_at__year=year,
+#         voucher__created_at__month=month
+#     ).select_related('product')
+
+#     summary = defaultdict(lambda: {
+#         'description': '',
+#         'unit': '',
+#         'quantity': 0,
+#         'taxable': 0,
+#         'igst': 0,
+#         'cgst': 0,
+#         'sgst': 0,
+#         'cess': 'NA',
+#         'rate': 0
+#     })
+
+#     for item in items:
+#         key = item.product.hsn_sac
+#         summary[key]['description'] = item.product.name
+#         summary[key]['unit'] = item.product.unit_of_measurement
+#         summary[key]['quantity'] += float(item.quantity)
+#         summary[key]['taxable'] += float(item.subtotal)
+#         summary[key]['igst'] += float(item.igst_amount)
+#         summary[key]['cgst'] += float(item.cgst_amount)
+#         summary[key]['sgst'] += float(item.sgst_amount)
+#         summary[key]['rate'] = float(item.igst_percent + item.cgst_percent + item.sgst_percent)
+
+#     wb = Workbook()
+#     ws = wb.active
+#     ws.title = f"HSN Summary {month_name} {year}"
+
+#     # Styles
+#     title_font = Font(size=14, bold=True)
+#     header_font = Font(size=12, bold=True)
+#     border = Border(left=Side(style='thin'), right=Side(style='thin'),
+#                     top=Side(style='thin'), bottom=Side(style='thin'))
+#     center = Alignment(horizontal='center')
+#     left = Alignment(horizontal='left')
+#     right = Alignment(horizontal='right')
+#     currency_format = '₹#,##0.00'
+#     header_fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+
+#     # Company Info
+#     top_lines = [
+#         "VVM AGRO INDUSTRIES (2020-26)",
+#         "SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD",
+#         "BESIDE TSIIC KALLAKAL, MUPPYREDDY PALLY VILLAGE",
+#         "MANOHARABAD MANDAL, MEDAK DIST.",
+#         "Contact : 9246565834",
+#         "GSTR-1 Reconciliation - HSN/SAC Summary",
+#         f"{start_date} to {end_date}",
+#         "GST Registration:",
+#         "36AANFV9684N1ZW (Comparison of Books & Portal Values)",
+#         "HSN/SAC Summary - HSN/SAC"
+#     ]
+
+#     for text in top_lines:
+#         row = ws.max_row + 1
+#         ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=12)
+#         cell = ws.cell(row=row, column=1, value=text)
+#         cell.font = title_font
+#         cell.alignment = center
+
+#     ws.append([])
+
+#     # Header Row
+#     headers = [
+#         "HSN/SAC", "Description", "UQC", "Quantity",
+#         "Total Amount (₹)", "Tax Rate (%)", "Taxable Amount (₹)",
+#         "IGST (₹)", "CGST (₹)", "SGST/UTGST (₹)", "Cess", "Tax Amount (₹)"
+#     ]
+#     ws.append(headers)
+#     r = ws.max_row
+#     for c in range(1, 13):
+#         cell = ws.cell(row=r, column=c)
+#         cell.font = header_font
+#         cell.alignment = center
+#         cell.fill = header_fill
+#         cell.border = border
+
+#     # Data Rows
+#     for hsn, data in summary.items():
+#         total_tax = data['igst'] + data['cgst'] + data['sgst']
+
+#         if total_tax == 0:
+#             continue  
+#         row = [
+#             hsn,
+#             data['description'],
+#             data['unit'],
+#             round(data['quantity'], 2),
+#             data['taxable'] + total_tax,
+#             data['rate'],
+#             data['taxable'],
+#             data['igst'],
+#             data['cgst'],
+#             data['sgst'],
+#             data['cess'],  # 'NA'
+#             total_tax
+#         ]
+#         ws.append(row)
+#         r = ws.max_row
+#         for c in range(1, 13):
+#             cell = ws.cell(row=r, column=c)
+#             cell.border = border
+
+#             # Format numeric ₹ columns
+#             if c in [5, 7, 8, 9, 10, 12] and isinstance(cell.value, (int, float)):
+#                 cell.alignment = right
+#                 cell.number_format = currency_format
+#             elif c == 6:  # Tax Rate (%)
+#                 cell.alignment = center
+#                 cell.number_format = '0.00'
+#             else:
+#                 cell.alignment = left
+
+#     # Auto column width
+#     for col in ws.columns:
+#         max_len = max(len(str(cell.value or '')) for cell in col)
+#         ws.column_dimensions[get_column_letter(col[0].column)].width = max(15, max_len + 2)
+
+#     # Output response
+#     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+#     filename = f"HSN_GST_Summary_{month_name}_{year}.xlsx"
+#     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+#     wb.save(response)
+#     return response
+
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+from .models import Voucher, VoucherProductItem
+from decimal import Decimal
+import calendar
+from datetime import datetime
+from collections import defaultdict
+
+# ... (keep all your other functions as they are) ...
+
+def export_hsn_gst_summary_excel(request, year, month):
     month_name = calendar.month_name[int(month)]
     start_date = f"1-{month_name[:3]}-{year}"
     end_day = calendar.monthrange(int(year), int(month))[1]
     end_date = f"{end_day}-{month_name[:3]}-{year}"
 
-    items = VoucherProductItem.objects.filter(
-        voucher__voucher_type='Buyer_Voucher',
-        voucher__created_at__year=year,
-        voucher__created_at__month=month
-    ).select_related('product')
+    # Get all sales vouchers for the period (same as sales register)
+    vouchers = Voucher.objects.filter(
+        voucher_type='Buyer_Voucher',
+        created_at__year=year,
+        created_at__month=month
+    ).order_by('created_at')
 
+    # Get all product items for these vouchers
+    items = VoucherProductItem.objects.filter(
+        voucher__in=vouchers
+    ).select_related('product', 'voucher')
+
+    # Create HSN summary based on sales register data
     summary = defaultdict(lambda: {
         'description': '',
         'unit': '',
-        'quantity': 0,
-        'taxable': 0,
-        'igst': 0,
-        'cgst': 0,
-        'sgst': 0,
+        'quantity': Decimal('0.00'),
+        'taxable': Decimal('0.00'),
+        'igst': Decimal('0.00'),
+        'cgst': Decimal('0.00'),
+        'sgst': Decimal('0.00'),
         'cess': 'NA',
-        'rate': 0
+        'rate': Decimal('0.00')
     })
 
     for item in items:
         key = item.product.hsn_sac
         summary[key]['description'] = item.product.name
         summary[key]['unit'] = item.product.unit_of_measurement
-        summary[key]['quantity'] += float(item.quantity)
-        summary[key]['taxable'] += float(item.subtotal)
-        summary[key]['igst'] += float(item.igst_amount)
-        summary[key]['cgst'] += float(item.cgst_amount)
-        summary[key]['sgst'] += float(item.sgst_amount)
-        summary[key]['rate'] = float(item.igst_percent + item.cgst_percent + item.sgst_percent)
+        summary[key]['quantity'] += Decimal(item.quantity)
+        summary[key]['taxable'] += Decimal(item.subtotal)
+        summary[key]['igst'] += Decimal(item.igst_amount)
+        summary[key]['cgst'] += Decimal(item.cgst_amount)
+        summary[key]['sgst'] += Decimal(item.sgst_amount)
+        
+        # Calculate the tax rate correctly
+        if Decimal(item.subtotal) > 0:
+            # Calculate the effective tax rate based on actual tax amounts
+            total_tax = Decimal(item.igst_amount) + Decimal(item.cgst_amount) + Decimal(item.sgst_amount)
+            summary[key]['rate'] = (total_tax / Decimal(item.subtotal)) * 100
+        else:
+            # If subtotal is 0, use the sum of tax percentages
+            summary[key]['rate'] = Decimal(item.igst_percent + item.cgst_percent + item.sgst_percent)
 
     wb = Workbook()
     ws = wb.active
@@ -1829,25 +1992,24 @@ def export_hsn_gst_summary_excel(request, year, month):
         cell.fill = header_fill
         cell.border = border
 
-    # Data Rows
+    # Data Rows - Include ALL HSN codes regardless of tax rate
     for hsn, data in summary.items():
         total_tax = data['igst'] + data['cgst'] + data['sgst']
-
-        if total_tax == 0:
-            continue  
+        total_amount = data['taxable'] + total_tax
+        
         row = [
             hsn,
             data['description'],
             data['unit'],
-            round(data['quantity'], 2),
-            data['taxable'] + total_tax,
-            data['rate'],
-            data['taxable'],
-            data['igst'],
-            data['cgst'],
-            data['sgst'],
+            float(data['quantity']),  # Convert to float for Excel compatibility
+            float(total_amount),
+            float(data['rate']),  # Convert to float for Excel compatibility
+            float(data['taxable']),
+            float(data['igst']),
+            float(data['cgst']),
+            float(data['sgst']),
             data['cess'],  # 'NA'
-            total_tax
+            float(total_tax)
         ]
         ws.append(row)
         r = ws.max_row
@@ -1861,6 +2023,9 @@ def export_hsn_gst_summary_excel(request, year, month):
                 cell.number_format = currency_format
             elif c == 6:  # Tax Rate (%)
                 cell.alignment = center
+                cell.number_format = '0.00'
+            elif c == 4:  # Quantity
+                cell.alignment = right
                 cell.number_format = '0.00'
             else:
                 cell.alignment = left
