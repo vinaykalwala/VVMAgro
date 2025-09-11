@@ -1720,11 +1720,12 @@ def download_sales_summary_page(request):
 
 
 from django.shortcuts import render
-import datetime
+from datetime import datetime
+
 
 def hsn_summary_form(request):
-    current_year = datetime.datetime.now().year
-    years = list(range(current_year, current_year - 100, -1))  # Last 10 years
+    current_year = datetime.now().year
+    years = list(range(current_year, current_year - 100, -1))
     months = [
         (1, 'January'), (2, 'February'), (3, 'March'),
         (4, 'April'), (5, 'May'), (6, 'June'),
