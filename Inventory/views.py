@@ -1743,6 +1743,7 @@ from decimal import Decimal
 import calendar
 from datetime import datetime
 from django.utils.text import slugify
+from django.db.models import F, Q
 from .models import VoucherProductItem
 
 def export_hsn_gst_summary_excel(request, year, month):
@@ -1768,10 +1769,10 @@ def export_hsn_gst_summary_excel(request, year, month):
         voucher__voucher_type='Buyer_Voucher',
         voucher__created_at__year=year,
         voucher__created_at__month=month
-    ).exclude(
-        cgst_amount=0,
-        sgst_amount=0,
-        igst_amount=0
+    ).annotate(
+        total_tax=F('cgst_amount') + F('sgst_amount') + F('igst_amount')
+    ).filter(
+        total_tax__gt=0
     ).select_related('product')
 
     # Aggregate data
@@ -1849,6 +1850,8 @@ def export_hsn_gst_summary_excel(request, year, month):
     # Data Rows
     for hsn, data in summary.items():
         total_tax = data['igst'] + data['cgst'] + data['sgst']
+        if total_tax == 0:  # Additional safety check
+            continue
         row = [
             hsn,
             data['description'],
