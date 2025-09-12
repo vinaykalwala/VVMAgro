@@ -1733,6 +1733,8 @@ def hsn_summary_form(request):
         (10, 'October'), (11, 'November'), (12, 'December')
     ]
     return render(request, 'export_hsn_summary.html', {'years': years, 'months': months})
+
+
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
@@ -1742,7 +1744,7 @@ from decimal import Decimal
 import calendar
 from datetime import datetime
 from django.utils.text import slugify
-from django.db.models import F
+from django.db.models import F, ExpressionWrapper, DecimalField, Q
 from .models import Voucher, VoucherProductItem
 
 def export_hsn_gst_summary_excel(request, year, month):
@@ -1775,11 +1777,16 @@ def export_hsn_gst_summary_excel(request, year, month):
     ).values_list('id', flat=True)
 
     # Fetch items from qualifying vouchers and exclude zero-tax items
+    # Use ExpressionWrapper to properly handle the comparison
     items = VoucherProductItem.objects.filter(
         voucher_id__in=qualifying_voucher_ids
+    ).annotate(
+        total_tax=ExpressionWrapper(
+            F('igst_amount') + F('cgst_amount') + F('sgst_amount'),
+            output_field=DecimalField()
+        )
     ).filter(
-        # Exclude items with zero tax
-        F('igst_amount') + F('cgst_amount') + F('sgst_amount') > Decimal('0')
+        total_tax__gt=Decimal('0')
     ).select_related('product')
 
     # Aggregate data
@@ -1901,7 +1908,6 @@ def export_hsn_gst_summary_excel(request, year, month):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     wb.save(response)
     return response
-
 # from django.http import HttpResponse
 # from openpyxl import Workbook
 # from openpyxl.utils import get_column_letter
