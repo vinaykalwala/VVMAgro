@@ -1743,8 +1743,8 @@ from decimal import Decimal
 import calendar
 from datetime import datetime
 from django.utils.text import slugify
-from django.db.models import F, Q
-from .models import VoucherProductItem
+from django.db.models import F
+from .models import Voucher, VoucherProductItem
 
 def export_hsn_gst_summary_excel(request, year, month):
     # Input validation
@@ -1764,15 +1764,20 @@ def export_hsn_gst_summary_excel(request, year, month):
     end_day = calendar.monthrange(year, month)[1]
     end_date = datetime(year, month, end_day).strftime('%d-%m-%Y')
 
-    # Fetch data with tax filter
-    items = VoucherProductItem.objects.filter(
-        voucher__voucher_type='Buyer_Voucher',
-        voucher__created_at__year=year,
-        voucher__created_at__month=month
+    # Get qualifying voucher IDs (vouchers with total GST > 0)
+    qualifying_voucher_ids = Voucher.objects.filter(
+        voucher_type='Buyer_Voucher',
+        created_at__year=year,
+        created_at__month=month
     ).annotate(
-        total_tax=F('cgst_amount') + F('sgst_amount') + F('igst_amount')
+        total_voucher_tax=F('total_cgst') + F('total_sgst') + F('total_igst')
     ).filter(
-        total_tax__gt=0
+        total_voucher_tax__gt=Decimal('0')
+    ).values_list('id', flat=True)
+
+    # Fetch ALL items from qualifying vouchers (including zero-tax items)
+    items = VoucherProductItem.objects.filter(
+        voucher_id__in=qualifying_voucher_ids
     ).select_related('product')
 
     # Aggregate data
@@ -1785,12 +1790,13 @@ def export_hsn_gst_summary_excel(request, year, month):
     for item in items:
         key = item.product.hsn_sac
         summary[key]['description'] = item.product.name
-        summary[key]['unit'] = item.product.unit_of_measurement
+        summary[key]['unit'] = item.product.unit_of_measurement or ''
         summary[key]['quantity'] += item.quantity
         summary[key]['taxable'] += item.subtotal
         summary[key]['igst'] += item.igst_amount
         summary[key]['cgst'] += item.cgst_amount
         summary[key]['sgst'] += item.sgst_amount
+        # Use the item's rate (will be 0 for exempt items)
         summary[key]['rate'] = item.igst_percent + item.cgst_percent + item.sgst_percent
 
     # Create workbook
@@ -1847,13 +1853,11 @@ def export_hsn_gst_summary_excel(request, year, month):
         cell.fill = header_fill
         cell.border = border
 
-    # Data Rows
+    # Data Rows - Include all HSNs, even with zero tax (exempt/nil-rated)
     for hsn, data in summary.items():
         total_tax = data['igst'] + data['cgst'] + data['sgst']
-        if total_tax == 0:  # Additional safety check
-            continue
         row = [
-            hsn,
+            hsn or '',
             data['description'],
             data['unit'],
             round(float(data['quantity']), 2),
@@ -1882,7 +1886,10 @@ def export_hsn_gst_summary_excel(request, year, month):
 
     # Auto column width
     for col in range(1, 13):
-        max_len = max(len(str(ws.cell(row=r, column=col).value or '')) for r in range(1, ws.max_row + 1))
+        max_len = 0
+        for row_cell in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=col, max_col=col, values_only=True):
+            cell_value = row_cell[0] if row_cell else ''
+            max_len = max(max_len, len(str(cell_value or '')))
         max_len = max(max_len, len(headers[col-1]))
         ws.column_dimensions[get_column_letter(col)].width = max(15, max_len + 2)
 
