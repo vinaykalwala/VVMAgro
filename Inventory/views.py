@@ -1733,7 +1733,6 @@ def hsn_summary_form(request):
         (10, 'October'), (11, 'November'), (12, 'December')
     ]
     return render(request, 'export_hsn_summary.html', {'years': years, 'months': months})
-
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
@@ -1775,9 +1774,12 @@ def export_hsn_gst_summary_excel(request, year, month):
         total_voucher_tax__gt=Decimal('0')
     ).values_list('id', flat=True)
 
-    # Fetch ALL items from qualifying vouchers (including zero-tax items)
+    # Fetch items from qualifying vouchers and exclude zero-tax items
     items = VoucherProductItem.objects.filter(
         voucher_id__in=qualifying_voucher_ids
+    ).filter(
+        # Exclude items with zero tax
+        F('igst_amount') + F('cgst_amount') + F('sgst_amount') > Decimal('0')
     ).select_related('product')
 
     # Aggregate data
@@ -1796,7 +1798,7 @@ def export_hsn_gst_summary_excel(request, year, month):
         summary[key]['igst'] += item.igst_amount
         summary[key]['cgst'] += item.cgst_amount
         summary[key]['sgst'] += item.sgst_amount
-        # Use the item's rate (will be 0 for exempt items)
+        # Use the item's rate (will be non-zero since we filtered zero-tax items)
         summary[key]['rate'] = item.igst_percent + item.cgst_percent + item.sgst_percent
 
     # Create workbook
@@ -1853,7 +1855,7 @@ def export_hsn_gst_summary_excel(request, year, month):
         cell.fill = header_fill
         cell.border = border
 
-    # Data Rows - Include all HSNs, even with zero tax (exempt/nil-rated)
+    # Data Rows - Only include HSNs with tax (already filtered)
     for hsn, data in summary.items():
         total_tax = data['igst'] + data['cgst'] + data['sgst']
         row = [
