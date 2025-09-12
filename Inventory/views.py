@@ -1573,140 +1573,6 @@ def add_finished_product_stock(request, pk):
     })
 
 
-# from django.http import HttpResponse
-# from openpyxl import Workbook
-# from openpyxl.utils import get_column_letter
-# from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
-# from .models import Voucher
-# from decimal import Decimal
-# import calendar
-# from datetime import datetime
-
-# def export_sales_summary_excel(request, year, month):
-#     month_name = calendar.month_name[int(month)]
-#     vouchers = Voucher.objects.filter(
-#         voucher_type='Buyer_Voucher',
-#         created_at__year=year,
-#         created_at__month=month
-#     ).order_by('created_at')
-
-#     wb = Workbook()
-#     ws = wb.active
-#     ws.title = f"Sales {month_name} {year}"
-
-#     # === Define styles ===
-#     title_font = Font(size=16, bold=True)
-#     header_font = Font(size=12, bold=True)
-#     currency_format = '₹#,##0.00'
-#     center_align = Alignment(horizontal='center')
-#     left_align = Alignment(horizontal='left')
-#     header_fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
-#     thin_border = Border(left=Side(style='thin'), right=Side(style='thin'),
-#                          top=Side(style='thin'), bottom=Side(style='thin'))
-
-#     # === Company Header Section ===
-#     company_info = [
-#         "VVM AGRO INDUSTRIES (2020-26)",
-#         "SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD",
-#         "BESIDE TSIIC KALLAKAL, MUPPYREDDY PALLY VILLAGE",
-#         "MANOHARABAD MANDAL, MEDAK DIST.",
-#         "Contact : 9246565834",
-#         "Sales Register",
-#         f"1-{month_name[:3]}-{year} to {calendar.monthrange(int(year), int(month))[1]}-{month_name[:3]}-{year}"
-#     ]
-
-#     for line in company_info:
-#         row_idx = ws.max_row + 1
-#         ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=10)
-#         cell = ws.cell(row=row_idx, column=1, value=line)
-#         cell.font = title_font
-#         cell.alignment = center_align
-
-#     ws.append([])  # Empty row
-
-#     # === Table Header ===
-#     headers = [
-#         "Date", "Particulars", "Buyer", "Buyer Address", "Voucher Type", "Voucher No.",
-#         "GSTIN/UIN", "Value", "Gross Total", "INTER STATE SALES", "Output IGST",
-#         "SALES", "Output CGST", "Output SGST", "ROUND OFF ON SALES", "FREIGHT"
-#     ]
-#     ws.append(headers)
-#     header_row = ws.max_row
-
-#     for col_num, header in enumerate(headers, 1):
-#         cell = ws.cell(row=header_row, column=col_num)
-#         cell.font = header_font
-#         cell.alignment = center_align
-#         cell.fill = header_fill
-#         cell.border = thin_border
-
-#     ws.append([])  # Empty row
-
-#     # === Data Rows ===
-#     for voucher in vouchers:
-#         party = voucher.party
-#         cgst = voucher.total_cgst or Decimal('0.00')
-#         sgst = voucher.total_sgst or Decimal('0.00')
-#         igst = voucher.total_igst or Decimal('0.00')
-#         if cgst == 0 and sgst == 0 and igst == 0:
-#             continue
-
-#         round_off = voucher.round_off_on_sales or Decimal('0.00')
-#         freight = voucher.freight_charge or Decimal('0.00')
-#         subtotal = voucher.total_subtotal or Decimal('0.00')
-#         total = voucher.grand_total or Decimal('0.00')
-#         is_inter_state = bool(igst > 0)
-#         interstate_sales = subtotal if is_inter_state else ''
-#         local_sales = subtotal if not is_inter_state else ''
-
-#         row_data = [
-#             voucher.created_at.strftime('%d-%m-%Y'),
-#             party.name,
-#             party.name,
-#             party.address,
-#             "Sales",
-#             voucher.voucher_number,
-#             party.gstin_uin_number,
-#             subtotal,
-#             total,
-#             interstate_sales,
-#             igst,
-#             local_sales,
-#             cgst,
-#             sgst,
-#             round_off,
-#             freight
-#         ]
-
-#         ws.append(row_data)
-#         current_row = ws.max_row
-
-#         # Apply formatting to each cell
-#         for col_index, value in enumerate(row_data, start=1):
-#             cell = ws.cell(row=current_row, column=col_index)
-#             cell.border = thin_border
-#             if isinstance(value, Decimal) or isinstance(value, float):
-#                 cell.number_format = currency_format
-#                 cell.alignment = right_align = Alignment(horizontal='right')
-#             else:
-#                 cell.alignment = left_align
-
-#     # === Auto-adjust column widths ===
-#     for col in ws.columns:
-#         max_length = max(len(str(cell.value or '')) for cell in col)
-#         col_letter = get_column_letter(col[0].column)
-#         ws.column_dimensions[col_letter].width = max(14, max_length + 2)
-
-#     # === Freeze header row (after company section) ===
-#     ws.freeze_panes = f"A{header_row + 2}"
-
-#     # === Return file response ===
-#     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-#     filename = f"Sales_Summary_{month_name}_{year}.xlsx"
-#     response['Content-Disposition'] = f'attachment; filename={filename}'
-#     wb.save(response)
-#     return response
-
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
@@ -1718,16 +1584,10 @@ from datetime import datetime
 
 def export_sales_summary_excel(request, year, month):
     month_name = calendar.month_name[int(month)]
-    
-    # Filter vouchers to exclude those with zero GST
     vouchers = Voucher.objects.filter(
         voucher_type='Buyer_Voucher',
         created_at__year=year,
         created_at__month=month
-    ).exclude(  # Exclude vouchers with all zero GST values
-        total_cgst=Decimal('0.00'),
-        total_sgst=Decimal('0.00'),
-        total_igst=Decimal('0.00')
     ).order_by('created_at')
 
     wb = Workbook()
@@ -1740,7 +1600,6 @@ def export_sales_summary_excel(request, year, month):
     currency_format = '₹#,##0.00'
     center_align = Alignment(horizontal='center')
     left_align = Alignment(horizontal='left')
-    right_align = Alignment(horizontal='right')  # Define right_align properly
     header_fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
     thin_border = Border(left=Side(style='thin'), right=Side(style='thin'),
                          top=Side(style='thin'), bottom=Side(style='thin'))
@@ -1758,7 +1617,7 @@ def export_sales_summary_excel(request, year, month):
 
     for line in company_info:
         row_idx = ws.max_row + 1
-        ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=16)  # Changed to 16 columns
+        ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=10)
         cell = ws.cell(row=row_idx, column=1, value=line)
         cell.font = title_font
         cell.alignment = center_align
@@ -1781,29 +1640,33 @@ def export_sales_summary_excel(request, year, month):
         cell.fill = header_fill
         cell.border = thin_border
 
+    ws.append([])  # Empty row
+
     # === Data Rows ===
     for voucher in vouchers:
         party = voucher.party
         cgst = voucher.total_cgst or Decimal('0.00')
         sgst = voucher.total_sgst or Decimal('0.00')
         igst = voucher.total_igst or Decimal('0.00')
+        if cgst == 0 and sgst == 0 and igst == 0:
+            continue
 
         round_off = voucher.round_off_on_sales or Decimal('0.00')
         freight = voucher.freight_charge or Decimal('0.00')
         subtotal = voucher.total_subtotal or Decimal('0.00')
         total = voucher.grand_total or Decimal('0.00')
-        is_inter_state = igst > Decimal('0.00')
+        is_inter_state = bool(igst > 0)
         interstate_sales = subtotal if is_inter_state else ''
         local_sales = subtotal if not is_inter_state else ''
 
         row_data = [
             voucher.created_at.strftime('%d-%m-%Y'),
-            party.name if party else '',
-            party.name if party else '',
-            party.address if party else '',
+            party.name,
+            party.name,
+            party.address,
             "Sales",
-            voucher.voucher_number or '',
-            party.gstin_uin_number if party else '',
+            voucher.voucher_number,
+            party.gstin_uin_number,
             subtotal,
             total,
             interstate_sales,
@@ -1822,31 +1685,20 @@ def export_sales_summary_excel(request, year, month):
         for col_index, value in enumerate(row_data, start=1):
             cell = ws.cell(row=current_row, column=col_index)
             cell.border = thin_border
-            if isinstance(value, (Decimal, float, int)) and value != '':
+            if isinstance(value, Decimal) or isinstance(value, float):
                 cell.number_format = currency_format
-                cell.alignment = right_align
+                cell.alignment = right_align = Alignment(horizontal='right')
             else:
                 cell.alignment = left_align
 
     # === Auto-adjust column widths ===
-    for col in range(1, 17):  # Adjust for 16 columns
-        max_length = 0
-        col_letter = get_column_letter(col)
-        
-        # Check header length
-        if col <= len(headers):
-            max_length = max(max_length, len(str(headers[col-1])))
-        
-        # Check data rows
-        for row in range(header_row + 1, ws.max_row + 1):
-            cell_value = ws.cell(row=row, column=col).value
-            if cell_value is not None:
-                max_length = max(max_length, len(str(cell_value)))
-        
+    for col in ws.columns:
+        max_length = max(len(str(cell.value or '')) for cell in col)
+        col_letter = get_column_letter(col[0].column)
         ws.column_dimensions[col_letter].width = max(14, max_length + 2)
 
-    # === Freeze header row ===
-    ws.freeze_panes = f"A{header_row + 1}"
+    # === Freeze header row (after company section) ===
+    ws.freeze_panes = f"A{header_row + 2}"
 
     # === Return file response ===
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -1854,6 +1706,154 @@ def export_sales_summary_excel(request, year, month):
     response['Content-Disposition'] = f'attachment; filename={filename}'
     wb.save(response)
     return response
+
+# from django.http import HttpResponse
+# from openpyxl import Workbook
+# from openpyxl.utils import get_column_letter
+# from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+# from .models import Voucher
+# from decimal import Decimal
+# import calendar
+# from datetime import datetime
+
+# def export_sales_summary_excel(request, year, month):
+#     month_name = calendar.month_name[int(month)]
+    
+#     # Filter vouchers to exclude those with zero GST
+#     vouchers = Voucher.objects.filter(
+#         voucher_type='Buyer_Voucher',
+#         created_at__year=year,
+#         created_at__month=month
+#     ).exclude(  # Exclude vouchers with all zero GST values
+#         total_cgst=Decimal('0.00'),
+#         total_sgst=Decimal('0.00'),
+#         total_igst=Decimal('0.00')
+#     ).order_by('created_at')
+
+#     wb = Workbook()
+#     ws = wb.active
+#     ws.title = f"Sales {month_name} {year}"
+
+#     # === Define styles ===
+#     title_font = Font(size=16, bold=True)
+#     header_font = Font(size=12, bold=True)
+#     currency_format = '₹#,##0.00'
+#     center_align = Alignment(horizontal='center')
+#     left_align = Alignment(horizontal='left')
+#     right_align = Alignment(horizontal='right')  # Define right_align properly
+#     header_fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
+#     thin_border = Border(left=Side(style='thin'), right=Side(style='thin'),
+#                          top=Side(style='thin'), bottom=Side(style='thin'))
+
+#     # === Company Header Section ===
+#     company_info = [
+#         "VVM AGRO INDUSTRIES (2020-26)",
+#         "SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD",
+#         "BESIDE TSIIC KALLAKAL, MUPPYREDDY PALLY VILLAGE",
+#         "MANOHARABAD MANDAL, MEDAK DIST.",
+#         "Contact : 9246565834",
+#         "Sales Register",
+#         f"1-{month_name[:3]}-{year} to {calendar.monthrange(int(year), int(month))[1]}-{month_name[:3]}-{year}"
+#     ]
+
+#     for line in company_info:
+#         row_idx = ws.max_row + 1
+#         ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=16)  # Changed to 16 columns
+#         cell = ws.cell(row=row_idx, column=1, value=line)
+#         cell.font = title_font
+#         cell.alignment = center_align
+
+#     ws.append([])  # Empty row
+
+#     # === Table Header ===
+#     headers = [
+#         "Date", "Particulars", "Buyer", "Buyer Address", "Voucher Type", "Voucher No.",
+#         "GSTIN/UIN", "Value", "Gross Total", "INTER STATE SALES", "Output IGST",
+#         "SALES", "Output CGST", "Output SGST", "ROUND OFF ON SALES", "FREIGHT"
+#     ]
+#     ws.append(headers)
+#     header_row = ws.max_row
+
+#     for col_num, header in enumerate(headers, 1):
+#         cell = ws.cell(row=header_row, column=col_num)
+#         cell.font = header_font
+#         cell.alignment = center_align
+#         cell.fill = header_fill
+#         cell.border = thin_border
+
+#     # === Data Rows ===
+#     for voucher in vouchers:
+#         party = voucher.party
+#         cgst = voucher.total_cgst or Decimal('0.00')
+#         sgst = voucher.total_sgst or Decimal('0.00')
+#         igst = voucher.total_igst or Decimal('0.00')
+
+#         round_off = voucher.round_off_on_sales or Decimal('0.00')
+#         freight = voucher.freight_charge or Decimal('0.00')
+#         subtotal = voucher.total_subtotal or Decimal('0.00')
+#         total = voucher.grand_total or Decimal('0.00')
+#         is_inter_state = igst > Decimal('0.00')
+#         interstate_sales = subtotal if is_inter_state else ''
+#         local_sales = subtotal if not is_inter_state else ''
+
+#         row_data = [
+#             voucher.created_at.strftime('%d-%m-%Y'),
+#             party.name if party else '',
+#             party.name if party else '',
+#             party.address if party else '',
+#             "Sales",
+#             voucher.voucher_number or '',
+#             party.gstin_uin_number if party else '',
+#             subtotal,
+#             total,
+#             interstate_sales,
+#             igst,
+#             local_sales,
+#             cgst,
+#             sgst,
+#             round_off,
+#             freight
+#         ]
+
+#         ws.append(row_data)
+#         current_row = ws.max_row
+
+#         # Apply formatting to each cell
+#         for col_index, value in enumerate(row_data, start=1):
+#             cell = ws.cell(row=current_row, column=col_index)
+#             cell.border = thin_border
+#             if isinstance(value, (Decimal, float, int)) and value != '':
+#                 cell.number_format = currency_format
+#                 cell.alignment = right_align
+#             else:
+#                 cell.alignment = left_align
+
+#     # === Auto-adjust column widths ===
+#     for col in range(1, 17):  # Adjust for 16 columns
+#         max_length = 0
+#         col_letter = get_column_letter(col)
+        
+#         # Check header length
+#         if col <= len(headers):
+#             max_length = max(max_length, len(str(headers[col-1])))
+        
+#         # Check data rows
+#         for row in range(header_row + 1, ws.max_row + 1):
+#             cell_value = ws.cell(row=row, column=col).value
+#             if cell_value is not None:
+#                 max_length = max(max_length, len(str(cell_value)))
+        
+#         ws.column_dimensions[col_letter].width = max(14, max_length + 2)
+
+#     # === Freeze header row ===
+#     ws.freeze_panes = f"A{header_row + 1}"
+
+#     # === Return file response ===
+#     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+#     filename = f"Sales_Summary_{month_name}_{year}.xlsx"
+#     response['Content-Disposition'] = f'attachment; filename={filename}'
+#     wb.save(response)
+#     return response
 
 
 import datetime as dt
