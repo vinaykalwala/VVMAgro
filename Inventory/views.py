@@ -2239,11 +2239,10 @@ def export_sales_summary_excel(request, year, month):
     month_name = calendar.month_name[int(month)]
     end_day = calendar.monthrange(int(year), int(month))[1]
 
-    from django.utils.timezone import make_aware
     from datetime import datetime
 
-    start_date = make_aware(datetime(int(year), int(month), 1))
-    end_date = make_aware(datetime(int(year), int(month), end_day))
+    start_date = datetime(int(year), int(month), 1)
+    end_date = datetime(int(year), int(month), end_day, 23, 59, 59)
 
     vouchers = Voucher.objects.filter(
         voucher_type="Buyer_Voucher",
@@ -2254,7 +2253,6 @@ def export_sales_summary_excel(request, year, month):
     ws = wb.active
     ws.title = "Sales Summary"
 
-    # Header row
     ws.append([
         "Voucher No", "Date", "Party", "HSN Codes", "Products",
         "Total Amount", "IGST", "CGST", "SGST", "Grand Total"
@@ -2262,8 +2260,6 @@ def export_sales_summary_excel(request, year, month):
 
     for voucher in vouchers:
         hsn_set, product_set = set(), set()
-
-        # Safe related_name handling
         for item in voucher.items.all():
             hsn_set.add(normalize_hsn(item.product.hsn_sac))
             product_set.add(item.product.name)
@@ -2281,11 +2277,14 @@ def export_sales_summary_excel(request, year, month):
             voucher.grand_total,
         ])
 
-    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
     filename = f"Sales_Summary_{month_name}_{year}.xlsx"
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
     wb.save(response)
     return response
+
 
 
 def export_hsn_gst_summary_excel(request, year, month):
