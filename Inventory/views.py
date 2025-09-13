@@ -2267,7 +2267,7 @@ def export_sales_summary_excel(request, year, month):
         ws.append([
             voucher.voucher_number,
             voucher.created_at.strftime("%d-%b-%Y"),
-            voucher.party.party_name if voucher.party else "N/A",
+            voucher.party.name if voucher.party else "N/A",
             ", ".join(hsn_set),
             ", ".join(product_set),
             voucher.total_subtotal,
