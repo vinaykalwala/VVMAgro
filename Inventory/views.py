@@ -1572,7 +1572,6 @@ def add_finished_product_stock(request, pk):
         'formset': formset,
     })
 
-
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
@@ -1594,7 +1593,7 @@ def export_sales_summary_excel(request, year, month):
     ws = wb.active
     ws.title = f"Sales {month_name} {year}"
 
-    # === Define styles ===
+    # Define styles
     title_font = Font(size=16, bold=True)
     header_font = Font(size=12, bold=True)
     currency_format = '₹#,##0.00'
@@ -1604,7 +1603,7 @@ def export_sales_summary_excel(request, year, month):
     thin_border = Border(left=Side(style='thin'), right=Side(style='thin'),
                          top=Side(style='thin'), bottom=Side(style='thin'))
 
-    # === Company Header Section ===
+    # Company Header Section
     company_info = [
         "VVM AGRO INDUSTRIES (2020-26)",
         "SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD",
@@ -1624,7 +1623,7 @@ def export_sales_summary_excel(request, year, month):
 
     ws.append([])  # Empty row
 
-    # === Table Header ===
+    # Table Header
     headers = [
         "Date", "Particulars", "Buyer", "Buyer Address", "Voucher Type", "Voucher No.",
         "GSTIN/UIN", "Value", "Gross Total", "INTER STATE SALES", "Output IGST",
@@ -1642,14 +1641,14 @@ def export_sales_summary_excel(request, year, month):
 
     ws.append([])  # Empty row
 
-    # === Data Rows ===
+    # Data Rows
     for voucher in vouchers:
         party = voucher.party
         cgst = voucher.total_cgst or Decimal('0.00')
         sgst = voucher.total_sgst or Decimal('0.00')
         igst = voucher.total_igst or Decimal('0.00')
         if cgst == 0 and sgst == 0 and igst == 0:
-            continue
+            continue  # Skip zero-tax vouchers (unchanged)
 
         round_off = voucher.round_off_on_sales or Decimal('0.00')
         freight = voucher.freight_charge or Decimal('0.00')
@@ -1691,21 +1690,155 @@ def export_sales_summary_excel(request, year, month):
             else:
                 cell.alignment = left_align
 
-    # === Auto-adjust column widths ===
+    # Auto-adjust column widths
     for col in ws.columns:
         max_length = max(len(str(cell.value or '')) for cell in col)
         col_letter = get_column_letter(col[0].column)
         ws.column_dimensions[col_letter].width = max(14, max_length + 2)
 
-    # === Freeze header row (after company section) ===
+    # Freeze header row (after company section)
     ws.freeze_panes = f"A{header_row + 2}"
 
-    # === Return file response ===
+    # Return file response
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     filename = f"Sales_Summary_{month_name}_{year}.xlsx"
     response['Content-Disposition'] = f'attachment; filename={filename}'
     wb.save(response)
     return response
+
+# from django.http import HttpResponse
+# from openpyxl import Workbook
+# from openpyxl.utils import get_column_letter
+# from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+# from .models import Voucher
+# from decimal import Decimal
+# import calendar
+# from datetime import datetime
+
+# def export_sales_summary_excel(request, year, month):
+#     month_name = calendar.month_name[int(month)]
+#     vouchers = Voucher.objects.filter(
+#         voucher_type='Buyer_Voucher',
+#         created_at__year=year,
+#         created_at__month=month
+#     ).order_by('created_at')
+
+#     wb = Workbook()
+#     ws = wb.active
+#     ws.title = f"Sales {month_name} {year}"
+
+#     # === Define styles ===
+#     title_font = Font(size=16, bold=True)
+#     header_font = Font(size=12, bold=True)
+#     currency_format = '₹#,##0.00'
+#     center_align = Alignment(horizontal='center')
+#     left_align = Alignment(horizontal='left')
+#     header_fill = PatternFill(start_color="C0C0C0", end_color="C0C0C0", fill_type="solid")
+#     thin_border = Border(left=Side(style='thin'), right=Side(style='thin'),
+#                          top=Side(style='thin'), bottom=Side(style='thin'))
+
+#     # === Company Header Section ===
+#     company_info = [
+#         "VVM AGRO INDUSTRIES (2020-26)",
+#         "SURVEY NO. 247/AA AND 249/A1, KONDARPUR ROAD",
+#         "BESIDE TSIIC KALLAKAL, MUPPYREDDY PALLY VILLAGE",
+#         "MANOHARABAD MANDAL, MEDAK DIST.",
+#         "Contact : 9246565834",
+#         "Sales Register",
+#         f"1-{month_name[:3]}-{year} to {calendar.monthrange(int(year), int(month))[1]}-{month_name[:3]}-{year}"
+#     ]
+
+#     for line in company_info:
+#         row_idx = ws.max_row + 1
+#         ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=10)
+#         cell = ws.cell(row=row_idx, column=1, value=line)
+#         cell.font = title_font
+#         cell.alignment = center_align
+
+#     ws.append([])  # Empty row
+
+#     # === Table Header ===
+#     headers = [
+#         "Date", "Particulars", "Buyer", "Buyer Address", "Voucher Type", "Voucher No.",
+#         "GSTIN/UIN", "Value", "Gross Total", "INTER STATE SALES", "Output IGST",
+#         "SALES", "Output CGST", "Output SGST", "ROUND OFF ON SALES", "FREIGHT"
+#     ]
+#     ws.append(headers)
+#     header_row = ws.max_row
+
+#     for col_num, header in enumerate(headers, 1):
+#         cell = ws.cell(row=header_row, column=col_num)
+#         cell.font = header_font
+#         cell.alignment = center_align
+#         cell.fill = header_fill
+#         cell.border = thin_border
+
+#     ws.append([])  # Empty row
+
+#     # === Data Rows ===
+#     for voucher in vouchers:
+#         party = voucher.party
+#         cgst = voucher.total_cgst or Decimal('0.00')
+#         sgst = voucher.total_sgst or Decimal('0.00')
+#         igst = voucher.total_igst or Decimal('0.00')
+#         if cgst == 0 and sgst == 0 and igst == 0:
+#             continue
+
+#         round_off = voucher.round_off_on_sales or Decimal('0.00')
+#         freight = voucher.freight_charge or Decimal('0.00')
+#         subtotal = voucher.total_subtotal or Decimal('0.00')
+#         total = voucher.grand_total or Decimal('0.00')
+#         is_inter_state = bool(igst > 0)
+#         interstate_sales = subtotal if is_inter_state else ''
+#         local_sales = subtotal if not is_inter_state else ''
+
+#         row_data = [
+#             voucher.created_at.strftime('%d-%m-%Y'),
+#             party.name,
+#             party.name,
+#             party.address,
+#             "Sales",
+#             voucher.voucher_number,
+#             party.gstin_uin_number,
+#             subtotal,
+#             total,
+#             interstate_sales,
+#             igst,
+#             local_sales,
+#             cgst,
+#             sgst,
+#             round_off,
+#             freight
+#         ]
+
+#         ws.append(row_data)
+#         current_row = ws.max_row
+
+#         # Apply formatting to each cell
+#         for col_index, value in enumerate(row_data, start=1):
+#             cell = ws.cell(row=current_row, column=col_index)
+#             cell.border = thin_border
+#             if isinstance(value, Decimal) or isinstance(value, float):
+#                 cell.number_format = currency_format
+#                 cell.alignment = right_align = Alignment(horizontal='right')
+#             else:
+#                 cell.alignment = left_align
+
+#     # === Auto-adjust column widths ===
+#     for col in ws.columns:
+#         max_length = max(len(str(cell.value or '')) for cell in col)
+#         col_letter = get_column_letter(col[0].column)
+#         ws.column_dimensions[col_letter].width = max(14, max_length + 2)
+
+#     # === Freeze header row (after company section) ===
+#     ws.freeze_panes = f"A{header_row + 2}"
+
+#     # === Return file response ===
+#     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+#     filename = f"Sales_Summary_{month_name}_{year}.xlsx"
+#     response['Content-Disposition'] = f'attachment; filename={filename}'
+#     wb.save(response)
+#     return response
 
 # from django.http import HttpResponse
 # from openpyxl import Workbook
@@ -2067,9 +2200,9 @@ from decimal import Decimal
 import calendar
 from datetime import datetime
 from django.utils.text import slugify
-from django.db.models import F, ExpressionWrapper, DecimalField, Q
+from django.db.models import F, ExpressionWrapper, DecimalField
 from .models import Voucher, VoucherProductItem
-import re  # Added for HSN normalization
+import re
 
 def export_hsn_gst_summary_excel(request, year, month):
     # Input validation
@@ -2089,8 +2222,8 @@ def export_hsn_gst_summary_excel(request, year, month):
     end_day = calendar.monthrange(year, month)[1]
     end_date = datetime(year, month, end_day).strftime('%d-%m-%Y')
 
-    # Get qualifying voucher IDs (vouchers with total GST > 0)
-    qualifying_voucher_ids = Voucher.objects.filter(
+    # Get qualifying vouchers (with total GST > 0)
+    qualifying_vouchers = Voucher.objects.filter(
         voucher_type='Buyer_Voucher',
         created_at__year=year,
         created_at__month=month
@@ -2098,10 +2231,15 @@ def export_hsn_gst_summary_excel(request, year, month):
         total_voucher_tax=F('total_cgst') + F('total_sgst') + F('total_igst')
     ).filter(
         total_voucher_tax__gt=Decimal('0')
-    ).values_list('id', flat=True)
+    )
+    qualifying_voucher_ids = list(qualifying_vouchers.values_list('id', flat=True))
 
-    # Fetch items from qualifying vouchers and exclude zero-tax items
-    # Use ExpressionWrapper to properly handle the comparison
+    # Sum adjustments (freight + round-off)
+    sum_round_off = sum((v.round_off_on_sales or Decimal('0')) for v in qualifying_vouchers)
+    sum_freight = sum((v.freight_charge or Decimal('0')) for v in qualifying_vouchers)
+    total_adjustments = sum_round_off + sum_freight
+
+    # Fetch ALL items from qualifying vouchers (include zero-tax items)
     items = VoucherProductItem.objects.filter(
         voucher_id__in=qualifying_voucher_ids
     ).annotate(
@@ -2109,13 +2247,11 @@ def export_hsn_gst_summary_excel(request, year, month):
             F('igst_amount') + F('cgst_amount') + F('sgst_amount'),
             output_field=DecimalField()
         )
-    ).filter(
-        total_tax__gt=Decimal('0')
     ).select_related('product')
 
     # Aggregate data
     summary = defaultdict(lambda: {
-        'descriptions': set(),  # Changed: Collect unique descriptions
+        'descriptions': set(),
         'unit': '', 'quantity': Decimal('0'),
         'taxable': Decimal('0'), 'igst': Decimal('0'), 'cgst': Decimal('0'),
         'sgst': Decimal('0'), 'cess': 'NA', 'rate': Decimal('0')
@@ -2123,18 +2259,30 @@ def export_hsn_gst_summary_excel(request, year, month):
 
     for item in items:
         hsn_raw = item.product.hsn_sac or ''
-        key = re.sub(r'\D', '', str(hsn_raw))  # Normalize: Strip non-digits (e.g., "7318" and "(7318)" -> "7318")
-        if not key:  # Skip if no valid HSN after normalization
+        key = re.sub(r'\D', '', str(hsn_raw))  # Normalize HSN
+        if not key:
+            print(f"Skipping item with no HSN: {item.product.name}, Voucher: {item.voucher.voucher_number}, Subtotal: {item.subtotal}")
             continue
-        summary[key]['descriptions'].add(item.product.name)  # Collect unique names
-        summary[key]['unit'] = item.product.unit_of_measurement or ''  # Keep last (assume consistent)
+        summary[key]['descriptions'].add(item.product.name)
+        summary[key]['unit'] = item.product.unit_of_measurement or ''  # Last seen
         summary[key]['quantity'] += item.quantity
         summary[key]['taxable'] += item.subtotal
         summary[key]['igst'] += item.igst_amount
         summary[key]['cgst'] += item.cgst_amount
         summary[key]['sgst'] += item.sgst_amount
-        # Use the item's rate (will be non-zero since we filtered zero-tax items)
-        summary[key]['rate'] = item.igst_percent + item.cgst_percent + item.sgst_percent  # Keep last (assume consistent)
+        summary[key]['rate'] = item.igst_percent + item.cgst_percent + item.sgst_percent  # Last seen
+
+    # Add adjustments row if needed
+    if total_adjustments != Decimal('0'):
+        adj_key = 'Adjustments'
+        summary[adj_key]['descriptions'] = {'Freight and Round Off Adjustments'}
+        summary[adj_key]['unit'] = ''
+        summary[adj_key]['quantity'] = Decimal('0')
+        summary[adj_key]['taxable'] = Decimal('0')
+        summary[adj_key]['igst'] = Decimal('0')
+        summary[adj_key]['cgst'] = Decimal('0')
+        summary[adj_key]['sgst'] = Decimal('0')
+        summary[adj_key]['rate'] = Decimal('0')
 
     # Create workbook
     wb = Workbook()
@@ -2190,16 +2338,17 @@ def export_hsn_gst_summary_excel(request, year, month):
         cell.fill = header_fill
         cell.border = border
 
-    # Data Rows - Only include HSNs with tax (already filtered)
-    for hsn, data in summary.items():
+    # Data Rows
+    for hsn_key, data in summary.items():
         total_tax = data['igst'] + data['cgst'] + data['sgst']
-        description = ', '.join(sorted(data['descriptions']))  # Use joined unique descriptions
+        description = ', '.join(sorted(data['descriptions']))
+        hsn_display = hsn_key if hsn_key != 'Adjustments' else 'NA'
         row = [
-            hsn,  # Normalized HSN
+            hsn_display,
             description,
             data['unit'],
             round(float(data['quantity']), 2),
-            float(data['taxable'] + total_tax),
+            float(data['taxable'] + total_tax) if hsn_key != 'Adjustments' else float(total_adjustments),
             float(data['rate']),
             float(data['taxable']),
             float(data['igst']),
@@ -2237,6 +2386,9 @@ def export_hsn_gst_summary_excel(request, year, month):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     wb.save(response)
     return response
+
+
+
 
 from django.http import HttpResponse
 from openpyxl import Workbook
