@@ -2237,13 +2237,17 @@ def normalize_hsn(hsn_value):
 
 def export_sales_summary_excel(request, year, month):
     month_name = calendar.month_name[int(month)]
-    start_date = f"1-{month_name[:3]}-{year}"
     end_day = calendar.monthrange(int(year), int(month))[1]
-    end_date = f"{end_day}-{month_name[:3]}-{year}"
+
+    from django.utils.timezone import make_aware
+    from datetime import datetime
+
+    start_date = make_aware(datetime(int(year), int(month), 1))
+    end_date = make_aware(datetime(int(year), int(month), end_day))
 
     vouchers = Voucher.objects.filter(
         voucher_type="Buyer_Voucher",
-        voucher_date__range=[f"{year}-{month}-01", f"{year}-{month}-{end_day}"],
+        created_at__range=[start_date, end_date],
     )
 
     wb = Workbook()
@@ -2257,30 +2261,26 @@ def export_sales_summary_excel(request, year, month):
     ])
 
     for voucher in vouchers:
-        # Collect HSN + Product names
         hsn_set, product_set = set(), set()
 
         # Safe related_name handling
-        item_qs = getattr(voucher, "items", None) or getattr(voucher, "voucherproductitem_set", None)
-        if item_qs:
-            for item in item_qs.all():
-                hsn_set.add(normalize_hsn(item.product.hsn_sac))
-                product_set.add(item.product.name)
+        for item in voucher.items.all():
+            hsn_set.add(normalize_hsn(item.product.hsn_sac))
+            product_set.add(item.product.name)
 
         ws.append([
             voucher.voucher_number,
-            voucher.voucher_date.strftime("%d-%b-%Y"),
+            voucher.created_at.strftime("%d-%b-%Y"),
             voucher.party.party_name if voucher.party else "N/A",
             ", ".join(hsn_set),
             ", ".join(product_set),
-            voucher.total_amount,
-            voucher.igst_amount,
-            voucher.cgst_amount,
-            voucher.sgst_amount,
+            voucher.total_subtotal,
+            voucher.total_igst,
+            voucher.total_cgst,
+            voucher.total_sgst,
             voucher.grand_total,
         ])
 
-    # Prepare response
     response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     filename = f"Sales_Summary_{month_name}_{year}.xlsx"
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
