@@ -2234,10 +2234,10 @@ def export_hsn_gst_summary_excel(request, year, month):
     )
     qualifying_voucher_ids = list(qualifying_vouchers.values_list('id', flat=True))
 
-    # Sum adjustments (freight + round-off)
-    sum_round_off = sum((v.round_off_on_sales or Decimal('0')) for v in qualifying_vouchers)
-    sum_freight = sum((v.freight_charge or Decimal('0')) for v in qualifying_vouchers)
-    total_adjustments = sum_round_off + sum_freight
+    # Sum adjustments (freight + round-off) using Decimal
+    sum_round_off = sum((v.round_off_on_sales or Decimal('0.00')) for v in qualifying_vouchers)
+    sum_freight = sum((v.freight_charge or Decimal('0.00')) for v in qualifying_vouchers)
+    total_adjustments = (sum_round_off + sum_freight).quantize(Decimal('0.01'))  # Round to 2 decimal places
 
     # Fetch ALL items from qualifying vouchers (include zero-tax items)
     items = VoucherProductItem.objects.filter(
@@ -2245,16 +2245,16 @@ def export_hsn_gst_summary_excel(request, year, month):
     ).annotate(
         total_tax=ExpressionWrapper(
             F('igst_amount') + F('cgst_amount') + F('sgst_amount'),
-            output_field=DecimalField()
+            output_field=DecimalField(max_digits=15, decimal_places=2)
         )
     ).select_related('product')
 
     # Aggregate data
     summary = defaultdict(lambda: {
         'descriptions': set(),
-        'unit': '', 'quantity': Decimal('0'),
-        'taxable': Decimal('0'), 'igst': Decimal('0'), 'cgst': Decimal('0'),
-        'sgst': Decimal('0'), 'cess': 'NA', 'rate': Decimal('0')
+        'unit': '', 'quantity': Decimal('0.00'),
+        'taxable': Decimal('0.00'), 'igst': Decimal('0.00'), 'cgst': Decimal('0.00'),
+        'sgst': Decimal('0.00'), 'cess': 'NA', 'rate': Decimal('0.00')
     })
 
     for item in items:
@@ -2273,16 +2273,16 @@ def export_hsn_gst_summary_excel(request, year, month):
         summary[key]['rate'] = item.igst_percent + item.cgst_percent + item.sgst_percent  # Last seen
 
     # Add adjustments row if needed
-    if total_adjustments != Decimal('0'):
+    if total_adjustments != Decimal('0.00'):
         adj_key = 'Adjustments'
         summary[adj_key]['descriptions'] = {'Freight and Round Off Adjustments'}
         summary[adj_key]['unit'] = ''
-        summary[adj_key]['quantity'] = Decimal('0')
-        summary[adj_key]['taxable'] = Decimal('0')
-        summary[adj_key]['igst'] = Decimal('0')
-        summary[adj_key]['cgst'] = Decimal('0')
-        summary[adj_key]['sgst'] = Decimal('0')
-        summary[adj_key]['rate'] = Decimal('0')
+        summary[adj_key]['quantity'] = Decimal('0.00')
+        summary[adj_key]['taxable'] = Decimal('0.00')
+        summary[adj_key]['igst'] = Decimal('0.00')
+        summary[adj_key]['cgst'] = Decimal('0.00')
+        summary[adj_key]['sgst'] = Decimal('0.00')
+        summary[adj_key]['rate'] = Decimal('0.00')
 
     # Create workbook
     wb = Workbook()
@@ -2340,29 +2340,30 @@ def export_hsn_gst_summary_excel(request, year, month):
 
     # Data Rows
     for hsn_key, data in summary.items():
-        total_tax = data['igst'] + data['cgst'] + data['sgst']
+        total_tax = (data['igst'] + data['cgst'] + data['sgst']).quantize(Decimal('0.01'))
         description = ', '.join(sorted(data['descriptions']))
         hsn_display = hsn_key if hsn_key != 'Adjustments' else 'NA'
+        total_amount = (data['taxable'] + total_tax).quantize(Decimal('0.01')) if hsn_key != 'Adjustments' else total_adjustments
         row = [
             hsn_display,
             description,
             data['unit'],
-            round(float(data['quantity']), 2),
-            float(data['taxable'] + total_tax) if hsn_key != 'Adjustments' else float(total_adjustments),
-            float(data['rate']),
-            float(data['taxable']),
-            float(data['igst']),
-            float(data['cgst']),
-            float(data['sgst']),
+            round(float(data['quantity']), 2),  # Quantity can stay float for display
+            total_amount,  # Keep Decimal
+            data['rate'].quantize(Decimal('0.01')),  # Keep Decimal
+            data['taxable'].quantize(Decimal('0.01')),  # Keep Decimal
+            data['igst'].quantize(Decimal('0.01')),  # Keep Decimal
+            data['cgst'].quantize(Decimal('0.01')),  # Keep Decimal
+            data['sgst'].quantize(Decimal('0.01')),  # Keep Decimal
             data['cess'],
-            float(total_tax)
+            total_tax  # Keep Decimal
         ]
         ws.append(row)
         r = ws.max_row
         for c in range(1, 13):
             cell = ws.cell(row=r, column=c)
             cell.border = border
-            if c in [5, 7, 8, 9, 10, 12] and isinstance(cell.value, (int, float)):
+            if c in [5, 7, 8, 9, 10, 12] and isinstance(cell.value, (int, float, Decimal)):
                 cell.alignment = right
                 cell.number_format = currency_format
             elif c == 6:
@@ -2386,8 +2387,6 @@ def export_hsn_gst_summary_excel(request, year, month):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     wb.save(response)
     return response
-
-
 
 
 from django.http import HttpResponse
